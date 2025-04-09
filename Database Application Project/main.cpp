@@ -1,11 +1,46 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <windows.h>
+#include <sqlext.h>
+#include <sqltypes.h>
+#include <sql.h>
 
 using namespace sf;
 using namespace std;
 
 int main()
 {
+	SQLHENV envSQL;
+	SQLHDBC dbconSQL;
+	SQLHSTMT handleSQL;
+	SQLRETURN retSQL;
+
+	SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &envSQL);
+	SQLSetEnvAttr(envSQL, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
+	SQLAllocHandle(SQL_HANDLE_DBC, envSQL, &dbconSQL);
+
+	SQLWCHAR connStr[] = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};SERVER=localhost;PORT=3306;DATABASE=test_db;UID=root;PWD=Capacity16!?;";
+	retSQL = SQLDriverConnect(dbconSQL, NULL, connStr, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
+
+	if (SQL_SUCCEEDED(retSQL))
+	{
+		cout << "Connected" << endl;
+
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+		SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+	}
+	else
+	{
+		cerr << "Connection failed" << endl;
+	}
+
+	SQLFreeHandle(SQL_HANDLE_DBC, dbconSQL);
+	SQLFreeHandle(SQL_HANDLE_ENV, envSQL);
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------*/
+	
 	RenderWindow window = RenderWindow(VideoMode({ 1280,720 }), "Test");
 	window.setFramerateLimit(60);
 
@@ -34,6 +69,7 @@ int main()
 		{
 			if (event->is < Event::Closed>())
 			{
+				SQLDisconnect(dbconSQL);
 				window.close();
 			}
 		}
