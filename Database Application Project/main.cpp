@@ -71,13 +71,26 @@ int main()
 
 	String input;
 	Text inputText(font);
-	inputText.setString("Placeholder");
+	inputText.setString("Type Here");
 	inputText.setCharacterSize(12);
 	inputText.setFillColor(Color::Black);
 	inputText.setOrigin({ inputText.getGlobalBounds().getCenter().x, inputText.getGlobalBounds().getCenter().y });
 	inputText.setPosition({ 635, 300 });
 
+	Texture textCursorTex;
+
+	if (textCursorTex.loadFromFile("text_cursor.png"))
+	{
+		cout << "invalid location / name" << endl;
+	}
+
+	Sprite textCursor(textCursorTex);
+	textCursor.setColor(Color::Transparent);
+	textCursor.setOrigin({ textCursorTex.getSize().x / 2.f, textCursorTex.getSize().y / 2.f });
+	textCursor.setPosition({ 610, 300 });
+
 	MouseDetector mouseDetector;
+	Clock clock;
 	
 
 	while (window.isOpen())
@@ -108,12 +121,20 @@ int main()
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
 				//need to have a blinking text cursor in inputBox
+				inputText.setFillColor(Color::Transparent);
+				textCursor.setColor(Color::Black);
+
+				if (fmod(clock.getElapsedTime().asSeconds(), 2) >= 0.95)
+				{
+
+				}
 			}
 		}
 
 		window.clear();
 		window.draw(textBox);
 		window.draw(inputText);
+		window.draw(textCursor);
 		window.draw(button);
 		window.draw(text);
 		window.display();
