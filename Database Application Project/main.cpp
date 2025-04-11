@@ -46,14 +46,9 @@ int main()
 	window.setFramerateLimit(60);
 
 	Font font;
-	
-	if (!font.openFromFile("arial.ttf"))
-	{
-		cout << "invalid location/name";
-	}
+	font.openFromFile("arial.ttf");
 
 	Text text(font);
-
 	text.setString("Button");
 	text.setCharacterSize(24);
 	text.setFillColor(Color::Red);
@@ -69,7 +64,7 @@ int main()
 	textBox.setPosition({ 640, 300 });
 	textBox.setFillColor(Color::White);
 
-	String input;
+	string input;
 	Text inputText(font);
 	inputText.setString("Type Here");
 	inputText.setCharacterSize(12);
@@ -77,40 +72,65 @@ int main()
 	inputText.setOrigin({ inputText.getGlobalBounds().getCenter().x, inputText.getGlobalBounds().getCenter().y });
 	inputText.setPosition({ 635, 300 });
 
-	Texture textCursorTex;
-
-	if (textCursorTex.loadFromFile("text_cursor.png"))
-	{
-		cout << "invalid location / name" << endl;
-	}
-
-	Sprite textCursor(textCursorTex);
-	textCursor.setColor(Color::Transparent);
-	textCursor.setOrigin({ textCursorTex.getSize().x / 2.f, textCursorTex.getSize().y / 2.f });
-	textCursor.setPosition({ 610, 300 });
-
 	MouseDetector mouseDetector;
 	Clock clock;
-	
+	bool clickBox = false;
+	const float waitTime = 0.3;
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------*/
+	
 	while (window.isOpen())
-	{
+	{	
 		while (const optional event = window.pollEvent())
 		{
-			if (event->is < Event::Closed>())
+			if (event->is<Event::Closed>())
 			{
 				SQLDisconnect(dbconSQL);
 				window.close();
 			}
+
+			if (const auto* textEntered = event->getIf<Event::TextEntered>())
+			{
+				if (textEntered->unicode < 128)
+				{	
+					if (clickBox == true)
+					{
+						input += static_cast<char>(textEntered->unicode);
+						inputText.setString(input);
+					}
+				}
+			}
 		}
 
-		window.setMouseCursor(Cursor::createFromSystem(Cursor::Type::Arrow).value());
-
-		if (mouseDetector.isOn(button, window))
-		{
-			if (Mouse::isButtonPressed(Mouse::Button::Left))
+		//update this so that it does not accept blank values
+		if (mouseDetector.isOn(button, window) && Mouse::isButtonPressed(Mouse::Button::Left))
+		{			
+			if (clock.getElapsedTime().asSeconds() >= waitTime)
 			{
-				cout << "Button Pressed" << endl;
+				wstring wInput(input.begin(), input.end());
+				wstring insertQuery = L"INSERT INTO test_table (test_insert) VALUES ('" + wInput + L"')";
+
+
+				//always allocate the handle and then free it when using handleSQL (line 119)
+				SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+				retSQL = SQLExecDirect(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+				SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+				if (SQL_SUCCEEDED(retSQL))
+				{
+					cout << "Insert successful!" << endl;
+				}
+				else
+				{
+					cerr << "Insert failed!" << endl;
+				}
+
+				input = "";
+				inputText.setString(input);
+
+				clock.restart();
 			}
 		}
 
@@ -120,25 +140,26 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				//need to have a blinking text cursor in inputBox
-				inputText.setFillColor(Color::Transparent);
-				textCursor.setColor(Color::Black);
-
-				if (fmod(clock.getElapsedTime().asSeconds(), 2) >= 0.95)
-				{
-
-				}
+				clickBox = true;
+				inputText.setString(input);
 			}
 		}
 
+		else
+		{
+			window.setMouseCursor(Cursor::createFromSystem(Cursor::Type::Arrow).value());
+		}
+
+		if (!mouseDetector.isOn(textBox, window) && Mouse::isButtonPressed(Mouse::Button::Left))
+		{
+			clickBox = false;
+		}
+		
 		window.clear();
 		window.draw(textBox);
 		window.draw(inputText);
-		window.draw(textCursor);
 		window.draw(button);
 		window.draw(text);
 		window.display();
 	}
-
-
 }
