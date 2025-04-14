@@ -28,7 +28,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="text_cursor.png">
+    <Image Include="buttonBox.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

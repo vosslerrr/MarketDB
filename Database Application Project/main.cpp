@@ -49,20 +49,26 @@ int main()
 	font.openFromFile("arial.ttf");
 
 	Text text(font);
-	text.setString("Button");
+	text.setString("Submit");
 	text.setCharacterSize(24);
 	text.setFillColor(Color::Red);
 	text.setOrigin({ text.getGlobalBounds().getCenter().x, text.getGlobalBounds().getCenter().y});
 	text.setPosition({640,360});
 
-	RectangleShape button({75,50});
-	button.setOrigin({button.getGeometricCenter().x, button.getGeometricCenter().y});
-	button.setPosition({ 640,360 });
+	RectangleShape submitButton({75,50});
+	submitButton.setOrigin({submitButton.getGeometricCenter().x, submitButton.getGeometricCenter().y});
+	submitButton.setPosition({ 640,360 });
 
 	RectangleShape textBox({ 75,25 });
 	textBox.setOrigin({ textBox.getGeometricCenter().x, textBox.getGeometricCenter().y });
 	textBox.setPosition({ 640, 300 });
 	textBox.setFillColor(Color::White);
+
+	RectangleShape background({ 1280,720 });
+	background.setOrigin({ background.getGeometricCenter().x, background.getGeometricCenter().y });
+	background.setPosition({ 640,360 });
+	Color backgroundColor(100,100,100);
+	background.setFillColor(backgroundColor);
 
 	string input;
 	Text inputText(font);
@@ -105,12 +111,12 @@ int main()
 		}
 
 		//update this so that it does not accept blank values
-		if (mouseDetector.isOn(button, window) && Mouse::isButtonPressed(Mouse::Button::Left))
+		if (mouseDetector.isOn(submitButton, window) && Mouse::isButtonPressed(Mouse::Button::Left))
 		{			
 			if (clock.getElapsedTime().asSeconds() >= waitTime)
 			{
 				wstring wInput(input.begin(), input.end());
-				wstring insertQuery = L"INSERT INTO test_table (test_insert) VALUES ('" + wInput + L"')";
+				wstring insertQuery = L"INSERT INTO item (item_id) VALUES ('" + wInput + L"')";
 
 
 				//always allocate the handle and then free it when using handleSQL (line 119)
@@ -156,9 +162,10 @@ int main()
 		}
 		
 		window.clear();
+		window.draw(background);
 		window.draw(textBox);
 		window.draw(inputText);
-		window.draw(button);
+		window.draw(submitButton);
 		window.draw(text);
 		window.display();
 	}

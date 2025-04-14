@@ -150,7 +150,7 @@
     <ClInclude Include="MouseDetector.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="text_cursor.png" />
+    <Image Include="buttonBox.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
