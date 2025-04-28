@@ -55,9 +55,50 @@ int main()
 	text.setOrigin({ text.getGlobalBounds().getCenter().x, text.getGlobalBounds().getCenter().y});
 	text.setPosition({640,360});
 
+	/*Texture buttonTex;
+	buttonTex.loadFromFile("buttonBox.png");
+	Sprite submitButton2(buttonTex);
+	submitButton2.setOrigin({submitButton2.getGlobalBounds().getCenter().x, submitButton2.getGlobalBounds().getCenter().y});
+	submitButton2.setPosition({ 640,420 });*/
+
 	RectangleShape submitButton({75,50});
 	submitButton.setOrigin({submitButton.getGeometricCenter().x, submitButton.getGeometricCenter().y});
 	submitButton.setPosition({ 640,360 });
+
+	Text item(font);
+	item.setString("Item");
+	item.setCharacterSize(24);
+	item.setFillColor(Color::Black);
+	item.setOrigin({item.getGlobalBounds().getCenter().x, item.getGlobalBounds().getCenter().y});
+	item.setPosition({ 75,25 });
+
+	Text isle(font);
+	isle.setString("Isle");
+	isle.setCharacterSize(24);
+	isle.setFillColor(Color::Black);
+	isle.setOrigin({ isle.getGlobalBounds().getCenter().x, isle.getGlobalBounds().getCenter().y });
+	isle.setPosition({ item.getOrigin().x + 100 ,25});
+
+	Text section(font);
+	section.setString("Section");
+	section.setCharacterSize(24);
+	section.setFillColor(Color::Black);
+	section.setOrigin({ section.getGlobalBounds().getCenter().x, section.getGlobalBounds().getCenter().y });
+	section.setPosition({ 275,25 });
+
+	Text supplier(font);
+	supplier.setString("Supplier");
+	supplier.setCharacterSize(24);
+	supplier.setFillColor(Color::Black);
+	supplier.setOrigin({ supplier.getGlobalBounds().getCenter().x, supplier.getGlobalBounds().getCenter().y });
+	supplier.setPosition({ 375,25 });
+
+	Text transaction(font);
+	transaction.setString("Transaction");
+	transaction.setCharacterSize(24);
+	transaction.setFillColor(Color::Black);
+	transaction.setOrigin({ transaction.getGlobalBounds().getCenter().x, transaction.getGlobalBounds().getCenter().y });
+	transaction.setPosition({ 475,25 });
 
 	RectangleShape textBox({ 75,25 });
 	textBox.setOrigin({ textBox.getGeometricCenter().x, textBox.getGeometricCenter().y });
@@ -69,6 +110,20 @@ int main()
 	background.setPosition({ 640,360 });
 	Color backgroundColor(100,100,100);
 	background.setFillColor(backgroundColor);
+
+	VertexArray backgroundStrip(PrimitiveType::TriangleStrip, 6);
+	backgroundStrip[0].position = {0, 720};
+	backgroundStrip[1].position = {50, 720};
+	backgroundStrip[2].position = {0,0};
+	backgroundStrip[3].position = {50, 50};
+	backgroundStrip[4].position = { 1280, 0 };
+	backgroundStrip[5].position = { 1280,50 };
+	backgroundStrip[0].color = Color::Red;
+	backgroundStrip[1].color = Color::Red;
+	backgroundStrip[2].color = Color::Red;
+	backgroundStrip[3].color = Color::Red;
+	backgroundStrip[4].color = Color::Red;
+	backgroundStrip[5].color = Color::Red;
 
 	string input;
 	Text inputText(font);
@@ -110,7 +165,6 @@ int main()
 			}
 		}
 
-		//update this so that it does not accept blank values
 		if (mouseDetector.isOn(submitButton, window) && Mouse::isButtonPressed(Mouse::Button::Left))
 		{			
 			if (clock.getElapsedTime().asSeconds() >= waitTime)
@@ -163,9 +217,16 @@ int main()
 		
 		window.clear();
 		window.draw(background);
+		window.draw(backgroundStrip);
+		window.draw(item);
+		window.draw(isle);
+		window.draw(section);
+		window.draw(supplier);
+		window.draw(transaction);
 		window.draw(textBox);
 		window.draw(inputText);
 		window.draw(submitButton);
+		//window.draw(submitButton2);
 		window.draw(text);
 		window.display();
 	}
