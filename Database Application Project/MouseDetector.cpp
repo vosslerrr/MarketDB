@@ -2,14 +2,27 @@
 
 using namespace sf;
 
-bool MouseDetector::isOn(RectangleShape item, RenderWindow &window)
+bool MouseDetector::isOn(Sprite item, RenderWindow &window)
 {
-	if (Mouse::getPosition(window).x > (item.getPosition().x - item.getGeometricCenter().x)
-		&& Mouse::getPosition(window).x < (item.getPosition().x + item.getGeometricCenter().x)
-		&& Mouse::getPosition(window).y >(item.getPosition().y - item.getGeometricCenter().y)
-		&& Mouse::getPosition(window).y < (item.getPosition().y + item.getGeometricCenter().y))
+	if (Mouse::getPosition(window).x > (item.getPosition().x - item.getOrigin().x)
+		&& Mouse::getPosition(window).x < (item.getPosition().x + item.getOrigin().x)
+		&& Mouse::getPosition(window).y >(item.getPosition().y - item.getOrigin().y)
+		&& Mouse::getPosition(window).y < (item.getPosition().y + item.getOrigin().y))
 	{
 		return true;
 	}
     return false;
+}
+
+bool MouseDetector::isOn(sf::RectangleShape item, sf::RenderWindow& window)
+{
+	if (Mouse::getPosition(window).x > (item.getPosition().x - item.getOrigin().x)
+		&& Mouse::getPosition(window).x < (item.getPosition().x + item.getOrigin().x)
+		&& Mouse::getPosition(window).y >(item.getPosition().y - item.getOrigin().y)
+		&& Mouse::getPosition(window).y < (item.getPosition().y + item.getOrigin().y))
+	{
+		return true;
+	}
+
+	return false;
 }

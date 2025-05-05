@@ -151,6 +151,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="buttonBox.png" />
+    <Image Include="headers.png" />
+    <Image Include="itemColumns.png" />
+    <Image Include="loginBox.png" />
+    <Image Include="loginColumns.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

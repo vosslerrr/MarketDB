@@ -31,5 +31,17 @@
     <Image Include="buttonBox.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="headers.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="itemColumns.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="loginBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="loginColumns.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
