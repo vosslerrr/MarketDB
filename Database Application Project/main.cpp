@@ -1,10 +1,12 @@
 #include <iostream>
+#include <imgui.h>
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 #include <sqlext.h>
 #include <sqltypes.h>
 #include <sql.h>
 #include "MouseDetector.h"
+#include <imgui-SFML.h>
 
 using namespace sf;
 using namespace std;
@@ -26,7 +28,7 @@ int main()
 	RectangleShape loginBackground({800,600});
 	loginBackground.setOrigin({loginBackground.getGeometricCenter().x, loginBackground.getGeometricCenter().y});
 	loginBackground.setPosition({ 400,300 });
-	loginBackground.setFillColor(Color::Green);
+	loginBackground.setFillColor(Color(62,129,80));
 
 	Texture loginColumnsTexture;
 	loginColumnsTexture.loadFromFile("loginColumns.png");
@@ -331,44 +333,36 @@ int main()
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------*/
 	
-	RenderWindow window = RenderWindow(VideoMode({ 1280,720 }), "Test");
+	RenderWindow window = RenderWindow(VideoMode({ 1280,720 }), "Test", Style::Close);
 	window.setFramerateLimit(60);
 
-	Texture submitButton;
-	submitButton.loadFromFile("buttonBox.png");
-	Sprite submitButtonSprite(submitButton);
-	submitButtonSprite.setOrigin({ 24,8 });
-	submitButtonSprite.setPosition({ 210,500 });
+	ImGui::SFML::Init(window);
 
-	Texture headers;
-	headers.loadFromFile("headers.png");
-	Sprite headersSprite(headers);
-	headersSprite.setPosition({ 75,15 });
+	Texture backgroundTexture;
+	backgroundTexture.loadFromFile("background.png");
+	Sprite background(backgroundTexture);
+	background.setOrigin({640,360});
+	background.setPosition({ 640,360 });
 
 	RectangleShape itemHeaderBox({57,23});
-	itemHeaderBox.setPosition({79,17});
-	itemHeaderBox.setFillColor(Color::Blue);
+	itemHeaderBox.setOrigin({ itemHeaderBox.getGeometricCenter().x, itemHeaderBox.getGeometricCenter().y });
+	itemHeaderBox.setPosition({110,31});
 
 	RectangleShape isleHeaderBox({ 45,23 });
-	isleHeaderBox.setPosition({ 221,17 });
-	isleHeaderBox.setFillColor(Color::Blue);
+	isleHeaderBox.setOrigin({ isleHeaderBox.getGeometricCenter().x, isleHeaderBox.getGeometricCenter().y });
+	isleHeaderBox.setPosition({ 246,31 });
 
 	RectangleShape sectionHeaderBox({ 104,23 });
-	sectionHeaderBox.setPosition({ 349,17 });
-	sectionHeaderBox.setFillColor(Color::Blue);
+	sectionHeaderBox.setOrigin({ sectionHeaderBox.getGeometricCenter().x, sectionHeaderBox.getGeometricCenter().y });
+	sectionHeaderBox.setPosition({ 404,31 });
 
 	RectangleShape supplierHeaderBox({ 117,23 });
-	supplierHeaderBox.setPosition({ 535,17 });
-	supplierHeaderBox.setFillColor(Color::Blue);
+	supplierHeaderBox.setOrigin({ supplierHeaderBox.getGeometricCenter().x, supplierHeaderBox.getGeometricCenter().y });
+	supplierHeaderBox.setPosition({ 596,31 });
 
 	RectangleShape transactionHeaderBox({ 164,23 });
-	transactionHeaderBox.setPosition({ 731,17 });
-	transactionHeaderBox.setFillColor(Color::Blue);
-
-	Texture itemColumns;
-	itemColumns.loadFromFile("itemColumns.png");
-	Sprite itemColumnsSprite(itemColumns);
-	itemColumnsSprite.setPosition({ 75,100 });
+	transactionHeaderBox.setOrigin({ transactionHeaderBox.getGeometricCenter().x, transactionHeaderBox.getGeometricCenter().y });
+	transactionHeaderBox.setPosition({ 816,31 });
 
 	string t1In;
 	Text t1Input(font);
@@ -446,26 +440,15 @@ int main()
 	checkBox.setPosition({ 210, 386 });
 	checkBox.setFillColor(Color::White);
 
-	RectangleShape background({ 1280,720 });
-	background.setOrigin({ background.getGeometricCenter().x, background.getGeometricCenter().y });
-	background.setPosition({ 640,360 });
-	Color backgroundColor(100,100,100);
-	background.setFillColor(backgroundColor);
+	Texture submitButton;
+	submitButton.loadFromFile("buttonBox.png");
+	Sprite submitButtonSprite(submitButton);
+	submitButtonSprite.setOrigin({ 24,8 });
+	submitButtonSprite.setPosition({ 210,500 });
 
-	VertexArray backgroundStrip(PrimitiveType::TriangleStrip, 6);
-	backgroundStrip[0].position = {0, 720};
-	backgroundStrip[1].position = {50, 720};
-	backgroundStrip[2].position = {0,0};
-	backgroundStrip[3].position = {50, 50};
-	backgroundStrip[4].position = { 1280, 0 };
-	backgroundStrip[5].position = { 1280,50 };
-	backgroundStrip[0].color = Color::Red;
-	backgroundStrip[1].color = Color::Red;
-	backgroundStrip[2].color = Color::Red;
-	backgroundStrip[3].color = Color::Red;
-	backgroundStrip[4].color = Color::Red;
-	backgroundStrip[5].color = Color::Red;
-
+	const auto arrowCursor = Cursor::createFromSystem(Cursor::Type::Arrow).value();
+	const auto handCursor = Cursor::createFromSystem(Cursor::Type::Hand).value();
+	const auto textCursor = Cursor::createFromSystem(Cursor::Type::Text).value();
 	MouseDetector mouseDetector;
 	Clock clock;
 	bool clickT1 = false;
@@ -474,6 +457,9 @@ int main()
 	bool clickT4 = false;
 	bool clickT5 = false;
 	bool clickT6 = false;
+	bool onBackground = true;
+	bool notNull = true;
+	bool valNums = true;
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -483,6 +469,8 @@ int main()
 	{	
 		while (const optional event = window.pollEvent())
 		{
+			ImGui::SFML::ProcessEvent(window, *event);
+
 			if (event->is<Event::Closed>())
 			{
 				SQLDisconnect(dbconSQL);
@@ -532,130 +520,210 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(textBox1, window) && Mouse::isButtonPressed(Mouse::Button::Left))
+		if (mouseDetector.isOn(textBox1, window))
 		{
-			clickT1 = true;
-			clickT2 = false;
-			clickT3 = false;
-			clickT4 = false;
-			clickT5 = false;
-			clickT6 = false;
+			onBackground = false;
+			window.setMouseCursor(textCursor);
 
-			t1Input.setString(t1In);
-		}
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = true;
+				clickT2 = false;
+				clickT3 = false;
+				clickT4 = false;
+				clickT5 = false;
+				clickT6 = false;
 
-		if (mouseDetector.isOn(textBox2, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickT1 = false;
-			clickT2 = true;
-			clickT3 = false;
-			clickT4 = false;
-			clickT5 = false;
-			clickT6 = false;
-
-			t2Input.setString(t2In);
-		}
-
-		if (mouseDetector.isOn(textBox3, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickT1 = false;
-			clickT2 = false;
-			clickT3 = true;
-			clickT4 = false;
-			clickT5 = false;
-			clickT6 = false;
-
-			t3Input.setString(t3In);
-		}
-
-		if (mouseDetector.isOn(textBox4, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickT1 = false;
-			clickT2 = false;
-			clickT3 = false;
-			clickT4 = true;
-			clickT5 = false;
-			clickT6 = false;
-
-			t4Input.setString(t4In);
-		}
-
-		if (mouseDetector.isOn(textBox5, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickT1 = false;
-			clickT2 = false;
-			clickT3 = false;
-			clickT4 = false;
-			clickT5 = true;
-			clickT6 = false;
-
-			t5Input.setString(t5In);
-		}
-
-		if (mouseDetector.isOn(textBox6, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickT1 = false;
-			clickT2 = false;
-			clickT3 = false;
-			clickT4 = false;
-			clickT5 = false;
-			clickT6 = true;
-
-			t6Input.setString(t6In);
-		}
-
-		if (mouseDetector.isOn(submitButtonSprite, window) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{			
-			if (clock.getElapsedTime().asSeconds() >= 0.3)
-			{ 
-				SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-				wstring item_id(t1In.begin(), t1In.end());
-				wstring item_name(t2In.begin(), t2In.end());
-				int isle_no = stoi(t3In);
-				wstring section_id(t4In.begin(), t4In.end());
-				float item_price = stod(t5In);
-				int no_of_items = stoi(t6In);
-				wstring insertQuery = L"INSERT INTO item (item_id, item_name, isle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
-				
-				SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-				SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-				SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
-				SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &isle_no, 0, NULL);
-				SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
-				SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
-				SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
-
-				retSQL = SQLExecute(handleSQL);
-
-				if (SQL_SUCCEEDED(retSQL))
-				{
-					cout << "Insert successful!" << endl;
-				}
-				else
-				{
-					cerr << "Insert failed!" << endl;
-
-					SQLWCHAR sqlState[6], message[256];
-					SQLINTEGER nativeError;
-					SQLSMALLINT textLength;
-					if (SQLGetDiagRec(SQL_HANDLE_STMT, handleSQL, 1, sqlState, &nativeError, message, sizeof(message) / sizeof(SQLWCHAR), &textLength) == SQL_SUCCESS)
-					{
-						wcerr << L"ODBC Error: " << message << L" (SQLSTATE: " << sqlState << L")" << endl;
-					}
-				}
-
-				SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-				clock.restart();
+				t1Input.setString(t1In);
 			}
 		}
+
+		if (mouseDetector.isOn(textBox2, window))
+		{
+			onBackground = false;
+			window.setMouseCursor(textCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = false;
+				clickT2 = true;
+				clickT3 = false;
+				clickT4 = false;
+				clickT5 = false;
+				clickT6 = false;
+
+				t2Input.setString(t2In);
+			}
+		}
+
+		if (mouseDetector.isOn(textBox3, window))
+		{
+			onBackground = false;
+			window.setMouseCursor(textCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = false;
+				clickT2 = false;
+				clickT3 = true;
+				clickT4 = false;
+				clickT5 = false;
+				clickT6 = false;
+
+				t3Input.setString(t3In);
+			}
+		}
+
+		if (mouseDetector.isOn(textBox4, window))
+		{
+			onBackground = false;
+			window.setMouseCursor(textCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = false;
+				clickT2 = false;
+				clickT3 = false;
+				clickT4 = true;
+				clickT5 = false;
+				clickT6 = false;
+
+				t4Input.setString(t4In);
+			}
+		}
+
+		if (mouseDetector.isOn(textBox5, window))
+		{
+			onBackground = false;
+			window.setMouseCursor(textCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = false;
+				clickT2 = false;
+				clickT3 = false;
+				clickT4 = false;
+				clickT5 = true;
+				clickT6 = false;
+
+				t5Input.setString(t5In);
+			}
+		}
+
+		if (mouseDetector.isOn(textBox6, window))
+		{
+			onBackground = false;
+			window.setMouseCursor(textCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				clickT1 = false;
+				clickT2 = false;
+				clickT3 = false;
+				clickT4 = false;
+				clickT5 = false;
+				clickT6 = true;
+
+				t6Input.setString(t6In);
+			}
+		}
+
+		if (mouseDetector.isOn(submitButtonSprite, window))
+		{			
+			onBackground = false;
+			window.setMouseCursor(handCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
+			{
+				if (clock.getElapsedTime().asSeconds() >= 0.3)
+				{ 
+					if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty() || t5In.empty() || t6In.empty())
+					{
+						cerr << "Empty inputs detected" << endl;
+						notNull = false;
+					}
+
+					try
+					{
+						stoi(t3In);
+						stod(t5In);
+						stoi(t6In);
+					}
+					catch (const exception& e)
+					{
+						cerr << "invalid numbers" << endl;
+						valNums = false;
+					}
+
+					if (notNull && valNums)
+					{
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						wstring item_id(t1In.begin(), t1In.end());
+						wstring item_name(t2In.begin(), t2In.end());
+						int isle_no = stoi(t3In);
+						wstring section_id(t4In.begin(), t4In.end());
+						float item_price = stod(t5In);
+						int no_of_items = stoi(t6In);
+						
+						wstring insertQuery = L"INSERT INTO item (item_id, item_name, isle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
+
+						SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+						SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
+						SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &isle_no, 0, NULL);
+						SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
+						SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
+						SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
+
+						retSQL = SQLExecute(handleSQL);
+
+						if (SQL_SUCCEEDED(retSQL))
+						{
+							cout << "Insert successful!" << endl;
+						}
+						else
+						{
+							cerr << "Insert failed!" << endl;
+
+							SQLWCHAR sqlState[6], message[256];
+							SQLINTEGER nativeError;
+							SQLSMALLINT textLength;
+							if (SQLGetDiagRec(SQL_HANDLE_STMT, handleSQL, 1, sqlState, &nativeError, message, sizeof(message) / sizeof(SQLWCHAR), &textLength) == SQL_SUCCESS)
+							{
+								wcerr << L"ODBC Error: " << message << L" (SQLSTATE: " << sqlState << L")" << endl;
+							}
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+						notNull = true;
+						valNums = true;
+					}
+				
+					clock.restart();
+				}
+			}
+		}
+
+		if (mouseDetector.isOn(background, window) && !mouseDetector.isOn(submitButtonSprite, window)
+												   && !mouseDetector.isOn(textBox1, window)
+												   && !mouseDetector.isOn(textBox2, window)
+												   && !mouseDetector.isOn(textBox3, window)
+												   && !mouseDetector.isOn(textBox4, window)
+												   && !mouseDetector.isOn(textBox5, window)
+												   && !mouseDetector.isOn(textBox6, window)) {onBackground = true;}
+
+		if (onBackground) {window.setMouseCursor(arrowCursor);}
+
+		ImGui::SFML::Update(window, clock.getElapsedTime());
+
+		ImGui::Begin("Hello, ImGui!");
+		ImGui::Text("This is working!");
+		ImGui::End();
 		
 		window.clear();
 		window.draw(background);
-		window.draw(backgroundStrip);
-		window.draw(headersSprite);
 		window.draw(textBox1);
 		window.draw(t1Input);
 		window.draw(textBox2);
@@ -670,7 +738,9 @@ int main()
 		window.draw(t6Input);
 		window.draw(checkBox);
 		window.draw(submitButtonSprite);
-		window.draw(itemColumnsSprite);
+		ImGui::SFML::Render(window);
 		window.display();
 	}
+
+	ImGui::SFML::Shutdown();
 }
