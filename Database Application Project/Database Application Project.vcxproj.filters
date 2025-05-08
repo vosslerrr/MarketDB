@@ -58,5 +58,23 @@
     <Image Include="background.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="itemBackground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="modifyBox.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="aisleBackground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sectionBackground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="supplierBackground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="transactionBackground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
