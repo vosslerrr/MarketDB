@@ -163,6 +163,12 @@ int main()
 	bool clickUid = false;
 	bool clickPwd = false;
 
+	bool itemTable = false;
+	bool aisleTable = false;
+	bool sectionTable = false;
+	bool supplierTable = false;
+	bool transactionTable = false;
+
 	MouseDetector winLogDetector;
 	Clock loginClock;
 
@@ -382,6 +388,148 @@ int main()
 		loginwindow.draw(loginBox);
 		loginwindow.display();
 	}
+
+	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'item'", SQL_NTS);
+
+	if (SQL_SUCCEEDED(retSQL)) {
+		if (SQLFetch(handleSQL) == SQL_SUCCESS) {
+			itemTable = true;
+		}
+	}
+
+	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+	
+	if (!itemTable)
+	{
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+		const wchar_t* createQuery =
+			L"CREATE TABLE item ("
+			L"item_id VARCHAR(45) PRIMARY KEY NOT NULL,"
+			L"item_name VARCHAR(45) NOT NULL,"
+			L"aisle_no INT NOT NULL,"
+			L"section_id VARCHAR(45) NOT NULL,"
+			L"item_price FLOAT NOT NULL,"
+			L"no_of_items INT NOT NULL"
+			L")";
+
+		retSQL = SQLExecDirect(handleSQL, (SQLWCHAR*)createQuery, SQL_NTS);
+	
+		SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+	}
+	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'aisle'", SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+	if (SQL_SUCCEEDED(retSQL)) {
+		if (SQLFetch(handleSQL) == SQL_SUCCESS) {
+			aisleTable = true;
+		}
+	}
+	
+	if (!aisleTable)
+	{
+		SQLHSTMT hCreateStmt;
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &hCreateStmt);
+
+		const wchar_t* createQuery =
+			L"CREATE TABLE aisle ("
+			L"aisle_no INT PRIMARY KEY NOT NULL,"
+			L"no_of_sections INT NOT NULL"
+			L")";
+
+		SQLRETURN createRet = SQLExecDirect(hCreateStmt, (SQLWCHAR*)createQuery, SQL_NTS);
+
+		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
+	}
+
+	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'section'", SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+	if (SQL_SUCCEEDED(retSQL)) {
+		if (SQLFetch(handleSQL) == SQL_SUCCESS) {
+			sectionTable = true;
+		}
+	}
+
+	if (!sectionTable)
+	{
+		SQLHSTMT hCreateStmt;
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &hCreateStmt);
+
+		const wchar_t* createQuery =
+			L"CREATE TABLE section ("
+			L"section_id VARCHAR(45) PRIMARY KEY NOT NULL,"
+			L"section_name VARCHAR(45) NOT NULL,"
+			L"aisle_no INT NOT NULL"
+			L")";
+
+		SQLRETURN createRet = SQLExecDirect(hCreateStmt, (SQLWCHAR*)createQuery, SQL_NTS);
+
+		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
+	}
+
+	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'supplier'", SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+	if (SQL_SUCCEEDED(retSQL)) {
+		if (SQLFetch(handleSQL) == SQL_SUCCESS) {
+			supplierTable = true;
+		}
+	}
+
+	if (!supplierTable)
+	{
+		SQLHSTMT hCreateStmt;
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &hCreateStmt);
+
+		const wchar_t* createQuery =
+			L"CREATE TABLE supplier ("
+			L"supplier_id VARCHAR(45) PRIMARY KEY NOT NULL,"
+			L"item_id VARCHAR(45) NOT NULL,"
+			L"item_cost FLOAT NOT NULL,"
+			L"supplier_name VARCHAR(45) NOT NULL"
+			L")";
+
+		SQLRETURN createRet = SQLExecDirect(hCreateStmt, (SQLWCHAR*)createQuery, SQL_NTS);
+
+		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
+	}
+
+	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'transaction'", SQL_NTS);
+	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+	if (SQL_SUCCEEDED(retSQL)) {
+		if (SQLFetch(handleSQL) == SQL_SUCCESS) {
+			transactionTable = true;
+		}
+	}
+
+	if (!transactionTable)
+	{
+		SQLHSTMT hCreateStmt;
+		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &hCreateStmt);
+
+		const wchar_t* createQuery =
+			L"CREATE TABLE transaction ("
+			L"transaction_id VARCHAR(45) PRIMARY KEY NOT NULL,"
+			L"item_id VARCHAR(45) NOT NULL,"
+			L"item_price FLOAT NOT NULL,"
+			L"tax_amount FLOAT NOT NULL,"
+			L"transaction_total FLOAT NOT NULL,"
+			L"transaction_date VARCHAR(45) NOT NULL"
+			L")";
+
+		SQLRETURN createRet = SQLExecDirect(hCreateStmt, (SQLWCHAR*)createQuery, SQL_NTS);
+
+		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
+	}
+
+	
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------- 
 -------------------------------------------------------------------------------------------------------------------------------------------------
