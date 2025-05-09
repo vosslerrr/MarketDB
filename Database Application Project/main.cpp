@@ -88,33 +88,18 @@ int main()
 	RenderWindow loginwindow = RenderWindow(VideoMode({ 800,600 }), "Login", Style::Close);
 	loginwindow.setFramerateLimit(60);
 
+	ImGui::SFML::Init(loginwindow); 
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigInputTextCursorBlink = false;
+	io.KeyRepeatDelay = 100.f;
+	io.KeyRepeatRate = 15.f;
+
 	Texture loginBackgroundTexture;
 	loginBackgroundTexture.loadFromFile("loginColumns.png");
 	Sprite loginBackground(loginBackgroundTexture);
 
-	RectangleShape serverBox({ 150,22 });
-	serverBox.setOrigin({ serverBox.getGeometricCenter().x,serverBox.getGeometricCenter().y });
-	serverBox.setPosition({ 400,300 });
-
-	RectangleShape portBox({ 150,22 });
-	portBox.setOrigin({ portBox.getGeometricCenter().x,portBox.getGeometricCenter().y });
-	portBox.setPosition({ 400,340 });
-
-	RectangleShape databaseBox({ 150,22 });
-	databaseBox.setOrigin({ databaseBox.getGeometricCenter().x,databaseBox.getGeometricCenter().y });
-	databaseBox.setPosition({ 400,380 });
-
-	RectangleShape uidBox({ 150,22 });
-	uidBox.setOrigin({ uidBox.getGeometricCenter().x,uidBox.getGeometricCenter().y });
-	uidBox.setPosition({ 400,420 });
-
-	RectangleShape pwdBox({ 150,22 });
-	pwdBox.setOrigin({ pwdBox.getGeometricCenter().x,pwdBox.getGeometricCenter().y });
-	pwdBox.setPosition({ 400,460 });
-
 	Texture loginTexture;
 	loginTexture.loadFromFile("loginBox.png");
-
 	Sprite loginBox(loginTexture);
 	loginBox.setOrigin({28,12});
 	loginBox.setPosition({ 400, 500 });
@@ -122,46 +107,8 @@ int main()
 	Font font;
 	font.openFromFile("arial.ttf");
 
-	string serverIn;
-	Text serverInput(font);
-	serverInput.setCharacterSize(20);
-	serverInput.setFillColor(Color::Black);
-	serverInput.setOrigin({ serverInput.getGlobalBounds().getCenter().x, serverInput.getGlobalBounds().getCenter().y });
-	serverInput.setPosition({ 330,285 });
-
-	string portIn;
-	Text portInput(font);
-	portInput.setCharacterSize(20);
-	portInput.setFillColor(Color::Black);
-	portInput.setOrigin({ portInput.getGlobalBounds().getCenter().x, portInput.getGlobalBounds().getCenter().y });
-	portInput.setPosition({ 330,325 });
-
-	string databaseIn;
-	Text databaseInput(font);
-	databaseInput.setCharacterSize(20);
-	databaseInput.setFillColor(Color::Black);
-	databaseInput.setOrigin({ databaseInput.getGlobalBounds().getCenter().x, databaseInput.getGlobalBounds().getCenter().y });
-	databaseInput.setPosition({ 330,365 });
-
-	string uidIn;
-	Text uidInput(font);
-	uidInput.setCharacterSize(20);
-	uidInput.setFillColor(Color::Black);
-	uidInput.setOrigin({ uidInput.getGlobalBounds().getCenter().x, uidInput.getGlobalBounds().getCenter().y });
-	uidInput.setPosition({ 330,405 });
-
-	string pwdIn;
-	Text pwdInput(font);
-	pwdInput.setCharacterSize(20);
-	pwdInput.setFillColor(Color::Black);
-	pwdInput.setOrigin({ pwdInput.getGlobalBounds().getCenter().x, pwdInput.getGlobalBounds().getCenter().y });
-	pwdInput.setPosition({ 330,445 });
-
-	bool clickServer = false;
-	bool clickPort = false;
-	bool clickDatabase = false;
-	bool clickUid = false;
-	bool clickPwd = false;
+	ImFont* guiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
+	ImGui::SFML::UpdateFontTexture();
 
 	bool itemTable = false;
 	bool aisleTable = false;
@@ -172,220 +119,181 @@ int main()
 	MouseDetector winLogDetector;
 	Clock loginClock;
 
+	char serverIn[128] = "";
+	char portIn[128] = "";
+	char databaseIn[128] = "";
+	char uidIn[128] = "";
+	char pwdIn[128] = "";
+
+	const auto arrowCursor = Cursor::createFromSystem(Cursor::Type::Arrow).value();
+	const auto handCursor = Cursor::createFromSystem(Cursor::Type::Hand).value();
+	const auto textCursor = Cursor::createFromSystem(Cursor::Type::Text).value();
+
 	while (loginwindow.isOpen())
 	{
 		while (const optional event = loginwindow.pollEvent())
 		{
+			ImGui::SFML::ProcessEvent(loginwindow, *event);
+
 			if (event->is<Event::Closed>())
 			{
 				loginwindow.close();
 				return 0;
 			}
+		}
 
-			if (const auto* textEntered = event->getIf<Event::TextEntered>())
+		ImGui::SFML::Update(loginwindow, loginClock.getElapsedTime());
+
+		//server box
+		{
+			ImGui::SetNextWindowPos(ImVec2(317, 279));//x-offset:8	y-offset:9
+			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+			ImGui::PushFont(guiFont);
+			ImGui::Begin("##ServerInputWindow", nullptr, ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoBackground
+				| ImGuiWindowFlags_NoTitleBar);
+			ImGui::InputText("##ServerInput", serverIn, sizeof(serverIn));
+			ImGui::PopStyleColor(2);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
+		//port box
+		{
+			ImGui::SetNextWindowPos(ImVec2(317, 319));//x-offset:8	y-offset:9
+			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+			ImGui::PushFont(guiFont);
+			ImGui::Begin("##PortInputWindow", nullptr, ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoBackground
+				| ImGuiWindowFlags_NoTitleBar);
+			ImGui::InputText("##PortInput", portIn, sizeof(portIn));
+			ImGui::PopStyleColor(2);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
+		//database box
+		{
+			ImGui::SetNextWindowPos(ImVec2(317, 359));//x-offset:8	y-offset:9
+			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+			ImGui::PushFont(guiFont);
+			ImGui::Begin("##DatabaseInputWindow", nullptr, ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoBackground
+				| ImGuiWindowFlags_NoTitleBar);
+			ImGui::InputText("##DatabaseInput", databaseIn, sizeof(databaseIn));
+			ImGui::PopStyleColor(2);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
+		//uid box
+		{
+			ImGui::SetNextWindowPos(ImVec2(317, 399));//x-offset:8	y-offset:9
+			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+			ImGui::PushFont(guiFont);
+			ImGui::Begin("##UIDInputWindow", nullptr, ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoBackground
+				| ImGuiWindowFlags_NoTitleBar);
+			ImGui::InputText("##UIDInput", uidIn, sizeof(uidIn));
+			ImGui::PopStyleColor(2);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
+		//pwd box
+		{
+			ImGui::SetNextWindowPos(ImVec2(317, 439));//x-offset:8	y-offset:9
+			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+			ImGui::PushFont(guiFont);
+			ImGui::Begin("##PWDInputWindow", nullptr, ImGuiWindowFlags_NoResize
+													| ImGuiWindowFlags_NoMove
+													| ImGuiWindowFlags_NoCollapse
+													| ImGuiWindowFlags_NoBackground
+													| ImGuiWindowFlags_NoTitleBar);
+			ImGui::InputText("##PWDInput", pwdIn, sizeof(pwdIn));
+			ImGui::PopStyleColor(2);
+			ImGui::PopFont();
+			ImGui::End();
+		}
+
+		if (winLogDetector.isOn(loginBox, loginwindow))
+		{
+			loginwindow.setMouseCursor(handCursor);
+
+			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (textEntered->unicode > 32 && textEntered->unicode < 127)
+				if (loginClock.getElapsedTime().asSeconds() >= 0.3)
 				{
-					if (clickServer)
+					string serverInStr(serverIn);
+					wstring wServerInput(serverInStr.begin(), serverInStr.end());
+					string portInStr(portIn);
+					wstring wPortInput(portInStr.begin(), portInStr.end());
+					string databaseInStr(databaseIn);
+					wstring wDatabaseInput(databaseInStr.begin(), databaseInStr.end());
+					string uidInStr(uidIn);
+					wstring wUidInput(uidInStr.begin(), uidInStr.end());
+					string pwdInStr(pwdIn);
+					wstring wPwdInput(pwdInStr.begin(), pwdInStr.end());
+					wstring connStr = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};SERVER=" + wServerInput + L";PORT=" + wPortInput + L";DATABASE=" +
+						wDatabaseInput + L";UID=" + wUidInput + L";PWD=" + wPwdInput + L";";
+
+					retSQL = SQLDriverConnect(dbconSQL, NULL, (SQLWCHAR*)connStr.c_str(), SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
+
+					if (SQL_SUCCEEDED(retSQL))
 					{
-						serverIn += static_cast<char>(textEntered->unicode);
-						serverInput.setString(serverIn);
+						cout << "Connected" << endl;
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+						SQLFreeHandle(SQL_HANDLE_DBC, dbconSQL);
+						SQLFreeHandle(SQL_HANDLE_ENV, envSQL);
+
+						loginwindow.close();
 					}
 
-					if (clickPort)
+					else
 					{
-						portIn += static_cast<char>(textEntered->unicode);
-						portInput.setString(portIn);
+						cerr << "Connection failed" << endl;
+
+						serverIn[0] = '\0';
+						serverInStr = "";
+						portIn[0] = '\0';
+						portInStr = "";
+						databaseIn[0] = '\0';
+						databaseInStr = "";
+						uidIn[0] = '\0';
+						uidInStr = "";
+						pwdIn[0] = '\0';
+						pwdInStr = "";
 					}
 
-					if (clickDatabase)
-					{
-						databaseIn += static_cast<char>(textEntered->unicode);
-						databaseInput.setString(databaseIn);
-					}
-
-					if (clickUid)
-					{
-						uidIn += static_cast<char>(textEntered->unicode);
-						uidInput.setString(uidIn);
-					}
-
-					if (clickPwd)
-					{
-						pwdIn += static_cast<char>(textEntered->unicode);
-						pwdInput.setString(pwdIn);
-					}
-				}
-
-				if (textEntered->unicode == 8)
-				{
-					if (clickServer)
-					{
-						if (serverIn != "")
-						{
-							serverIn.pop_back();
-							serverInput.setString(serverIn);
-						}
-					}
-
-					if (clickPort)
-					{
-						if (portIn != "")
-						{
-							portIn.pop_back();
-							portInput.setString(portIn);
-						}
-					}
-
-					if (clickDatabase)
-					{
-						if (databaseIn != "")
-						{
-							databaseIn.pop_back();
-							databaseInput.setString(databaseIn);
-						}
-					}
-
-					if (clickUid)
-					{
-						if (uidIn != "")
-						{
-							uidIn.pop_back();
-							uidInput.setString(uidIn);
-						}
-					}
-
-					if (clickPwd)
-					{
-						if (pwdIn != "")
-						{
-							pwdIn.pop_back();
-							pwdInput.setString(pwdIn);
-						}
-					}
+					loginClock.restart();
 				}
 			}
-		}
-
-		if (winLogDetector.isOn(loginBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			if (loginClock.getElapsedTime().asSeconds() >= 0.3)
-			{
-				wstring wServerInput(serverIn.begin(), serverIn.end());
-				wstring wPortInput(portIn.begin(), portIn.end());
-				wstring wDatabaseInput(databaseIn.begin(), databaseIn.end());
-				wstring wUidInput(uidIn.begin(), uidIn.end());
-				wstring wPwdInput(pwdIn.begin(), pwdIn.end());
-				wstring connStr = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};SERVER=" + wServerInput + L";PORT=" + wPortInput + L";DATABASE=" + 
-								  wDatabaseInput + L";UID=" + wUidInput + L";PWD=" + wPwdInput + L";";
-
-				retSQL = SQLDriverConnect(dbconSQL, NULL, (SQLWCHAR*)connStr.c_str(), SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
-
-				if (SQL_SUCCEEDED(retSQL))
-				{
-					cout << "Connected" << endl;
-
-					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-					SQLFreeHandle(SQL_HANDLE_DBC, dbconSQL);
-					SQLFreeHandle(SQL_HANDLE_ENV, envSQL);
-
-					loginwindow.close();
-				}
-
-				else
-				{
-					cerr << "Connection failed" << endl;
-
-					serverIn = "";
-					serverInput.setString(serverIn);
-					portIn = "";
-					portInput.setString(portIn);
-					databaseIn = "";
-					databaseInput.setString(databaseIn);
-					uidIn = "";
-					uidInput.setString(uidIn);
-					pwdIn = "";
-					pwdInput.setString(pwdIn);
-				}
-
-				loginClock.restart();
-			}
-		}
-
-		if (winLogDetector.isOn(serverBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickServer = true;
-			clickPort = false;
-			clickDatabase = false;
-			clickUid = false;
-			clickPwd = false;
-
-			serverIn = "localhost";
-			serverInput.setString(serverIn);
-		}
-
-		if (winLogDetector.isOn(portBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickServer = false;
-			clickPort = true;
-			clickDatabase = false;
-			clickUid = false;
-			clickPwd = false;
-
-			portIn = "3306";
-			portInput.setString(portIn);
-		}
-
-		if (winLogDetector.isOn(databaseBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickServer = false;
-			clickPort = false;
-			clickDatabase = true;
-			clickUid = false;
-			clickPwd = false;
-
-			databaseIn = "test_db";
-			databaseInput.setString(databaseIn);
-		}
-
-		if (winLogDetector.isOn(uidBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickServer = false;
-			clickPort = false;
-			clickDatabase = false;
-			clickUid = true;
-			clickPwd = false;
-
-			uidIn = "root";
-			uidInput.setString(uidIn);
-		}
-
-		if (winLogDetector.isOn(pwdBox, loginwindow) && Mouse::isButtonPressed(Mouse::Button::Left))
-		{
-			clickServer = false;
-			clickPort = false;
-			clickDatabase = false;
-			clickUid = false;
-			clickPwd = true;
-
-			pwdIn = "Capacity16!?";
-			pwdInput.setString(pwdIn);
 		}
 
 		loginwindow.clear();
 		loginwindow.draw(loginBackground);
-		loginwindow.draw(serverBox);
-		loginwindow.draw(serverInput);
-		loginwindow.draw(portBox);
-		loginwindow.draw(portInput);
-		loginwindow.draw(databaseBox);
-		loginwindow.draw(databaseInput);
-		loginwindow.draw(uidBox);
-		loginwindow.draw(uidInput);
-		loginwindow.draw(pwdBox);
-		loginwindow.draw(pwdInput);
 		loginwindow.draw(loginBox);
+		ImGui::SFML::Render(loginwindow);
 		loginwindow.display();
 	}
 
@@ -399,7 +307,7 @@ int main()
 	}
 
 	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-	
+
 	if (!itemTable)
 	{
 		SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -415,9 +323,10 @@ int main()
 			L")";
 
 		retSQL = SQLExecDirect(handleSQL, (SQLWCHAR*)createQuery, SQL_NTS);
-	
+
 		SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 	}
+
 	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'aisle'", SQL_NTS);
 	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
@@ -427,7 +336,7 @@ int main()
 			aisleTable = true;
 		}
 	}
-	
+
 	if (!aisleTable)
 	{
 		SQLHSTMT hCreateStmt;
@@ -528,8 +437,6 @@ int main()
 
 		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
 	}
-
-	
 
 /*----------------------------------------------------------------------------------------------------------------------------------------------- 
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -677,10 +584,6 @@ int main()
 	modifyButton.setOrigin({ 24,8 });
 	modifyButton.setPosition({0,0});
 	modifyButton.setColor(Color::Transparent);
-
-	const auto arrowCursor = Cursor::createFromSystem(Cursor::Type::Arrow).value();
-	const auto handCursor = Cursor::createFromSystem(Cursor::Type::Hand).value();
-	const auto textCursor = Cursor::createFromSystem(Cursor::Type::Text).value();
 
 	MouseDetector mouseDetector;
 	Clock clock;
@@ -985,6 +888,39 @@ int main()
 						t6Input.setString(t6In);
 					}
 				}
+
+				if (textEntered->unicode == 32)
+				{
+					if (clickT1)
+					{
+						t1In += " ";
+					}
+
+					if (clickT2)
+					{
+						t2In += " ";
+					}
+
+					if (clickT3)
+					{
+						t3In += " ";
+					}
+
+					if (clickT4)
+					{
+						t4In += " ";
+					}
+
+					if (clickT5)
+					{
+						t5In += " ";
+					}
+
+					if (clickT6)
+					{
+						t6In += " ";
+					}
+				}
 			}
 		}
 
@@ -1055,6 +991,9 @@ int main()
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(Color::White);
+
+				modifyButton.setPosition({ 0,0 });
+				modifyButton.setColor(Color::Transparent);
 			}
 		}
 
@@ -1593,6 +1532,9 @@ int main()
 
 				submitButton.setPosition({ 210,220 });
 				submitButton.setColor(Color::White);
+
+				modifyButton.setPosition({ 0,0 });
+				modifyButton.setColor(Color::Transparent);
 			}
 		}
 
@@ -1893,7 +1835,7 @@ int main()
 								modifyButton.setPosition({ 0,0 });
 
 								submitButton.setColor(Color::White);
-								submitButton.setPosition({ 210,400 });
+								submitButton.setPosition({ 210,220 });
 
 								t1In = "";
 								t1Input.setString(t1In);
@@ -1992,6 +1934,9 @@ int main()
 
 				submitButton.setPosition({ 210,250 });
 				submitButton.setColor(Color::White);
+
+				modifyButton.setPosition({ 0,0 });
+				modifyButton.setColor(Color::Transparent);
 			}
 		}
 
@@ -2430,6 +2375,9 @@ int main()
 
 				submitButton.setPosition({ 210,300 });
 				submitButton.setColor(Color::White);
+
+				modifyButton.setPosition({ 0,0 });
+				modifyButton.setColor(Color::Transparent);
 			}
 		}
 
@@ -2777,11 +2725,11 @@ int main()
 							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_name.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_supplier_id.c_str(), 0, NULL);
 
-							SQLRETURN ret = SQLExecute(handleSQL);
+							retSQL = SQLExecute(handleSQL);
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							if (SQL_SUCCEEDED(ret))
+							if (SQL_SUCCEEDED(retSQL))
 							{
 								cout << "Item updated successfully!" << endl;
 
@@ -2905,6 +2853,9 @@ int main()
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(Color::White);
+
+				modifyButton.setPosition({ 0,0 });
+				modifyButton.setColor(Color::Transparent);
 			}
 		}
 
@@ -3323,11 +3274,11 @@ int main()
 							SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_transaction_idW.c_str(), 0, NULL);
 
 
-							SQLRETURN ret = SQLExecute(handleSQL);
+							retSQL = SQLExecute(handleSQL);
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							if (SQL_SUCCEEDED(ret))
+							if (SQL_SUCCEEDED(retSQL))
 							{
 								cout << "Item updated successfully!" << endl;
 
@@ -3410,11 +3361,6 @@ int main()
 
 		window.clear();
 		window.draw(background);
-		/*window.draw(itemHeaderBox);
-		window.draw(aisleHeaderBox);
-		window.draw(sectionHeaderBox);
-		window.draw(supplierHeaderBox);
-		window.draw(transactionHeaderBox);*/
 		window.draw(textBox1);
 		window.draw(t1Input);
 		window.draw(textBox2);
