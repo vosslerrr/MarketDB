@@ -119,11 +119,11 @@ int main()
 	MouseDetector winLogDetector;
 	Clock loginClock;
 
-	char serverIn[128] = "";
-	char portIn[128] = "";
-	char databaseIn[128] = "";
-	char uidIn[128] = "";
-	char pwdIn[128] = "";
+	char serverIn[128] = "localhost";
+	char portIn[128] = "3306";
+	char databaseIn[128] = "test_db";
+	char uidIn[128] = "root";
+	char pwdIn[128] = "Capacity16!?";
 
 	const auto arrowCursor = Cursor::createFromSystem(Cursor::Type::Arrow).value();
 	const auto handCursor = Cursor::createFromSystem(Cursor::Type::Hand).value();
@@ -446,6 +446,10 @@ int main()
 	window.setFramerateLimit(60);
 
 	ImGui::SFML::Init(window);
+	ImGuiIO& io2 = ImGui::GetIO();
+	io2.ConfigInputTextCursorBlink = false;
+	io2.KeyRepeatDelay = 100.f;
+	io2.KeyRepeatRate = 15.f;
 
 	Texture backgroundTexture;
 	backgroundTexture.loadFromFile("background.png");
@@ -499,72 +503,30 @@ int main()
 	transactionHeaderBox.setOutlineColor(Color::Blue);
 	transactionHeaderBox.setFillColor(Color::Transparent);
 
-	string t1In;
-	Text t1Input(font);
-	t1Input.setCharacterSize(20);
-	t1Input.setFillColor(Color::Black);
-	t1Input.setOrigin({ t1Input.getGlobalBounds().getCenter().x, t1Input.getGlobalBounds().getCenter().y });
-	t1Input.setPosition({ 206,95 });
-
 	RectangleShape textBox1({ 150,22 });
 	textBox1.setOrigin({ textBox1.getGeometricCenter().x, textBox1.getGeometricCenter().y });
 	textBox1.setPosition({ 0, 0 });
 	textBox1.setFillColor(Color::Transparent);
-
-	string t2In;
-	Text t2Input(font);
-	t2Input.setCharacterSize(20);
-	t2Input.setFillColor(Color::Black);
-	t2Input.setOrigin({ t2Input.getGlobalBounds().getCenter().x, t2Input.getGlobalBounds().getCenter().y });
-	t2Input.setPosition({ 206,143 });
 
 	RectangleShape textBox2({ 150,22 });
 	textBox2.setOrigin({ textBox2.getGeometricCenter().x, textBox2.getGeometricCenter().y });
 	textBox2.setPosition({ 0,0 });
 	textBox2.setFillColor(Color::Transparent);
 
-	string t3In;
-	Text t3Input(font);
-	t3Input.setCharacterSize(20);
-	t3Input.setFillColor(Color::Black);
-	t3Input.setOrigin({ t3Input.getGlobalBounds().getCenter().x, t3Input.getGlobalBounds().getCenter().y });
-	t3Input.setPosition({ 206,191 });
-
 	RectangleShape textBox3({ 150,22 });
 	textBox3.setOrigin({ textBox3.getGeometricCenter().x, textBox3.getGeometricCenter().y });
 	textBox3.setPosition({ 0,0 });
 	textBox3.setFillColor(Color::Transparent);
-
-	string t4In;
-	Text t4Input(font);
-	t4Input.setCharacterSize(20);
-	t4Input.setFillColor(Color::Black);
-	t4Input.setOrigin({ t4Input.getGlobalBounds().getCenter().x, t4Input.getGlobalBounds().getCenter().y });
-	t4Input.setPosition({ 206,239 });
 
 	RectangleShape textBox4({ 150,22 });
 	textBox4.setOrigin({ textBox4.getGeometricCenter().x, textBox4.getGeometricCenter().y });
 	textBox4.setPosition({ 0,0 });
 	textBox4.setFillColor(Color::Transparent);
 
-	string t5In;
-	Text t5Input(font);
-	t5Input.setCharacterSize(20);
-	t5Input.setFillColor(Color::Black);
-	t5Input.setOrigin({ t5Input.getGlobalBounds().getCenter().x, t5Input.getGlobalBounds().getCenter().y });
-	t5Input.setPosition({ 206,287 });
-
 	RectangleShape textBox5({ 150,22 });
 	textBox5.setOrigin({ textBox5.getGeometricCenter().x, textBox5.getGeometricCenter().y });
 	textBox5.setPosition({ 0,0 });
 	textBox5.setFillColor(Color::Transparent);
-
-	string t6In;
-	Text t6Input(font);
-	t6Input.setCharacterSize(20);
-	t6Input.setFillColor(Color::Black);
-	t6Input.setOrigin({ t6Input.getGlobalBounds().getCenter().x, t6Input.getGlobalBounds().getCenter().y });
-	t6Input.setPosition({ 206,335 });
 
 	RectangleShape textBox6({ 150,22 });
 	textBox6.setOrigin({ textBox6.getGeometricCenter().x, textBox6.getGeometricCenter().y });
@@ -587,12 +549,6 @@ int main()
 
 	MouseDetector mouseDetector;
 	Clock clock;
-	bool clickT1 = false;
-	bool clickT2 = false;
-	bool clickT3 = false;
-	bool clickT4 = false;
-	bool clickT5 = false;
-	bool clickT6 = false;
 	bool notNull = true;
 	bool valNums = true;
 	bool clickItem = false;
@@ -793,6 +749,13 @@ int main()
 
 	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
+	char t1In[128] = "";
+	char t2In[128] = "";
+	char t3In[128] = "";
+	char t4In[128] = "";
+	char t5In[128] = "";
+	char t6In[128] = "";
+
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -808,120 +771,6 @@ int main()
 				SQLDisconnect(dbconSQL);
 				window.close();
 			}
-
-			if (const auto* textEntered = event->getIf<Event::TextEntered>())
-			{
-				if (textEntered->unicode > 32 && textEntered->unicode < 127)
-				{
-					if (clickT1)
-					{
-						t1In += static_cast<char>(textEntered->unicode);
-						t1Input.setString(t1In);
-					}
-
-					if (clickT2)
-					{
-						t2In += static_cast<char>(textEntered->unicode);
-						t2Input.setString(t2In);
-					}
-
-					if (clickT3)
-					{
-						t3In += static_cast<char>(textEntered->unicode);
-						t3Input.setString(t3In);
-					}
-
-					if (clickT4)
-					{
-						t4In += static_cast<char>(textEntered->unicode);
-						t4Input.setString(t4In);
-					}
-
-					if (clickT5)
-					{
-						t5In += static_cast<char>(textEntered->unicode);
-						t5Input.setString(t5In);
-					}
-
-					if (clickT6)
-					{
-						t6In += static_cast<char>(textEntered->unicode);
-						t6Input.setString(t6In);
-					}
-				}
-
-				if (textEntered->unicode == 8)
-				{
-					if (clickT1 && t1In != "")
-					{
-						t1In.pop_back();
-						t1Input.setString(t1In);
-					}
-
-					if (clickT2 && t2In != "")
-					{
-						t2In.pop_back();
-						t2Input.setString(t2In);
-					}
-
-					if (clickT3 && t3In != "")
-					{
-						t3In.pop_back();
-						t3Input.setString(t3In);
-					}
-
-					if (clickT4 && t4In != "")
-					{
-						t4In.pop_back();
-						t4Input.setString(t4In);
-					}
-
-					if (clickT5 && t5In != "")
-					{
-						t5In.pop_back();
-						t5Input.setString(t5In);
-					}
-
-					if (clickT6 && t6In != "")
-					{
-						t6In.pop_back();
-						t6Input.setString(t6In);
-					}
-				}
-
-				if (textEntered->unicode == 32)
-				{
-					if (clickT1)
-					{
-						t1In += " ";
-					}
-
-					if (clickT2)
-					{
-						t2In += " ";
-					}
-
-					if (clickT3)
-					{
-						t3In += " ";
-					}
-
-					if (clickT4)
-					{
-						t4In += " ";
-					}
-
-					if (clickT5)
-					{
-						t5In += " ";
-					}
-
-					if (clickT6)
-					{
-						t6In += " ";
-					}
-				}
-			}
 		}
 
 		ImGui::SFML::Update(window, clock.getElapsedTime());
@@ -932,62 +781,20 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (!clickItem)
-				{
-					t1In = "";
-					t2In = "";
-					t3In = "";
-					t4In = "";
-					t5In = "";
-					t6In = "";
-
-					t1Input.setString(t1In);
-					t2Input.setString(t2In);
-					t3Input.setString(t3In);
-					t4Input.setString(t4In);
-					t5Input.setString(t5In);
-					t6Input.setString(t6In);
-				}
-
 				clickItem = true;
 				clickAisle = false;
 				clickSection = false;
 				clickSupplier = false;
 				clickTransaction = false;
 
-				clickT1 = false;
-				clickT2 = false;
-				clickT3 = false;
-				clickT4 = false;
-				clickT5 = false;
-				clickT6 = false;
-
 				background.setTexture(itemBackgroundTexture);
-
-				textBox1.setPosition({ 280, 110 });
-				textBox1.setFillColor(Color::White);
-
+				
+				textBox1.setPosition({280, 110});
 				textBox2.setPosition({ 280, 158 });
-				textBox2.setFillColor(Color::White);
-
-				textBox3.setPosition({ 280, 206 });
-				textBox3.setFillColor(Color::White);
-
+				textBox3.setPosition({ 280, 206 });				
 				textBox4.setPosition({ 280, 254 });
-				textBox4.setFillColor(Color::White);
-
 				textBox5.setPosition({ 280, 302 });
-				textBox5.setFillColor(Color::White);
-
 				textBox6.setPosition({ 280, 350 });
-				textBox6.setFillColor(Color::White);
-
-				t1Input.setPosition({ 206,95 });
-				t2Input.setPosition({ 206,143 });
-				t3Input.setPosition({ 206,191 });
-				t4Input.setPosition({ 206,239 });
-				t5Input.setPosition({ 206,287 });
-				t6Input.setPosition({ 206,335 });
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(Color::White);
@@ -999,6 +806,114 @@ int main()
 
 		if (clickItem)
 		{
+			//t1 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 88));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt1InputWindow", nullptr, ImGuiWindowFlags_NoResize
+														| ImGuiWindowFlags_NoMove
+														| ImGuiWindowFlags_NoCollapse
+														| ImGuiWindowFlags_NoBackground
+														| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt1Input", t1In, sizeof(t1In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+			
+			//t2 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 136));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt2InputWindow", nullptr, ImGuiWindowFlags_NoResize
+														| ImGuiWindowFlags_NoMove
+														| ImGuiWindowFlags_NoCollapse
+														| ImGuiWindowFlags_NoBackground
+														| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt2Input", t2In, sizeof(t2In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t3 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 184));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt3InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt3Input", t3In, sizeof(t3In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t4 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 232));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt4InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt4Input", t4In, sizeof(t4In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t5 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 280));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt5InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt5Input", t5In, sizeof(t5In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t6 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(197, 328));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##itemt6InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##itemt6Input", t6In, sizeof(t6In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+			
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -1114,19 +1029,15 @@ int main()
 
 							original_item_id1 = items[selectedRow].item_id1;
 
-							t1In = items[selectedRow].item_id1;
-							t2In = items[selectedRow].item_name1;
-							t3In = to_string(items[selectedRow].aisle_no1);
-							t4In = items[selectedRow].section_id1;
-							t5In = to_string(items[selectedRow].item_price1);
-							t6In = to_string(items[selectedRow].no_of_items1);
-
-							t1Input.setString(t1In);
-							t2Input.setString(t2In);
-							t3Input.setString(t3In);
-							t4Input.setString(t4In);
-							t5Input.setString(t5In);
-							t6Input.setString(t6In);
+							strncpy_s(t1In, items[selectedRow].item_id1.c_str(), sizeof(t1In) - 1);
+							t1In[sizeof(t1In) - 1] = '\0';
+							strncpy_s(t2In, items[selectedRow].item_name1.c_str(), sizeof(t2In) - 1);
+							t2In[sizeof(t2In) - 1] = '\0';
+							snprintf(t3In, sizeof(t3In), "%d", items[selectedRow].aisle_no1);
+							strncpy_s(t4In, items[selectedRow].section_id1.c_str(), sizeof(t4In) - 1);
+							t4In[sizeof(t4In) - 1] = '\0';
+							snprintf(t5In, sizeof(t5In), "%.2f", items[selectedRow].item_price1);
+							snprintf(t6In, sizeof(t6In), "%d", items[selectedRow].no_of_items1);
 						}
 					}
 				}
@@ -1140,107 +1051,12 @@ int main()
 
 		if (clickItem)
 		{
-			if (mouseDetector.isOn(textBox1, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = true;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t1Input.setString(t1In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox2, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = true;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t2Input.setString(t2In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox3, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = true;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t3Input.setString(t3In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox4, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = true;
-					clickT5 = false;
-					clickT6 = false;
-
-					t4Input.setString(t4In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox5, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = true;
-					clickT6 = false;
-
-					t5Input.setString(t5In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox6, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = true;
-
-					t6Input.setString(t6In);
-				}
-			}
+			if (mouseDetector.isOn(textBox1, window) 
+			 || mouseDetector.isOn(textBox2, window) 
+			 || mouseDetector.isOn(textBox3, window) 
+			 || mouseDetector.isOn(textBox4, window) 
+			 || mouseDetector.isOn(textBox5, window) 
+			 || mouseDetector.isOn(textBox6, window)){window.setMouseCursor(textCursor);}
 
 			if (mouseDetector.isOn(submitButton, window))
 			{
@@ -1250,7 +1066,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty() || t5In.empty() || t6In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0' || t5In[0] == '\0' || t6In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -1258,9 +1074,9 @@ int main()
 
 						try
 						{
-							stoi(t3In);
-							stod(t5In);
-							stoi(t6In);
+							atoi(t3In);
+							atof(t5In);
+							atoi(t6In);
 						}
 						catch (const exception& e)
 						{
@@ -1272,12 +1088,15 @@ int main()
 						{
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							wstring item_id(t1In.begin(), t1In.end());
-							wstring item_name(t2In.begin(), t2In.end());
-							int aisle_no = stoi(t3In);
-							wstring section_id(t4In.begin(), t4In.end());
-							float item_price = stod(t5In);
-							int no_of_items = stoi(t6In);
+							string item_idStr(t1In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							string item_nameStr(t2In);
+							wstring item_name(item_nameStr.begin(), item_nameStr.end());
+							int aisle_no = atoi(t3In);
+							string section_idStr(t4In);
+							wstring section_id(section_idStr.begin(), section_idStr.end());
+							float item_price = atof(t5In);
+							int no_of_items = atoi(t6In);
 
 							wstring insertQuery = L"INSERT INTO item (item_id, item_name, aisle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
 
@@ -1298,18 +1117,12 @@ int main()
 							{
 								cout << "Insert successful!" << endl;
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
-								t5In = "";
-								t5Input.setString(t5In);
-								t6In = "";
-								t6Input.setString(t6In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
+								t5In[0] = '\0';
+								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1364,7 +1177,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty() || t5In.empty() || t6In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0' || t5In[0] == '\0' || t6In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -1372,9 +1185,9 @@ int main()
 
 						try
 						{
-							stoi(t3In);
-							stod(t5In);
-							stoi(t6In);
+							atoi(t3In);
+							atof(t5In);
+							atoi(t6In);
 						}
 						catch (const exception& e)
 						{
@@ -1387,12 +1200,15 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							wstring original_item_idW(original_item_id1.begin(), original_item_id1.end());
-							wstring item_id(t1In.begin(), t1In.end());
-							wstring item_name(t2In.begin(), t2In.end());
-							int aisle_no = stoi(t3In);
-							wstring section_id(t4In.begin(), t4In.end());
-							float item_price = stod(t5In);
-							int no_of_items = stoi(t6In);
+							string item_idStr(t1In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							string item_nameStr(t2In);
+							wstring item_name(item_nameStr.begin(), item_nameStr.end());
+							int aisle_no = atoi(t3In);
+							string section_idStr(t4In);
+							wstring section_id(section_idStr.begin(), section_idStr.end());
+							float item_price = atof(t5In);
+							int no_of_items = atoi(t6In);
 
 							wstring updateQuery = L"UPDATE item SET item_id = ?, item_name = ?, aisle_no = ?, section_id = ?, item_price = ?, no_of_items = ? WHERE item_id = ?";
 
@@ -1420,18 +1236,12 @@ int main()
 								submitButton.setColor(Color::White);
 								submitButton.setPosition({ 210,400 });
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
-								t5In = "";
-								t5Input.setString(t5In);
-								t6In = "";
-								t6Input.setString(t6In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
+								t5In[0] = '\0';
+								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1484,51 +1294,16 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (!clickAisle)
-				{
-					t1In = "";
-					t2In = "";
-					t3In = "";
-					t4In = "";
-					t5In = "";
-					t6In = "";
-
-					t1Input.setString(t1In);
-					t2Input.setString(t2In);
-					t3Input.setString(t3In);
-					t4Input.setString(t4In);
-					t5Input.setString(t5In);
-					t6Input.setString(t6In);
-				}
-
 				clickItem = false;
 				clickAisle = true;
 				clickSection = false;
 				clickSupplier = false;
 				clickTransaction = false;
 
-				clickT1 = false;
-				clickT2 = false;
-				clickT3 = false;
-				clickT4 = false;
-				clickT5 = false;
-				clickT6 = false;
-
 				background.setTexture(aisleBackgroundTexture);
 
 				textBox1.setPosition({ 310, 110 });
-				textBox1.setFillColor(Color::White);
-
 				textBox2.setPosition({ 310, 158 });
-				textBox2.setFillColor(Color::White);
-
-				t1Input.setPosition({ 236,95 });
-				t2Input.setPosition({ 236,143 });
-
-				textBox3.setFillColor(Color::Transparent);
-				textBox4.setFillColor(Color::Transparent);
-				textBox5.setFillColor(Color::Transparent);
-				textBox6.setFillColor(Color::Transparent);
 
 				submitButton.setPosition({ 210,220 });
 				submitButton.setColor(Color::White);
@@ -1540,6 +1315,42 @@ int main()
 
 		if (clickAisle)
 		{
+			//t1 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 88));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 50)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##aislet1InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##aislet1Input", t1In, sizeof(t1In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t2 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 136));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##aislet2InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##aislet2Input", t2In, sizeof(t2In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+			
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -1643,11 +1454,8 @@ int main()
 
 							original_aisle_no2 = aisles[selectedRow].aisle_no2;
 
-							t1In = to_string(aisles[selectedRow].aisle_no2);
-							t2In = to_string(aisles[selectedRow].no_of_sections2);
-
-							t1Input.setString(t1In);
-							t2Input.setString(t2In);
+							snprintf(t1In, sizeof(t2In), "%d", aisles[selectedRow].aisle_no2);
+							snprintf(t2In, sizeof(t2In), "%d", aisles[selectedRow].no_of_sections2);
 						}
 					}
 				}
@@ -1661,39 +1469,7 @@ int main()
 
 		if (clickAisle)
 		{
-			if (mouseDetector.isOn(textBox1, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = true;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t1Input.setString(t1In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox2, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = true;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t2Input.setString(t2In);
-				}
-			}
+			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window)) {window.setMouseCursor(textCursor);}
 
 			if (mouseDetector.isOn(submitButton, window))
 			{
@@ -1703,7 +1479,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -1711,8 +1487,8 @@ int main()
 
 						try
 						{
-							stoi(t1In);
-							stoi(t2In);
+							atoi(t1In);
+							atoi(t2In);
 						}
 						catch (const exception& e)
 						{
@@ -1724,8 +1500,8 @@ int main()
 						{
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							int aisle_no = stoi(t1In);
-							int no_of_sections = stoi(t2In);
+							int aisle_no = atoi(t1In);
+							int no_of_sections = atoi(t2In);
 
 							wstring insertQuery = L"INSERT INTO aisle (aisle_no, no_of_sections) VALUES (?,?)";
 
@@ -1742,10 +1518,8 @@ int main()
 							{
 								cout << "Insert successful!" << endl;
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1790,7 +1564,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -1798,8 +1572,8 @@ int main()
 
 						try
 						{
-							stoi(t1In);
-							stoi(t2In);
+							atoi(t1In);
+							atoi(t2In);
 						}
 						catch (const exception& e)
 						{
@@ -1812,8 +1586,8 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							int original_aisle_no = original_aisle_no2;
-							int aisle_no = stoi(t1In);
-							int no_of_sections = stoi(t2In);
+							int aisle_no = atoi(t1In);
+							int no_of_sections = atoi(t2In);
 
 							wstring updateQuery = L"UPDATE aisle SET aisle_no = ?, no_of_sections = ? WHERE aisle_no = ?";
 
@@ -1837,10 +1611,8 @@ int main()
 								submitButton.setColor(Color::White);
 								submitButton.setPosition({ 210,220 });
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1883,54 +1655,17 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (!clickSection)
-				{
-					t1In = "";
-					t2In = "";
-					t3In = "";
-					t4In = "";
-					t5In = "";
-					t6In = "";
-
-					t1Input.setString(t1In);
-					t2Input.setString(t2In);
-					t3Input.setString(t3In);
-					t4Input.setString(t4In);
-					t5Input.setString(t5In);
-					t6Input.setString(t6In);
-				}
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = true;
 				clickSupplier = false;
 				clickTransaction = false;
 
-				clickT1 = false;
-				clickT2 = false;
-				clickT3 = false;
-				clickT4 = false;
-				clickT5 = false;
-				clickT6 = false;
-
 				background.setTexture(sectionBackgroundTexture);
 
-				textBox1.setPosition({ 310, 110 });
-				textBox1.setFillColor(Color::White);
-
-				textBox2.setPosition({ 310, 158 });
-				textBox2.setFillColor(Color::White);
-
-				textBox3.setPosition({ 310, 206 });
-				textBox3.setFillColor(Color::White);
-
-				t1Input.setPosition({ 236,95 });
-				t2Input.setPosition({ 236,143 });
-				t3Input.setPosition({ 236,191 });
-
-				textBox4.setFillColor(Color::Transparent);
-				textBox5.setFillColor(Color::Transparent);
-				textBox6.setFillColor(Color::Transparent);
+				textBox1.setPosition({ 300, 110 });
+				textBox2.setPosition({ 300, 158 });
+				textBox3.setPosition({ 300, 206 });
 
 				submitButton.setPosition({ 210,250 });
 				submitButton.setColor(Color::White);
@@ -1942,6 +1677,60 @@ int main()
 
 		if (clickSection)
 		{
+			//t1 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(217, 88));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##sectiont1InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##sectiont1Input", t1In, sizeof(t1In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t2 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(217, 136));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##sectiont2InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##sectiont2Input", t2In, sizeof(t2In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t3 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(217, 184));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##sectiont3InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##sectiont3Input", t3In, sizeof(t3In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -2048,13 +1837,11 @@ int main()
 
 							original_section_id3 = sections[selectedRow].section_id3;
 
-							t1In = sections[selectedRow].section_id3;
-							t2In = sections[selectedRow].section_name3;
-							t3In = to_string(sections[selectedRow].aisle_no3);
-
-							t1Input.setString(t1In);
-							t2Input.setString(t2In);
-							t3Input.setString(t3In);
+							strncpy_s(t1In, sections[selectedRow].section_id3.c_str(), sizeof(t1In) - 1);
+							t1In[sizeof(t1In) - 1] = '\0';
+							strncpy_s(t2In, sections[selectedRow].section_name3.c_str(), sizeof(t2In) - 1);
+							t2In[sizeof(t2In) - 1] = '\0';
+							snprintf(t3In, sizeof(t3In), "%d", sections[selectedRow].aisle_no3);
 						}
 					}
 				}
@@ -2068,56 +1855,7 @@ int main()
 
 		if (clickSection)
 		{
-			if (mouseDetector.isOn(textBox1, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = true;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t1Input.setString(t1In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox2, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = true;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t2Input.setString(t2In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox3, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = true;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t3Input.setString(t3In);
-				}
-			}
+			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window) || mouseDetector.isOn(textBox3, window)){window.setMouseCursor(textCursor);}
 
 			if (mouseDetector.isOn(submitButton, window))
 			{
@@ -2129,7 +1867,7 @@ int main()
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
 
-						if (t1In.empty() || t2In.empty() || t3In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -2137,7 +1875,7 @@ int main()
 
 						try
 						{
-							stoi(t3In);
+							atoi(t3In);
 						}
 						catch (const exception& e)
 						{
@@ -2149,9 +1887,11 @@ int main()
 						{
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							wstring section_id(t1In.begin(), t1In.end());
-							wstring section_name(t2In.begin(), t2In.end());
-							int aisle_no = stoi(t3In);
+							string section_idStr(t1In);
+							wstring section_id(section_idStr.begin(), section_idStr.end());
+							string section_nameStr(t2In);
+							wstring section_name(section_nameStr.begin(), section_nameStr.end());
+							int aisle_no = atoi(t3In);
 
 							wstring insertQuery = L"INSERT INTO section (section_id, section_name, aisle_no) VALUES (?,?,?)";
 
@@ -2169,12 +1909,9 @@ int main()
 							{
 								cout << "Insert successful!" << endl;
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2222,7 +1959,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -2230,7 +1967,7 @@ int main()
 
 						try
 						{
-							stoi(t3In);
+							atoi(t3In);
 						}
 						catch (const exception& e)
 						{
@@ -2243,9 +1980,11 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							wstring original_section_id(original_section_id3.begin(), original_section_id3.end());
-							wstring section_id(t1In.begin(), t1In.end());
-							wstring section_name(t2In.begin(), t2In.end());
-							int aisle_no = stoi(t3In);
+							string section_idStr(t1In);
+							wstring section_id(section_idStr.begin(), section_idStr.end());
+							string section_nameStr(t2In);
+							wstring section_name(section_nameStr.begin(), section_nameStr.end());
+							int aisle_no = atoi(t3In);;
 
 							wstring updateQuery = L"UPDATE section SET section_id = ?, section_name = ?, aisle_no = ? WHERE section_id = ?";
 
@@ -2270,12 +2009,9 @@ int main()
 								submitButton.setColor(Color::White);
 								submitButton.setPosition({ 210,250 });
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2321,57 +2057,18 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (!clickSupplier)
-				{
-					t1In = "";
-					t2In = "";
-					t3In = "";
-					t4In = "";
-					t5In = "";
-					t6In = "";
-
-					t1Input.setString(t1In);
-					t2Input.setString(t2In);
-					t3Input.setString(t3In);
-					t4Input.setString(t4In);
-					t5Input.setString(t5In);
-					t6Input.setString(t6In);
-				}
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = false;
 				clickSupplier = true;
 				clickTransaction = false;
 
-				clickT1 = false;
-				clickT2 = false;
-				clickT3 = false;
-				clickT4 = false;
-				clickT5 = false;
-				clickT6 = false;
-
 				background.setTexture(supplierBackgroundTexture);
 
 				textBox1.setPosition({ 310, 110 });
-				textBox1.setFillColor(Color::White);
-
 				textBox2.setPosition({ 310, 158 });
-				textBox2.setFillColor(Color::White);
-
 				textBox3.setPosition({ 310, 206 });
-				textBox3.setFillColor(Color::White);
-
 				textBox4.setPosition({ 310, 254 });
-				textBox4.setFillColor(Color::White);
-
-				t1Input.setPosition({ 236,95 });
-				t2Input.setPosition({ 236,143 });
-				t3Input.setPosition({ 236,191 });
-				t4Input.setPosition({ 236,239 });
-
-				textBox5.setFillColor(Color::Transparent);
-				textBox6.setFillColor(Color::Transparent);
 
 				submitButton.setPosition({ 210,300 });
 				submitButton.setColor(Color::White);
@@ -2383,6 +2080,78 @@ int main()
 
 		if (clickSupplier)
 		{
+			//t1 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 88));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##suppliert1InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##suppliert1Input", t1In, sizeof(t1In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t2 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 136));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##suppliert2InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##suppliert2Input", t2In, sizeof(t2In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t3 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 184));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##suppliert3InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##suppliert3Input", t3In, sizeof(t3In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t4 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(227, 232));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##suppliert4InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##suppliert4Input", t4In, sizeof(t4In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -2492,15 +2261,13 @@ int main()
 
 							original_supplier_id4 = suppliers[selectedRow].supplier_id4;
 
-							t1In = suppliers[selectedRow].supplier_id4;
-							t2In = suppliers[selectedRow].item_id4;
-							t3In = to_string(suppliers[selectedRow].item_cost4);
-							t4In = suppliers[selectedRow].supplier_name4;
-
-							t1Input.setString(t1In);
-							t2Input.setString(t2In);
-							t3Input.setString(t3In);
-							t4Input.setString(t4In);
+							strncpy_s(t1In, suppliers[selectedRow].supplier_id4.c_str(), sizeof(t1In) - 1);
+							t1In[sizeof(t1In) - 1] = '\0';
+							strncpy_s(t2In, suppliers[selectedRow].item_id4.c_str(), sizeof(t2In) - 1);
+							t2In[sizeof(t2In) - 1] = '\0';
+							snprintf(t3In, sizeof(t3In), "%.2f", suppliers[selectedRow].item_cost4);
+							strncpy_s(t4In, suppliers[selectedRow].supplier_name4.c_str(), sizeof(t4In) - 1);
+							t4In[sizeof(t4In) - 1] = '\0';
 						}
 					}
 				}
@@ -2514,73 +2281,7 @@ int main()
 
 		if (clickSupplier)
 		{
-			if (mouseDetector.isOn(textBox1, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = true;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t1Input.setString(t1In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox2, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = true;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t2Input.setString(t2In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox3, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = true;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t3Input.setString(t3In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox4, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = true;
-					clickT5 = false;
-					clickT6 = false;
-
-					t4Input.setString(t4In);
-				}
-			}
+			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window)|| mouseDetector.isOn(textBox3, window) || mouseDetector.isOn(textBox4, window)){window.setMouseCursor(textCursor);}
 
 			if (mouseDetector.isOn(submitButton, window))
 			{
@@ -2590,7 +2291,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -2598,7 +2299,7 @@ int main()
 
 						try
 						{
-							stod(t3In);
+							atof(t3In);
 						}
 						catch (const exception& e)
 						{
@@ -2610,10 +2311,13 @@ int main()
 						{
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							wstring supplier_id(t1In.begin(), t1In.end());
-							wstring item_id(t2In.begin(), t2In.end());
-							float item_cost = stod(t3In);
-							wstring supplier_name(t4In.begin(), t4In.end());
+							string supplier_idStr(t1In);
+							wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
+							string item_idStr(t2In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							float item_cost = atof(t3In);
+							string supplier_nameStr(t4In);
+							wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
 
 							wstring insertQuery = L"INSERT INTO supplier (supplier_id, item_id, item_cost, supplier_name) VALUES (?,?,?,?)";
 
@@ -2632,14 +2336,10 @@ int main()
 							{
 								cout << "Insert successful!" << endl;
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2689,7 +2389,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -2697,7 +2397,7 @@ int main()
 
 						try
 						{
-							stod(t3In);
+							atof(t3In);
 						}
 						catch (const exception& e)
 						{
@@ -2710,10 +2410,13 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							wstring original_supplier_id(original_supplier_id4.begin(), original_supplier_id4.end());
-							wstring supplier_id(t1In.begin(), t1In.end());
-							wstring item_id(t2In.begin(), t2In.end());
-							float item_cost = stod(t3In);
-							wstring supplier_name(t4In.begin(), t4In.end());
+							string supplier_idStr(t1In);
+							wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
+							string item_idStr(t2In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							float item_cost = atof(t3In);
+							string supplier_nameStr(t4In);
+							wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
 
 							wstring updateQuery = L"UPDATE supplier SET supplier_id = ?, item_id = ?, item_cost = ?, supplier_name = ? WHERE supplier_id = ?";
 
@@ -2739,14 +2442,10 @@ int main()
 								submitButton.setColor(Color::White);
 								submitButton.setPosition({ 210,300 });
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2794,62 +2493,20 @@ int main()
 
 			if (Mouse::isButtonPressed(Mouse::Button::Left))
 			{
-				if (!clickTransaction)
-				{
-					t1In = "";
-					t2In = "";
-					t3In = "";
-					t4In = "";
-					t5In = "";
-					t6In = "YYYY-MM-DD";
-
-					t1Input.setString(t1In);
-					t2Input.setString(t2In);
-					t3Input.setString(t3In);
-					t4Input.setString(t4In);
-					t5Input.setString(t5In);
-					t6Input.setString(t6In);
-				}
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = false;
 				clickSupplier = false;
 				clickTransaction = true;
 
-				clickT1 = false;
-				clickT2 = false;
-				clickT3 = false;
-				clickT4 = false;
-				clickT5 = false;
-				clickT6 = false;
-
 				background.setTexture(transactionBackgroundTexture);
 
 				textBox1.setPosition({ 330, 110 });
-				textBox1.setFillColor(Color::White);
-
 				textBox2.setPosition({ 330, 158 });
-				textBox2.setFillColor(Color::White);
-
 				textBox3.setPosition({ 330, 206 });
-				textBox3.setFillColor(Color::White);
-
 				textBox4.setPosition({ 330, 254 });
-				textBox4.setFillColor(Color::White);
-
 				textBox5.setPosition({ 330, 302 });
-				textBox5.setFillColor(Color::White);
-
 				textBox6.setPosition({ 330, 350 });
-				textBox6.setFillColor(Color::White);
-
-				t1Input.setPosition({ 256,95 });
-				t2Input.setPosition({ 256,143 });
-				t3Input.setPosition({ 256,191 });
-				t4Input.setPosition({ 256,239 });
-				t5Input.setPosition({ 256,287 });
-				t6Input.setPosition({ 256,335 });
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(Color::White);
@@ -2861,6 +2518,114 @@ int main()
 
 		if (clickTransaction)
 		{
+			//t1 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 88));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont1InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont1Input", t1In, sizeof(t1In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t2 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 136));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont2InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont2Input", t2In, sizeof(t2In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t3 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 184));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont3InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont3Input", t3In, sizeof(t3In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t4 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 232));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont4InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont4Input", t4In, sizeof(t4In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t5 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 280));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont5InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont5Input", t5In, sizeof(t5In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
+			//t6 box
+			{
+				ImGui::SetNextWindowPos(ImVec2(247, 328));//x-offset:8	y-offset:+11
+				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(105.f / 255.f, 106.f / 255.f, 106.f / 255.f, 1.f));
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+				ImGui::PushFont(guiFont);
+				ImGui::Begin("##transactiont6InputWindow", nullptr, ImGuiWindowFlags_NoResize
+					| ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoCollapse
+					| ImGuiWindowFlags_NoBackground
+					| ImGuiWindowFlags_NoTitleBar);
+				ImGui::InputText("##transactiont6Input", t6In, sizeof(t6In));
+				ImGui::PopStyleColor(2);
+				ImGui::PopFont();
+				ImGui::End();
+			}
+
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -2977,19 +2742,15 @@ int main()
 
 							original_transaction_id5 = transactions[selectedRow].transaction_id5;
 
-							t1In = transactions[selectedRow].transaction_id5;
-							t2In = transactions[selectedRow].item_id5;
-							t3In = to_string(transactions[selectedRow].item_price5);
-							t4In = to_string(transactions[selectedRow].tax_amount5);
-							t5In = to_string(transactions[selectedRow].transaction_total5);
-							t6In = transactions[selectedRow].transaction_date5;
-
-							t1Input.setString(t1In);
-							t2Input.setString(t2In);
-							t3Input.setString(t3In);
-							t4Input.setString(t4In);
-							t5Input.setString(t5In);
-							t6Input.setString(t6In);
+							strncpy_s(t1In, transactions[selectedRow].transaction_id5.c_str(), sizeof(t1In) - 1);
+							t1In[sizeof(t1In) - 1] = '\0';
+							strncpy_s(t2In, transactions[selectedRow].item_id5.c_str(), sizeof(t2In) - 1);
+							t2In[sizeof(t2In) - 1] = '\0';
+							snprintf(t3In, sizeof(t3In), "%.2f", transactions[selectedRow].item_price5);
+							snprintf(t4In, sizeof(t4In), "%.2f", transactions[selectedRow].tax_amount5);
+							snprintf(t5In, sizeof(t5In), "%.2f", transactions[selectedRow].transaction_total5);
+							strncpy_s(t6In, transactions[selectedRow].transaction_date5.c_str(), sizeof(t6In) - 1);
+							t6In[sizeof(t6In) - 1] = '\0';
 						}
 					}
 				}
@@ -3003,112 +2764,12 @@ int main()
 
 		if (clickTransaction)
 		{
-			if (mouseDetector.isOn(textBox1, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = true;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t1Input.setString(t1In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox2, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = true;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t2Input.setString(t2In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox3, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = true;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = false;
-
-					t3Input.setString(t3In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox4, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = true;
-					clickT5 = false;
-					clickT6 = false;
-
-					t4Input.setString(t4In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox5, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = true;
-					clickT6 = false;
-
-					t5Input.setString(t5In);
-				}
-			}
-
-			if (mouseDetector.isOn(textBox6, window))
-			{
-				window.setMouseCursor(textCursor);
-
-				if (Mouse::isButtonPressed(Mouse::Button::Left))
-				{
-					clickT1 = false;
-					clickT2 = false;
-					clickT3 = false;
-					clickT4 = false;
-					clickT5 = false;
-					clickT6 = true;
-
-					if (t6In == "YYYY-MM-DD")
-					{
-						t6In = "";
-					}
-
-					t6Input.setString(t6In);
-				}
-			}
+			if (mouseDetector.isOn(textBox1, window)
+				|| mouseDetector.isOn(textBox2, window)
+				|| mouseDetector.isOn(textBox3, window)
+				|| mouseDetector.isOn(textBox4, window)
+				|| mouseDetector.isOn(textBox5, window)
+				|| mouseDetector.isOn(textBox6, window)) {window.setMouseCursor(textCursor);}
 
 			if (mouseDetector.isOn(submitButton, window))
 			{
@@ -3118,7 +2779,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty() || t5In.empty() || t6In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0' || t5In[0] == '\0' || t6In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -3126,9 +2787,9 @@ int main()
 
 						try
 						{
-							stod(t3In);
-							stod(t4In);
-							stod(t5In);
+							atof(t3In);
+							atof(t4In);
+							atof(t5In);
 						}
 						catch (const exception& e)
 						{
@@ -3140,12 +2801,15 @@ int main()
 						{
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							wstring transaction_id(t1In.begin(), t1In.end());
-							wstring item_id(t2In.begin(), t2In.end());
-							float item_price = stod(t3In);
-							float tax_amount = stod(t4In);
-							float transaction_total = stod(t5In);
-							wstring transaction_date(t6In.begin(), t6In.end());
+							string transaction_idStr(t1In);
+							wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
+							string item_idStr(t2In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							float item_price = atof(t3In);
+							float tax_amount = atof(t4In);
+							float transaction_total = atof(t5In);
+							string transaction_dateStr(t6In);
+							wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
 							wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date) VALUES (?,?,?,?,?,?)";
 
@@ -3166,18 +2830,12 @@ int main()
 							{
 								cout << "Insert successful!" << endl;
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
-								t5In = "";
-								t5Input.setString(t5In);
-								t6In = "";
-								t6Input.setString(t6In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
+								t5In[0] = '\0';
+								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3231,7 +2889,7 @@ int main()
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In.empty() || t2In.empty() || t3In.empty() || t4In.empty() || t5In.empty() || t6In.empty())
+						if (t1In[0] == '\0' || t2In[0] == '\0' || t3In[0] == '\0' || t4In[0] == '\0' || t5In[0] == '\0' || t6In[0] == '\0')
 						{
 							cerr << "Empty inputs detected" << endl;
 							notNull = false;
@@ -3239,9 +2897,9 @@ int main()
 
 						try
 						{
-							stod(t3In);
-							stod(t5In);
-							stod(t6In);
+							atof(t3In);
+							atof(t4In);
+							atof(t5In);
 						}
 						catch (const exception& e)
 						{
@@ -3254,12 +2912,15 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							wstring original_transaction_idW(original_transaction_id5.begin(), original_transaction_id5.end());
-							wstring transaction_id(t1In.begin(), t1In.end());
-							wstring item_id(t2In.begin(), t2In.end());
-							float item_price = stod(t3In);
-							float tax_amount = stod(t4In);
-							float transaction_total = stod(t5In);
-							wstring transaction_date(t6In.begin(), t6In.end());
+							string transaction_idStr(t1In);
+							wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
+							string item_idStr(t2In);
+							wstring item_id(item_idStr.begin(), item_idStr.end());
+							float item_price = atof(t3In);
+							float tax_amount = atof(t4In);
+							float transaction_total = atof(t5In);
+							string transaction_dateStr(t6In);
+							wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
 							wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ? WHERE transaction_id = ?";
 
@@ -3288,18 +2949,12 @@ int main()
 								submitButton.setColor(Color::White);
 								submitButton.setPosition({ 210,400 });
 
-								t1In = "";
-								t1Input.setString(t1In);
-								t2In = "";
-								t2Input.setString(t2In);
-								t3In = "";
-								t3Input.setString(t3In);
-								t4In = "";
-								t4Input.setString(t4In);
-								t5In = "";
-								t5Input.setString(t5In);
-								t6In = "YYYY-MM-DD";
-								t6Input.setString(t6In);
+								t1In[0] = '\0';
+								t2In[0] = '\0';
+								t3In[0] = '\0';
+								t4In[0] = '\0';
+								t5In[0] = '\0';
+								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3361,18 +3016,6 @@ int main()
 
 		window.clear();
 		window.draw(background);
-		window.draw(textBox1);
-		window.draw(t1Input);
-		window.draw(textBox2);
-		window.draw(t2Input);
-		window.draw(textBox3);
-		window.draw(t3Input);
-		window.draw(textBox4);
-		window.draw(t4Input);
-		window.draw(textBox5);
-		window.draw(t5Input);
-		window.draw(textBox6);
-		window.draw(t6Input);
 		window.draw(submitButton);
 		window.draw(modifyButton);
 		ImGui::SFML::Render(window);
