@@ -1,21 +1,21 @@
-#include "Windows.h"
+#include "Window.h"
 
-Windows::Windows()
+Window::Window()
 {
 	Setup("Window", sf::Vector2u(1280, 720));
 }
 
-Windows::Windows(const std::string& l_title, const sf::Vector2u& l_size)
+Window::Window(const std::string& l_title, const sf::Vector2u& l_size)
 {
 	Setup(l_title, l_size);
 }
 
-Windows::~Windows()
+Window::~Window()
 {
 	Destroy();
 }
 
-void Windows::Setup(const std::string& l_title, const sf::Vector2u& l_size)
+void Window::Setup(const std::string& l_title, const sf::Vector2u& l_size)
 {
 	m_windowTitle = l_title;
 	m_windowSize = l_size;
@@ -24,18 +24,18 @@ void Windows::Setup(const std::string& l_title, const sf::Vector2u& l_size)
 	Create();
 }
 
-void Windows::Create()
+void Window::Create()
 {
 	auto state = (m_isFullscreen ? sf::State::Fullscreen : sf::State::Windowed);
 	m_window.create(sf::VideoMode({m_windowSize.x, m_windowSize.y}, 32), m_windowTitle, state);
 }
 
-void Windows::Destroy()
+void Window::Destroy()
 {
 	m_window.close();
 }
 
-void Windows::Update()
+void Window::Update()
 {
 	while (const std::optional event = m_window.pollEvent())
 	{
@@ -51,34 +51,34 @@ void Windows::Update()
 	}
 }
 
-void Windows::ToggleFullscreen()
+void Window::ToggleFullscreen()
 {
 	m_isFullscreen = !m_isFullscreen;
 	Destroy();
 	Create();
 }
 
-void Windows::BeginDraw()
+void Window::BeginDraw()
 {
 	m_window.clear();
 }
 
-void Windows::Draw(sf::Drawable& l_drawable)
+void Window::Draw(sf::Drawable& l_drawable)
 {
 	m_window.draw(l_drawable);
 }
 
-void Windows::EndDraw()
+void Window::EndDraw()
 {
 	m_window.display();
 }
 
-bool Windows::IsDone()
+bool Window::IsDone()
 {
 	return m_isDone;
 }
 
-bool Windows::IsFullscreen()
+bool Window::IsFullscreen()
 {
 	return m_isFullscreen;
 }

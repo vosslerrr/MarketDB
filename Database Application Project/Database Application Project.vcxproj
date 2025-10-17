@@ -81,7 +81,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\External\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;opengl32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -119,7 +119,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\External\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;opengl32.lib;odbc32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -147,22 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\External\imgui\imgui.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MouseDetector.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MouseDetector.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="aisleBackground.png" />
@@ -174,7 +163,6 @@
     <Image Include="modifyBox.png" />
     <Image Include="sectionBackground.png" />
     <Image Include="supplierBackground.png" />
-    <Image Include="transactionBackground.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
