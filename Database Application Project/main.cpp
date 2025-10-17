@@ -44,6 +44,7 @@ bool IsDriverInstalled()
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+//int main()
 {
 	if (!IsDriverInstalled()) 
 	{
@@ -442,6 +443,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			L"`tax_amount` float NOT NULL,"
 			L"`transaction_total` float NOT NULL,"
 			L"`transaction_date` varchar(45) NOT NULL,"
+			L"`receipt_no` int NOT NULL,"
 			L"PRIMARY KEY(`transaction_id`),"
 			L"KEY `fk_transaction_item` (`item_id`),"
 			L"CONSTRAINT `fk_transaction_item` FOREIGN KEY(`item_id`) REFERENCES `item` (`item_id`)"
@@ -463,7 +465,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ImGuiIO& io2 = ImGui::GetIO();
 	io2.ConfigInputTextCursorBlink = false;
 	io2.KeyRepeatDelay = 100.f;
-	io2.KeyRepeatRate = 15.f;
+	io2.KeyRepeatRate = 25.f;
 
 	Texture backgroundTexture;
 	backgroundTexture.loadFromFile("background.png");
@@ -601,6 +603,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	bool valAisleNo = true;
 	bool valSectionID = true;
 	bool valItemID = true;
+	bool foundPrice = true;
 
 	struct Item {
 		string item_id1;
@@ -758,6 +761,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		float tax_amount5;
 		float transaction_total5;
 		string transaction_date5;
+		int receipt_no5;
 	};
 
 	string original_transaction_id5;
@@ -766,10 +770,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
+	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date, receipt_no FROM transaction", SQL_NTS);
 
 	char transaction_id5[46], item_id5[46], transaction_date5[46];
 	float item_price5, tax_amount5, transaction_total5;
+	int receipt_no5;
 
 	SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
@@ -777,6 +782,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
 	SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
 	SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
+	SQLBindCol(handleSQL, 7, SQL_C_SLONG, &receipt_no5, 0, nullptr);
 
 	transactions.clear();
 
@@ -788,7 +794,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			item_price5,
 			tax_amount5,
 			transaction_total5,
-			transaction_date5
+			transaction_date5,
+			receipt_no5
 			});
 	}
 
@@ -860,12 +867,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		float search_tax_amount5;
 		float search_transaction_total5;
 		string search_transaction_date5;
+		int search_receipt_no5;
 	};
 
 	vector<SearchTransaction> searchtransactions;
 
 	char search_transaction_id5[46], search_item_id5[46], search_transaction_date5[46];
 	float search_item_price5, search_tax_amount5, search_transaction_total5;
+	int search_receipt_no5;
 	
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3734,42 +3743,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				ImGui::End();
 			}
 
-			//t5 box
-			{
-				ImGui::SetNextWindowPos(ImVec2(247, 280));//x-offset:8	y-offset:+11
-				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-				ImGui::PushFont(guiFont);
-				ImGui::Begin("##transactiont5InputWindow", nullptr, ImGuiWindowFlags_NoResize
-					| ImGuiWindowFlags_NoMove
-					| ImGuiWindowFlags_NoCollapse
-					| ImGuiWindowFlags_NoBackground
-					| ImGuiWindowFlags_NoTitleBar);
-				ImGui::InputText("##transactiont5Input", t5In, sizeof(t5In));
-				ImGui::PopStyleColor(2);
-				ImGui::PopFont();
-				ImGui::End();
-			}
-
-			//t6 box
-			{
-				ImGui::SetNextWindowPos(ImVec2(247, 328));//x-offset:8	y-offset:+11
-				ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-				ImGui::PushFont(guiFont);
-				ImGui::Begin("##transactiont6InputWindow", nullptr, ImGuiWindowFlags_NoResize
-					| ImGuiWindowFlags_NoMove
-					| ImGuiWindowFlags_NoCollapse
-					| ImGuiWindowFlags_NoBackground
-					| ImGuiWindowFlags_NoTitleBar);
-				ImGui::InputText("##transactiont6Input", t6In, sizeof(t6In));
-				ImGui::PopStyleColor(2);
-				ImGui::PopFont();
-				ImGui::End();
-			}
-
 			static int selectedRow = -1;
 			int currentRow = 0;
 
@@ -3783,7 +3756,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			{
 				ImGui::BeginChild("TableScrollable", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-				if (ImGui::BeginTable("##TransactionsTable", 6, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Sortable))
+				if (ImGui::BeginTable("##TransactionsTable", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Sortable))
 				{
 					ImGui::TableSetupColumn("Transaction I.D.");
 					ImGui::TableSetupColumn("Item I.D.");
@@ -3791,6 +3764,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 					ImGui::TableSetupColumn("Tax Amount");
 					ImGui::TableSetupColumn("Transaction Total");
 					ImGui::TableSetupColumn("Transaction Date");
+					ImGui::TableSetupColumn("Receipt Number");
 					ImGui::TableHeadersRow();
 
 					ImGuiTableSortSpecs* sortSpecs = ImGui::TableGetSortSpecs();
@@ -3810,6 +3784,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 								case 3: return ascending ? a.tax_amount5 < b.tax_amount5 : a.tax_amount5 > b.tax_amount5;
 								case 4: return ascending ? a.transaction_total5 < b.transaction_total5 : a.transaction_total5 > b.transaction_total5;
 								case 5: return ascending ? a.transaction_date5 < b.transaction_date5 : a.transaction_date5 > b.transaction_date5;
+								case 6: return ascending ? a.receipt_no5 < b.receipt_no5 : a.receipt_no5 > b.receipt_no5;
 								default: return false;
 								}
 							});
@@ -3833,6 +3808,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						ImGui::TableSetColumnIndex(3); ImGui::Text("%.2f", transaction.tax_amount5);
 						ImGui::TableSetColumnIndex(4); ImGui::Text("%.2f", transaction.transaction_total5);						
 						ImGui::TableSetColumnIndex(5); ImGui::Text("%s", transaction.transaction_date5.c_str());
+						ImGui::TableSetColumnIndex(6); ImGui::Text("%d", transaction.receipt_no5);
 
 						currentRow++;
 					}
@@ -3896,11 +3872,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							t1In[sizeof(t1In) - 1] = '\0';
 							strncpy_s(t2In, transactions[selectedRow].item_id5.c_str(), sizeof(t2In) - 1);
 							t2In[sizeof(t2In) - 1] = '\0';
-							snprintf(t3In, sizeof(t3In), "%.2f", transactions[selectedRow].item_price5);
-							snprintf(t4In, sizeof(t4In), "%.2f", transactions[selectedRow].tax_amount5);
-							snprintf(t5In, sizeof(t5In), "%.2f", transactions[selectedRow].transaction_total5);
-							strncpy_s(t6In, transactions[selectedRow].transaction_date5.c_str(), sizeof(t6In) - 1);
-							t6In[sizeof(t6In) - 1] = '\0';
+							strncpy_s(t3In, transactions[selectedRow].transaction_date5.c_str(), sizeof(t3In) - 1);
+							t3In[sizeof(t3In) - 1] = '\0';
+							snprintf(t4In, sizeof(t4In), "%.d", transactions[selectedRow].receipt_no5);
+							
 						}
 					}
 				}
@@ -3977,54 +3952,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							invalT4.setOutlineColor(Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
-						{
-							cerr << "Empty t5" << endl;
-							notNull = false;
-
-							invalT5.setOutlineColor(Color::Red);
-						}
-						else
-						{
-							invalT5.setOutlineColor(Color::Transparent);
-						}
-
-						if (t6In[0] == '\0')
-						{
-							cerr << "Empty t6" << endl;
-							notNull = false;
-
-							invalT6.setOutlineColor(Color::Red);
-						}
-						else
-						{
-							invalT6.setOutlineColor(Color::Transparent);
-						}
-
-						try
-						{
-							string t3InTEST(t3In);
-
-							std::stof(t3InTEST);
-						}
-						catch (const exception& e)
-						{
-							cerr << "invalid t3 number" << endl;
-							valNums = false;
-							valT3 = false;
-
-							invalT3.setOutlineColor(Color::Red);
-						}
-						if (valT3)
-						{
-							invalT3.setOutlineColor(Color::Transparent);
-						}
-
 						try
 						{
 							string t4InTEST(t4In);
 
-							std::stof(t4InTEST);
+							std::stoi(t4InTEST);
 						}
 						catch (const exception& e)
 						{
@@ -4037,25 +3969,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						if (valT4)
 						{
 							invalT4.setOutlineColor(Color::Transparent);
-						}
-
-						try
-						{
-							string t5InTEST(t5In);
-
-							std::stof(t5InTEST);
-						}
-						catch (const exception& e)
-						{
-							cerr << "invalid t6 number" << endl;
-							valNums = false;
-							valT5 = false;
-
-							invalT5.setOutlineColor(Color::Red);
-						}
-						if (valT5)
-						{
-							invalT5.setOutlineColor(Color::Transparent);
 						}
 
 						if (notNull && valNums)
@@ -4135,75 +4048,149 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 								if (valItemID)
 								{
-									float item_price = atof(t3In);
-									float tax_amount = atof(t4In);
-									float transaction_total = atof(t5In);
-									string transaction_dateStr(t6In);
-									wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
-
-									wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date) VALUES (?,?,?,?,?,?)";
+									float item_price = 0.0f;
 
 									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-									SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
-									SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
-									SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
-									SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
-
+									SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_price FROM item WHERE item_id = ?", SQL_NTS);
+									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
 									retSQL = SQLExecute(handleSQL);
 
-									if (SQL_SUCCEEDED(retSQL))
+									if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO) 
 									{
-										cout << "Insert successful!" << endl;
-
-										t1In[0] = '\0';
-										t2In[0] = '\0';
-										t3In[0] = '\0';
-										t4In[0] = '\0';
-										t5In[0] = '\0';
-										t6In[0] = '\0';
-
-										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-										SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
-
-										char transaction_id5[46], item_id5[46], transaction_date5[46];
-										float item_price5, tax_amount5, transaction_total5;
-
-										SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
-										SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
-										SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
-										SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
-										SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
-										SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
-
-										transactions.clear();
-
-										while (SQLFetch(handleSQL) == SQL_SUCCESS)
+										if (SQLFetch(handleSQL) == SQL_SUCCESS) 
 										{
-											transactions.push_back({
-												transaction_id5,
-												item_id5,
-												item_price5,
-												tax_amount5,
-												transaction_total5,
-												transaction_date5
-												});
+											SQLGetData(handleSQL, 1, SQL_C_FLOAT, &item_price, 0, nullptr);
+											cout << "got item price" << endl;
 										}
-
-										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-									}
-
-									else
-									{
-										cerr << "Insert failed!" << endl;
+										else 
+										{
+											cerr << "Failed to retrieve item_price." << endl;
+											SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+											foundPrice = false;
+										}
 									}
 
 									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+									if (foundPrice)
+									{
+										string transaction_dateStr(t3In);
+										wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
+
+										int receipt_no = atoi(t4In);
+
+										cout << receipt_no << endl;
+
+										wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date, receipt_no) VALUES (?,?,?,?,?,?,?)";
+
+										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+										SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+
+										SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
+										SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+										SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
+
+										float tax_amount = 0.0f;
+										float transaction_total = 0.0f;
+
+										SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
+										SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
+										SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
+										SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+
+										retSQL = SQLExecute(handleSQL);
+
+										if (SQL_SUCCEEDED(retSQL))
+										{
+											cout << "Insert successful!" << endl;
+
+											float totalPriceSum = 0.0f;
+
+											SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+											SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT SUM(item_price) FROM transaction WHERE receipt_no = ?", SQL_NTS);
+											SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+											retSQL = SQLExecute(handleSQL);
+
+											if (SQL_SUCCEEDED(retSQL) && SQLFetch(handleSQL) == SQL_SUCCESS)
+											{
+												SQLGetData(handleSQL, 1, SQL_C_FLOAT, &totalPriceSum, 0, nullptr);
+											}
+
+											else
+											{
+												cout << "sum failed" << endl;
+											}
+
+											SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+											tax_amount = totalPriceSum * 0.06f;
+											transaction_total = totalPriceSum + tax_amount;
+
+											// Update all transactions with the new totals
+											SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+											SQLPrepareW(handleSQL,
+												(SQLWCHAR*)L"UPDATE transaction SET tax_amount = ?, transaction_total = ? WHERE receipt_no = ?", SQL_NTS);
+											SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
+											SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
+											SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+
+											retSQL = SQLExecute(handleSQL);
+
+											if (!SQL_SUCCEEDED(retSQL))
+											{
+												cout << "update transaction totals failed" << endl;
+											}
+
+											SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+											
+
+											t1In[0] = '\0';
+											t2In[0] = '\0';
+											t3In[0] = '\0';
+											t4In[0] = '\0';
+
+											SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+											SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date, receipt_no FROM transaction", SQL_NTS);
+
+											char transaction_id5[46], item_id5[46], transaction_date5[46];
+											float item_price5, tax_amount5, transaction_total5;
+											int receipt_no5;
+
+											SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
+											SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
+											SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
+											SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
+											SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
+											SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
+											SQLBindCol(handleSQL, 7, SQL_C_SLONG, &receipt_no5, 0, nullptr);
+
+											transactions.clear();
+
+											while (SQLFetch(handleSQL) == SQL_SUCCESS)
+											{
+												transactions.push_back({
+													transaction_id5,
+													item_id5,
+													item_price5,
+													tax_amount5,
+													transaction_total5,
+													transaction_date5,
+													receipt_no5
+													});
+											}
+
+											SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+										}
+
+										else
+										{
+											cerr << "Insert failed!" << endl;
+										}
+
+
+										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+									}
 								}
 							}
 						}
@@ -4224,6 +4211,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						valT3 = true;
 						valT4 = true;
 						valT5 = true;
+						foundPrice = true;
 
 						clock.restart();
 					}
@@ -4286,54 +4274,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							invalT4.setOutlineColor(Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
-						{
-							cerr << "Empty t5" << endl;
-							notNull = false;
-
-							invalT5.setOutlineColor(Color::Red);
-						}
-						else
-						{
-							invalT5.setOutlineColor(Color::Transparent);
-						}
-
-						if (t6In[0] == '\0')
-						{
-							cerr << "Empty t6" << endl;
-							notNull = false;
-
-							invalT6.setOutlineColor(Color::Red);
-						}
-						else
-						{
-							invalT6.setOutlineColor(Color::Transparent);
-						}
-
-						try
-						{
-							string t3InTEST(t3In);
-
-							std::stof(t3InTEST);
-						}
-						catch (const exception& e)
-						{
-							cerr << "invalid t3 number" << endl;
-							valNums = false;
-							valT3 = false;
-
-							invalT3.setOutlineColor(Color::Red);
-						}
-						if (valT3)
-						{
-							invalT3.setOutlineColor(Color::Transparent);
-						}
-
 						try
 						{
 							string t4InTEST(t4In);
 
-							std::stof(t4InTEST);
+							std::stoi(t4InTEST);
 						}
 						catch (const exception& e)
 						{
@@ -4348,108 +4293,194 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							invalT4.setOutlineColor(Color::Transparent);
 						}
 
-						try
-						{
-							string t5InTEST(t5In);
-
-							std::stof(t5InTEST);
-						}
-						catch (const exception& e)
-						{
-							cerr << "invalid t6 number" << endl;
-							valNums = false;
-							valT5 = false;
-
-							invalT5.setOutlineColor(Color::Red);
-						}
-						if (valT5)
-						{
-							invalT5.setOutlineColor(Color::Transparent);
-						}
-
 						if (notNull && valNums)
 						{
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
 							wstring original_transaction_idW(original_transaction_id5.begin(), original_transaction_id5.end());
 							string transaction_idStr(t1In);
 							wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
 							string item_idStr(t2In);
 							wstring item_id(item_idStr.begin(), item_idStr.end());
-							float item_price = atof(t3In);
-							float tax_amount = atof(t4In);
-							float transaction_total = atof(t5In);
-							string transaction_dateStr(t6In);
-							wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
-							wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ? WHERE transaction_id = ?";
-
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
-
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
-							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &tax_amount, 0, NULL);
-							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &transaction_total, 0, NULL);
-							SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_transaction_idW.c_str(), 0, NULL);
-
-
+							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
+							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
 							retSQL = SQLExecute(handleSQL);
 
-							if (SQL_SUCCEEDED(retSQL))
+							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 							{
-								cout << "Item updated successfully!" << endl;
-
-								modifyButton.setColor(Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
-
-								submitButton.setColor(Color::White);
-								submitButton.setPosition({ 210,400 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
-								t3In[0] = '\0';
-								t4In[0] = '\0';
-								t5In[0] = '\0';
-								t6In[0] = '\0';
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-								SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
-
-								char transaction_id5[46], item_id5[46], transaction_date5[46];
-								float item_price5, tax_amount5, transaction_total5;
-
-								SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
-								SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
-								SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
-								SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
-								SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
-								SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
-
-								transactions.clear();
-
-								while (SQLFetch(handleSQL) == SQL_SUCCESS)
+								if (SQLFetch(handleSQL) != SQL_SUCCESS)
 								{
-									transactions.push_back({
-										transaction_id5,
-										item_id5,
-										item_price5,
-										tax_amount5,
-										transaction_total5,
-										transaction_date5
-										});
-								}
+									cout << "Item ID does exists!" << endl;
+									valItemID = false;
 
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-							}
-							else
-							{
-								cerr << "Failed to update item!" << endl;
+									invalT2.setOutlineColor(Color::Red);
+
+									int primaryKeyError = MessageBoxW(
+										nullptr,
+										L"Item I.D. does not exist.\n\n"
+										L"Please try again.",
+										L"Foreign Key Constraint",
+										MB_OK | MB_ICONWARNING
+									);
+								}
+								else
+								{
+									valItemID = true;
+
+									invalT2.setOutlineColor(Color::Transparent);
+								}
 							}
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+							if (valItemID)
+							{
+								float item_price = 0.0f;
+
+								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_price FROM item WHERE item_id = ?", SQL_NTS);
+								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
+								retSQL = SQLExecute(handleSQL);
+
+								if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
+								{
+									if (SQLFetch(handleSQL) == SQL_SUCCESS)
+									{
+										SQLGetData(handleSQL, 1, SQL_C_FLOAT, &item_price, 0, nullptr);
+										cout << "got item price" << endl;
+									}
+									else
+									{
+										cerr << "Failed to retrieve item_price." << endl;
+										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+										foundPrice = false;
+									}
+								}
+
+								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+								if (foundPrice)
+								{
+									string transaction_dateStr(t3In);
+									wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
+									int receipt_no = atoi(t4In);
+									cout << receipt_no << endl;
+
+									wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ?, receipt_no = ? WHERE transaction_id = ?";
+
+									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+									SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
+									SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+									SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
+
+									float tax_amount = 0.0f;
+									float transaction_total = 0.0f;
+
+									SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &tax_amount, 0, NULL);
+									SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &transaction_total, 0, NULL);
+									SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
+									SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+									SQLBindParameter(handleSQL, 8, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_transaction_idW.c_str(), 0, NULL);
+
+									retSQL = SQLExecute(handleSQL);
+
+									if (SQL_SUCCEEDED(retSQL))
+									{
+										float totalPriceSum = 0.0f;
+
+										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+										SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT SUM(item_price) FROM transaction WHERE receipt_no = ?", SQL_NTS);
+										SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+										retSQL = SQLExecute(handleSQL);
+
+										if (SQL_SUCCEEDED(retSQL) && SQLFetch(handleSQL) == SQL_SUCCESS)
+										{
+											SQLGetData(handleSQL, 1, SQL_C_FLOAT, &totalPriceSum, 0, nullptr);
+										}
+
+										else
+										{
+											cout << "sum failed" << endl;
+										}
+
+										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+										tax_amount = totalPriceSum * 0.06f;
+										transaction_total = totalPriceSum + tax_amount;
+
+										// Update all transactions with the new totals
+										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+										SQLPrepareW(handleSQL,
+											(SQLWCHAR*)L"UPDATE transaction SET tax_amount = ?, transaction_total = ? WHERE receipt_no = ?", SQL_NTS);
+										SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
+										SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
+										SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &receipt_no, 0, NULL);
+
+										retSQL = SQLExecute(handleSQL);
+
+										if (!SQL_SUCCEEDED(retSQL))
+										{
+											cout << "update transaction totals failed" << endl;
+										}
+
+										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+
+										cout << "Item updated successfully!" << endl;
+
+										modifyButton.setColor(Color::Transparent);
+										modifyButton.setPosition({ 0,0 });
+
+										submitButton.setColor(Color::White);
+										submitButton.setPosition({ 210,400 });
+
+										t1In[0] = '\0';
+										t2In[0] = '\0';
+										t3In[0] = '\0';
+										t4In[0] = '\0';
+
+										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+										SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date, receipt_no FROM transaction", SQL_NTS);
+
+										char transaction_id5[46], item_id5[46], transaction_date5[46];
+										float item_price5, tax_amount5, transaction_total5;
+
+										SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
+										SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
+										SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
+										SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
+										SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
+										SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
+										SQLBindCol(handleSQL, 7, SQL_C_SLONG, &receipt_no5, 0, nullptr);
+
+										transactions.clear();
+
+										while (SQLFetch(handleSQL) == SQL_SUCCESS)
+										{
+											transactions.push_back({
+												transaction_id5,
+												item_id5,
+												item_price5,
+												tax_amount5,
+												transaction_total5,
+												transaction_date5,
+												receipt_no5
+												});
+										}
+
+										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+									}
+									else
+									{
+										cerr << "Failed to update item!" << endl;
+									}
+
+									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+								}	
+							}
 						}
 
 						else
@@ -4512,7 +4543,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		if (clickSearch)
 		{
-			const char* options[] = { "Item I.D.", "Aisle No.", "Section I.D.", "Supplier I.D.", "Transaction I.D.", "Date Sold"};
+			const char* options[] = { "Item I.D.", "Item Name", "Aisle No.", "Section I.D.", "Supplier I.D.", "Transaction I.D.", "Date Sold"};
 			static int current_option = 0;
 
 			ImGui::SetNextWindowPos(ImVec2(15, 63));//x-offset:8	y-offset:+11
@@ -4727,6 +4758,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &search_tax_amount5, 0, nullptr);
 							SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &search_transaction_total5, 0, nullptr);
 							SQLBindCol(handleSQL, 6, SQL_C_CHAR, search_transaction_date5, sizeof(search_transaction_date5), nullptr);
+							SQLBindCol(handleSQL, 7, SQL_C_SLONG, &search_receipt_no5, 0, nullptr);
 
 							searchtransactions.clear();
 
@@ -4738,7 +4770,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 										search_item_price5,
 										search_tax_amount5,
 										search_transaction_total5,
-										search_transaction_date5
+										search_transaction_date5,
+										search_receipt_no5
 									});
 							}
 						}
@@ -4757,6 +4790,230 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				}
 
 				if (current_option == 1)
+				{
+					showSearchItem = true;
+					showSearchAisle = true;
+					showSearchSection = true;
+					showSearchSupplier = true;
+					showSearchTransaction = true;
+
+					if (t1In[0] == '\0')
+					{
+						notNull = false;
+						clickGO = false;
+
+						int nullerror = MessageBoxW(
+							nullptr,
+							L"Input is empty.\n\n"
+							L"Please try again.",
+							L"Empty Input!",
+							MB_OK | MB_ICONWARNING
+						);
+					}
+
+					if (notNull)
+					{
+						string item_nameStr(t1In);
+						wstring item_name(item_nameStr.begin(), item_nameStr.end());
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item.* FROM item WHERE item_name = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_name.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
+						{
+							SQLBindCol(handleSQL, 1, SQL_C_CHAR, search_item_id1, sizeof(search_item_id1), nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_CHAR, search_item_name1, sizeof(search_item_name1), nullptr);
+							SQLBindCol(handleSQL, 3, SQL_C_SLONG, &search_aisle_no1, 0, nullptr);
+							SQLBindCol(handleSQL, 4, SQL_C_CHAR, search_section_id1, sizeof(search_section_id1), nullptr);
+							SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &search_item_price1, 0, nullptr);
+							SQLBindCol(handleSQL, 6, SQL_C_SLONG, &search_no_of_items1, 0, nullptr);
+
+							searchitems.clear();
+							bool found = false;
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								found = true;
+								searchitems.push_back({
+									search_item_id1,
+									search_item_name1,
+									search_aisle_no1,
+									search_section_id1,
+									search_item_price1,
+									search_no_of_items1
+									});
+							}
+
+							if (!found)
+							{
+								clickGO = false;
+
+								int notfounderror = MessageBoxW(
+									nullptr,
+									L"Item Name does not exist.\n\n"
+									L"Please try again.",
+									L"Invalid Item Name!",
+									MB_OK | MB_ICONWARNING
+								);
+							}
+						}
+
+						else
+						{
+							cout << "item failed" << endl;
+
+							clickGO = false;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle.* FROM aisle JOIN item ON item.aisle_no = aisle.aisle_no WHERE item_name = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_name.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
+						{
+							SQLBindCol(handleSQL, 1, SQL_C_SLONG, &search_aisle_no2, 0, nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_SLONG, &search_no_of_sections2, 0, nullptr);
+
+							searchaisles.clear();
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								searchaisles.push_back({
+									search_aisle_no2,
+									search_no_of_sections2
+									});
+							}
+						}
+
+						else
+						{
+							cout << "aisle failed" << endl;
+
+							clickGO = false;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT section.* FROM section JOIN item ON item.section_id = section.section_id WHERE item_name = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_name.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
+						{
+							SQLBindCol(handleSQL, 1, SQL_C_CHAR, search_section_id3, sizeof(search_section_id3), nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_CHAR, search_section_name3, sizeof(search_section_name3), nullptr);
+							SQLBindCol(handleSQL, 3, SQL_C_SLONG, &search_aisle_no3, 0, nullptr);
+
+							searchsections.clear();
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								searchsections.push_back({
+									search_section_id3,
+									search_section_name3,
+									search_aisle_no3
+									});
+							}
+						}
+
+						else
+						{
+							cout << "section failed" << endl;
+
+							clickGO = false;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT supplier.* FROM supplier JOIN item ON item.item_id = supplier.item_id WHERE item.item_name = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_name.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
+						{
+							SQLBindCol(handleSQL, 1, SQL_C_CHAR, search_supplier_id4, sizeof(search_supplier_id4), nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_CHAR, search_item_id4, sizeof(search_item_id4), nullptr);
+							SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &search_item_cost4, 0, nullptr);
+							SQLBindCol(handleSQL, 4, SQL_C_CHAR, search_supplier_name4, sizeof(search_supplier_name4), nullptr);
+
+							searchsuppliers.clear();
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								searchsuppliers.push_back({
+									search_supplier_id4,
+									search_item_id4,
+									search_item_cost4,
+									search_supplier_name4
+									});
+							}
+						}
+
+						else
+						{
+							cout << "supplier failed" << endl;
+
+							clickGO = false;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT transaction.* FROM transaction JOIN item ON item.item_id = transaction.item_id WHERE item.item_name = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_name.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
+						{
+							SQLBindCol(handleSQL, 1, SQL_C_CHAR, search_transaction_id5, sizeof(search_transaction_id5), nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_CHAR, search_item_id5, sizeof(search_item_id5), nullptr);
+							SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &search_item_price5, 0, nullptr);
+							SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &search_tax_amount5, 0, nullptr);
+							SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &search_transaction_total5, 0, nullptr);
+							SQLBindCol(handleSQL, 6, SQL_C_CHAR, search_transaction_date5, sizeof(search_transaction_date5), nullptr);
+							SQLBindCol(handleSQL, 7, SQL_C_SLONG, &search_receipt_no5, 0, nullptr);
+
+							searchtransactions.clear();
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								searchtransactions.push_back({
+										search_transaction_id5,
+										search_item_id5,
+										search_item_price5,
+										search_tax_amount5,
+										search_transaction_total5,
+										search_transaction_date5,
+										search_receipt_no5
+									});
+							}
+						}
+
+						else
+						{
+							cout << "transaction failed" << endl;
+
+							clickGO = false;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+
+					notNull = true;
+				}
+
+				if (current_option == 2)
 				{
 					showSearchItem = true;
 					showSearchAisle = true;
@@ -4905,7 +5162,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 					notNull = true;
 				}
 
-				if (current_option == 2)
+				if (current_option == 3)
 				{
 					showSearchItem = true;
 					showSearchAisle = true;
@@ -5054,7 +5311,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 					notNull = true;	
 				}
 
-				if (current_option == 3)
+				if (current_option == 4)
 				{
 					showSearchItem = true;
 					showSearchAisle = false;
@@ -5173,7 +5430,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 					notNull = true;	
 				}
 
-				if (current_option == 4)
+				if (current_option == 5)
 				{
 					showSearchItem = true;
 					showSearchAisle = false;
@@ -5226,7 +5483,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 									search_aisle_no1,
 									search_section_id1,
 									search_item_price1,
-									search_no_of_items1
+									search_no_of_items1,
 									});
 							}
 
@@ -5267,6 +5524,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &search_tax_amount5, 0, nullptr);
 							SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &search_transaction_total5, 0, nullptr);
 							SQLBindCol(handleSQL, 6, SQL_C_CHAR, search_transaction_date5, sizeof(search_transaction_date5), nullptr);
+							SQLBindCol(handleSQL, 7, SQL_C_SLONG, &search_receipt_no5, 0, nullptr);
 
 							searchtransactions.clear();
 
@@ -5278,7 +5536,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 										search_item_price5,
 										search_tax_amount5,
 										search_transaction_total5,
-										search_transaction_date5
+										search_transaction_date5,
+										search_receipt_no5
 									});
 							}
 						}
@@ -5296,7 +5555,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 					notNull = true;
 				}
 
-				if (current_option == 5)
+				if (current_option == 6)
 				{
 					showSearchItem = true;
 					showSearchAisle = false;
@@ -5390,6 +5649,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &search_tax_amount5, 0, nullptr);
 							SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &search_transaction_total5, 0, nullptr);
 							SQLBindCol(handleSQL, 6, SQL_C_CHAR, search_transaction_date5, sizeof(search_transaction_date5), nullptr);
+							SQLBindCol(handleSQL, 7, SQL_C_SLONG, &receipt_no5, 0, nullptr);
 
 							searchtransactions.clear();
 
@@ -5401,7 +5661,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 										search_item_price5,
 										search_tax_amount5,
 										search_transaction_total5,
-										search_transaction_date5
+										search_transaction_date5,
+										search_receipt_no5
 									});
 							}
 						}
@@ -5715,7 +5976,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				{
 					ImGui::BeginChild("TableScrollable", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-					if (ImGui::BeginTable("##SearchTransactionsTable", 6, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Sortable))
+					if (ImGui::BeginTable("##SearchTransactionsTable", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Sortable))
 					{
 						ImGui::TableSetupColumn("Transaction I.D.");
 						ImGui::TableSetupColumn("Item I.D.");
@@ -5723,6 +5984,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						ImGui::TableSetupColumn("Tax Amount");
 						ImGui::TableSetupColumn("Transaction Total");
 						ImGui::TableSetupColumn("Transaction Date");
+						ImGui::TableSetupColumn("Receipt Number");
 						ImGui::TableHeadersRow();
 
 						ImGuiTableSortSpecs* sortSpecs = ImGui::TableGetSortSpecs();
@@ -5742,6 +6004,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 									case 3: return ascending ? a.search_tax_amount5 < b.search_tax_amount5 : a.search_tax_amount5 > b.search_tax_amount5;
 									case 4: return ascending ? a.search_transaction_total5 < b.search_transaction_total5 : a.search_transaction_total5 > b.search_transaction_total5;
 									case 5: return ascending ? a.search_transaction_date5 < b.search_transaction_date5 : a.search_transaction_date5 > b.search_transaction_date5;
+									case 6: return ascending ? a.search_receipt_no5 < b.search_receipt_no5 : a.search_receipt_no5 > b.search_receipt_no5;
 									default: return false;
 									}
 								});
@@ -5765,6 +6028,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 							ImGui::TableSetColumnIndex(3); ImGui::Text("%.2f", searchtransaction.search_tax_amount5);
 							ImGui::TableSetColumnIndex(4); ImGui::Text("%.2f", searchtransaction.search_transaction_total5);
 							ImGui::TableSetColumnIndex(5); ImGui::Text("%s", searchtransaction.search_transaction_date5.c_str());
+							ImGui::TableSetColumnIndex(6); ImGui::Text("%d", searchtransaction.search_receipt_no5);
 
 							currentRow++;
 						}
