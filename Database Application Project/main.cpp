@@ -1,15 +1,14 @@
-#include <windows.h>
-#include "Window.h"
+#include "Game.h"
 
 int main()
 {
-	Window test;
+	Game game;
 
-	while (!test.IsDone())
+	while (!game.GetWindow().IsDone())
 	{
-		test.Update();
-		test.BeginDraw();
-		test.EndDraw();
+		game.Update();
+		game.Render();
+		game.RestartClock();
 	}
 
 }
