@@ -7,6 +7,7 @@
 #include <sql.h>
 #include "MouseDetector.h"
 #include <imgui-SFML.h>
+#include "Windows.h"
 
 using namespace sf;
 using namespace std;
@@ -43,8 +44,8 @@ bool IsDriverInstalled()
 	return driverFound;
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-//int main()
+//int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int main()
 {
 	if (!IsDriverInstalled()) 
 	{
