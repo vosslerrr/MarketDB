@@ -15,6 +15,21 @@ Window::~Window()
 	Destroy();
 }
 
+void Window::BeginDraw()
+{
+	m_window.clear();
+}
+
+void Window::Draw(sf::Drawable& l_drawable)
+{
+	m_window.draw(l_drawable);
+}
+
+void Window::EndDraw()
+{
+	m_window.display();
+}
+
 void Window::Setup(const std::string& l_title, const sf::Vector2u& l_size)
 {
 	m_windowTitle = l_title;
@@ -58,27 +73,17 @@ void Window::ToggleFullscreen()
 	Create();
 }
 
-void Window::BeginDraw()
-{
-	m_window.clear();
-}
-
-void Window::Draw(sf::Drawable& l_drawable)
-{
-	m_window.draw(l_drawable);
-}
-
-void Window::EndDraw()
-{
-	m_window.display();
-}
-
-bool Window::IsDone()
+bool Window::IsDone() const
 {
 	return m_isDone;
 }
 
-bool Window::IsFullscreen()
+bool Window::IsFullscreen() const
 {
 	return m_isFullscreen;
+}
+
+sf::Vector2u Window::GetWindowSize() const
+{
+	return m_windowSize;
 }

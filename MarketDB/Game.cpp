@@ -1,8 +1,11 @@
 #include "Game.h"
 
-Game::Game() : m_window("Test", sf::Vector2u(1280, 720)) {}
+Game::Game() : 
+	m_window("Test", sf::Vector2u(1280, 720)) 
+{}
 
-Game::~Game() {}
+Game::~Game() 
+{}
 
 void Game::Update()
 {

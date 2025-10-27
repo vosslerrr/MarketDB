@@ -11,14 +11,12 @@ public:
 	void BeginDraw();
 	void Draw(sf::Drawable& l_drawable);
 	void EndDraw();
-
 	void Update();
-
-	bool IsDone();
-	bool IsFullscreen();
-	sf::Vector2u GetWindowSize();
-
 	void ToggleFullscreen();
+
+	bool IsDone() const;
+	bool IsFullscreen() const;
+	sf::Vector2u GetWindowSize() const;
 
 private:
 	void Setup(const std::string& l_title, const sf::Vector2u& l_size);
@@ -26,8 +24,8 @@ private:
 	void Create();
 
 	sf::RenderWindow m_window;
-	sf::Vector2u m_windowSize;
 	std::string m_windowTitle;
+	sf::Vector2u m_windowSize;
 	bool m_isDone;
 	bool m_isFullscreen;
 };
