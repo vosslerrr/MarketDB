@@ -7,6 +7,7 @@
 #include <sql.h>
 #include "MouseDetector.h"
 #include <imgui-SFML.h>
+#include "ImGuiTextBox.h"
 
 using namespace sf;
 using namespace std;
@@ -43,7 +44,7 @@ bool IsDriverInstalled()
 	return driverFound;
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int main()
 {
 	if (!IsDriverInstalled()) 
 	{
@@ -93,6 +94,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	io.ConfigInputTextCursorBlink = false;
 	io.KeyRepeatDelay = 100.f;
 	io.KeyRepeatRate = 15.f;
+	ImFont* guiFont = io.Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
+	ImGui::SFML::UpdateFontTexture();
 
 	Texture loginBackgroundTexture;
 	loginBackgroundTexture.loadFromFile("loginColumns.png");
@@ -103,9 +106,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	Sprite loginBox(loginTexture);
 	loginBox.setOrigin({28,12});
 	loginBox.setPosition({ 400, 500 });
-
-	ImFont* guiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
-	ImGui::SFML::UpdateFontTexture();
 
 	bool itemTable = false;
 	bool aisleTable = false;
@@ -141,95 +141,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		ImGui::SFML::Update(loginwindow, loginClock.getElapsedTime());
 
-		//server box
-		{
-			ImGui::SetNextWindowPos(ImVec2(317, 279));//x-offset:8	y-offset:9
-			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-			ImGui::PushFont(guiFont);
-			ImGui::Begin("##ServerInputWindow", nullptr, ImGuiWindowFlags_NoResize
-				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoCollapse
-				| ImGuiWindowFlags_NoBackground
-				| ImGuiWindowFlags_NoTitleBar);
-			ImGui::InputText("##ServerInput", serverIn, sizeof(serverIn));
-			ImGui::PopStyleColor(2);
-			ImGui::PopFont();
-			ImGui::End();
-		}
-
-		//port box
-		{
-			ImGui::SetNextWindowPos(ImVec2(317, 319));//x-offset:8	y-offset:9
-			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-			ImGui::PushFont(guiFont);
-			ImGui::Begin("##PortInputWindow", nullptr, ImGuiWindowFlags_NoResize
-				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoCollapse
-				| ImGuiWindowFlags_NoBackground
-				| ImGuiWindowFlags_NoTitleBar);
-			ImGui::InputText("##PortInput", portIn, sizeof(portIn));
-			ImGui::PopStyleColor(2);
-			ImGui::PopFont();
-			ImGui::End();
-		}
-
-		//database box
-		{
-			ImGui::SetNextWindowPos(ImVec2(317, 359));//x-offset:8	y-offset:9
-			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-			ImGui::PushFont(guiFont);
-			ImGui::Begin("##DatabaseInputWindow", nullptr, ImGuiWindowFlags_NoResize
-				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoCollapse
-				| ImGuiWindowFlags_NoBackground
-				| ImGuiWindowFlags_NoTitleBar);
-			ImGui::InputText("##DatabaseInput", databaseIn, sizeof(databaseIn));
-			ImGui::PopStyleColor(2);
-			ImGui::PopFont();
-			ImGui::End();
-		}
-
-		//uid box
-		{
-			ImGui::SetNextWindowPos(ImVec2(317, 399));//x-offset:8	y-offset:9
-			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-			ImGui::PushFont(guiFont);
-			ImGui::Begin("##UIDInputWindow", nullptr, ImGuiWindowFlags_NoResize
-				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoCollapse
-				| ImGuiWindowFlags_NoBackground
-				| ImGuiWindowFlags_NoTitleBar);
-			ImGui::InputText("##UIDInput", uidIn, sizeof(uidIn));
-			ImGui::PopStyleColor(2);
-			ImGui::PopFont();
-			ImGui::End();
-		}
-
-		//pwd box
-		{
-			ImGui::SetNextWindowPos(ImVec2(317, 439));//x-offset:8	y-offset:9
-			ImGui::SetNextWindowSize(ImVec2(231, 45)); //x-offset:81
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-			ImGui::PushFont(guiFont);
-			ImGui::Begin("##PWDInputWindow", nullptr, ImGuiWindowFlags_NoResize
-													| ImGuiWindowFlags_NoMove
-													| ImGuiWindowFlags_NoCollapse
-													| ImGuiWindowFlags_NoBackground
-													| ImGuiWindowFlags_NoTitleBar);
-			ImGui::InputText("##PWDInput", pwdIn, sizeof(pwdIn), ImGuiInputTextFlags_Password);
-			ImGui::PopStyleColor(2);
-			ImGui::PopFont();
-			ImGui::End();
-		}
+		ImGuiTextBox serverBox{ImVec2(317,279), "##ServerInputWindow", "##ServerInput", serverIn, guiFont };
+		ImGuiTextBox portBox{ ImVec2(317,319), "##PortInputWindow", "##PortInput", portIn, guiFont };
+		ImGuiTextBox databaseBox{ ImVec2(317,359), "##DatabaseInputWindow", "##DatabaseInput", databaseIn, guiFont };
+		ImGuiTextBox uidBox{ ImVec2(317,399), "##UIDInputWindow", "##UIDInput", uidIn, guiFont };
+		ImGuiTextBox pwdBox{ ImVec2(317,439), "##PWDInputWindow", "##PWDInput", pwdIn, guiFont };
 
 		if (winLogDetector.isOn(loginBox, loginwindow))
 		{
