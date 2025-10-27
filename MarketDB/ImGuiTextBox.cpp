@@ -1,5 +1,7 @@
 #include "ImGUITextBox.h"
 
+ImGuiTextBox::ImGuiTextBox(){}
+
 ImGuiTextBox::ImGuiTextBox(ImVec2 l_windowPos, const char* l_name, const char* l_label, char* l_textIn, ImFont* l_font)
 {
 	ImGui::SetNextWindowPos(l_windowPos);
@@ -17,4 +19,6 @@ ImGuiTextBox::ImGuiTextBox(ImVec2 l_windowPos, const char* l_name, const char* l
 	ImGui::PopFont();
 	ImGui::End();
 }
+
+ImGuiTextBox::~ImGuiTextBox(){}
 
