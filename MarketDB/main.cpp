@@ -40,7 +40,7 @@ bool IsDriverInstalled()
 
 int main()
 {
-	if (!IsDriverInstalled()) 
+	if (!IsDriverInstalled())
 	{
 		int result = MessageBoxW(
 			nullptr,
@@ -52,7 +52,7 @@ int main()
 			MB_YESNO | MB_ICONWARNING
 		);
 
-		if (result == IDYES) 
+		if (result == IDYES)
 		{
 			ShellExecuteW(
 				nullptr,
@@ -63,7 +63,7 @@ int main()
 				SW_SHOWNORMAL
 			);
 		}
-		else 
+		else
 		{
 			MessageBoxW(nullptr, L"Installation canceled by user.", L"Canceled", MB_OK | MB_ICONINFORMATION);
 		}
@@ -83,42 +83,17 @@ int main()
 	sf::RenderWindow loginwindow = sf::RenderWindow(sf::VideoMode({ 800,600 }), "Login", sf::Style::Close);
 	loginwindow.setFramerateLimit(60);
 
-	ImGui::SFML::Init(loginwindow); 
+	ImGui::SFML::Init(loginwindow);
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigInputTextCursorBlink = false;
-	io.KeyRepeatDelay = 100.f;
-	io.KeyRepeatRate = 15.f;
-	ImFont* guiFont = io.Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
+	io.Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
 	ImGui::SFML::UpdateFontTexture();
+	io.FontDefault = io.Fonts->Fonts.back();
 
 	sf::Texture loginBackgroundTexture;
 	loginBackgroundTexture.loadFromFile("loginColumns.png");
 	sf::Sprite loginBackground(loginBackgroundTexture);
 
-	sf::Texture loginTexture;
-	loginTexture.loadFromFile("loginBox.png");
-	sf::Sprite loginBox(loginTexture);
-	loginBox.setOrigin({28,12});
-	loginBox.setPosition({ 400, 500 });
-
-	bool itemTable = false;
-	bool aisleTable = false;
-	bool sectionTable = false;
-	bool supplierTable = false;
-	bool transactionTable = false;
-
-	MouseDetector winLogDetector;
 	sf::Clock loginClock;
-
-	char serverIn[128] = "";
-	char portIn[128] = "";
-	char databaseIn[128] = "";
-	char uidIn[128] = "";
-	char pwdIn[128] = "";
-
-	const auto arrowCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Arrow).value();
-	const auto handCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Hand).value();
-	const auto textCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Text).value();
 
 	ImGuiTextBox serverBox;
 	ImGuiTextBox portBox;
@@ -139,74 +114,77 @@ int main()
 			}
 		}
 
-		ImGui::SFML::Update(loginwindow, loginClock.getElapsedTime());
+		ImGui::SFML::Update(loginwindow, loginClock.restart());
 
-		serverBox = { ImVec2(317,279), "##ServerInputWindow", "##ServerInput", serverIn, guiFont };
-		portBox = { ImVec2(317,319), "##PortInputWindow", "##PortInput", portIn, guiFont };
-		databaseBox = { ImVec2(317,359), "##DatabaseInputWindow", "##DatabaseInput", databaseIn, guiFont };
-		uidBox = { ImVec2(317,399), "##UIDInputWindow", "##UIDInput", uidIn, guiFont };
-		pwdBox = { ImVec2(317,439), "##PWDInputWindow", "##PWDInput", pwdIn, guiFont };
+		serverBox.draw(ImVec2(317, 279), "##ServerInputWindow", "##ServerInput");
+		portBox.draw(ImVec2(317, 319), "##PortInputWindow", "##PortInput");
+		databaseBox.draw(ImVec2(317, 359), "##DatabaseInputWindow", "##DatabaseInput");
+		uidBox.draw(ImVec2(317, 399), "##UIDInputWindow", "##UIDInput");
+		pwdBox.draw(ImVec2(317, 439), "##PWDInputWindow", "##PWDInput");
 
-		if (winLogDetector.isOn(loginBox, loginwindow))
+		ImGui::SetNextWindowPos(ImVec2(360, 475));
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(100.f / 255.f, 200.f / 255.f, 183.f / 255.f, 1.f));
+		ImGui::Begin("##logInButton", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+
+		if (ImGui::Button("Log In"))
 		{
-			loginwindow.setMouseCursor(handCursor);
+			std::string serverInStr(serverBox.getInput());
+			std::wstring wServerInput(serverInStr.begin(), serverInStr.end());
+			std::string portInStr(portBox.getInput());
+			std::wstring wPortInput(portInStr.begin(), portInStr.end());
+			std::string databaseInStr(databaseBox.getInput());
+			std::wstring wDatabaseInput(databaseInStr.begin(), databaseInStr.end());
+			std::string uidInStr(uidBox.getInput());
+			std::wstring wUidInput(uidInStr.begin(), uidInStr.end());
+			std::string pwdInStr(pwdBox.getInput());
+			std::wstring wPwdInput(pwdInStr.begin(), pwdInStr.end());
+			std::wstring connStr = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};SERVER=" + wServerInput + L";PORT=" + wPortInput + L";DATABASE=" +
+				wDatabaseInput + L";UID=" + wUidInput + L";PWD=" + wPwdInput + L";";
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			retSQL = SQLDriverConnect(dbconSQL, NULL, (SQLWCHAR*)connStr.c_str(), SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
+
+			if (SQL_SUCCEEDED(retSQL))
 			{
-				if (loginClock.getElapsedTime().asSeconds() >= 0.3)
-				{
-					std::string serverInStr(serverIn);
-					std::wstring wServerInput(serverInStr.begin(), serverInStr.end());
-					std::string portInStr(portIn);
-					std::wstring wPortInput(portInStr.begin(), portInStr.end());
-					std::string databaseInStr(databaseIn);
-					std::wstring wDatabaseInput(databaseInStr.begin(), databaseInStr.end());
-					std::string uidInStr(uidIn);
-					std::wstring wUidInput(uidInStr.begin(), uidInStr.end());
-					std::string pwdInStr(pwdIn);
-					std::wstring wPwdInput(pwdInStr.begin(), pwdInStr.end());
-					std::wstring connStr = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};SERVER=" + wServerInput + L";PORT=" + wPortInput + L";DATABASE=" +
-						wDatabaseInput + L";UID=" + wUidInput + L";PWD=" + wPwdInput + L";";
+				std::cout << "Connected" << std::endl;
 
-					retSQL = SQLDriverConnect(dbconSQL, NULL, (SQLWCHAR*)connStr.c_str(), SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
+				SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+				SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+				SQLFreeHandle(SQL_HANDLE_DBC, dbconSQL);
+				SQLFreeHandle(SQL_HANDLE_ENV, envSQL);
 
-					if (SQL_SUCCEEDED(retSQL))
-					{
-						std::cout << "Connected" << std::endl;
+				loginwindow.close();
+			}
 
-						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-						SQLFreeHandle(SQL_HANDLE_DBC, dbconSQL);
-						SQLFreeHandle(SQL_HANDLE_ENV, envSQL);
+			else
+			{
+				std::cerr << "Connection failed" << std::endl;
 
-						loginwindow.close();
-					}
-
-					else
-					{
-						std::cerr  << "Connection failed" << std::endl;
-
-						int error = MessageBoxW(
-							nullptr,
-							L"One or more of the inputs are incorrect.\n"
-							L"Connection to MySQL has failed.\n\n"
-							L"Please try again.",
-							L"Connection Failed!",
-							MB_OK | MB_ICONWARNING
-						);
-					}
-
-					loginClock.restart();
-				}
+				int error = MessageBoxW(
+					nullptr,
+					L"One or more of the inputs are incorrect.\n"
+					L"Connection to MySQL has failed.\n\n"
+					L"Please try again.",
+					L"Connection Failed!",
+					MB_OK | MB_ICONWARNING
+				);
 			}
 		}
 
+		ImGui::PopStyleColor(2);
+		ImGui::End();
+
 		loginwindow.clear();
 		loginwindow.draw(loginBackground);
-		loginwindow.draw(loginBox);
 		ImGui::SFML::Render(loginwindow);
 		loginwindow.display();
 	}
+
+	bool itemTable = false;
+	bool aisleTable = false;
+	bool sectionTable = false;
+	bool supplierTable = false;
+	bool transactionTable = false;
 
 	SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 	retSQL = SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SHOW TABLES LIKE 'aisle'", SQL_NTS);
@@ -376,10 +354,6 @@ int main()
 	window.setFramerateLimit(60);
 
 	ImGui::SFML::Init(window);
-	ImGuiIO& io2 = ImGui::GetIO();
-	io2.ConfigInputTextCursorBlink = false;
-	io2.KeyRepeatDelay = 100.f;
-	io2.KeyRepeatRate = 15.f;
 
 	sf::Texture backgroundTexture;
 	backgroundTexture.loadFromFile("background.png");
@@ -417,24 +391,6 @@ int main()
 	sf::RectangleShape transactionHeaderBox({ 165,23 });
 	transactionHeaderBox.setOrigin({ transactionHeaderBox.getGeometricCenter().x, transactionHeaderBox.getGeometricCenter().y });
 	transactionHeaderBox.setPosition({ 764,28 });
-
-	sf::RectangleShape textBox1({ 150,22 });
-	textBox1.setOrigin({ textBox1.getGeometricCenter().x, textBox1.getGeometricCenter().y });
-
-	sf::RectangleShape textBox2({ 150,22 });
-	textBox2.setOrigin({ textBox2.getGeometricCenter().x, textBox2.getGeometricCenter().y });
-
-	sf::RectangleShape textBox3({ 150,22 });
-	textBox3.setOrigin({ textBox3.getGeometricCenter().x, textBox3.getGeometricCenter().y });
-
-	sf::RectangleShape textBox4({ 150,22 });
-	textBox4.setOrigin({ textBox4.getGeometricCenter().x, textBox4.getGeometricCenter().y });
-
-	sf::RectangleShape textBox5({ 150,22 });
-	textBox5.setOrigin({ textBox5.getGeometricCenter().x, textBox5.getGeometricCenter().y });
-
-	sf::RectangleShape textBox6({ 150,22 });
-	textBox6.setOrigin({ textBox6.getGeometricCenter().x, textBox6.getGeometricCenter().y });
 
 	sf::RectangleShape searchButton({44,43});
 	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
@@ -710,13 +666,6 @@ int main()
 
 	SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-	char t1In[128] = "";
-	char t2In[128] = "";
-	char t3In[128] = "";
-	char t4In[128] = "";
-	char t5In[128] = "";
-	char t6In[128] = "";
-
 	// search item construction
 	struct SearchItem {
 		std::string search_item_id1;
@@ -807,21 +756,12 @@ int main()
 			}
 		}
 
-		ImGui::SFML::Update(window, clock.getElapsedTime());
+		ImGui::SFML::Update(window, clock.restart());
 
 		if (mouseDetector.isOn(itemHeaderBox, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = true;
 				clickAisle = false;
 				clickSection = false;
@@ -831,13 +771,6 @@ int main()
 				clickGO = false;
 
 				background.setTexture(itemBackgroundTexture);
-				
-				textBox1.setPosition({280, 110});
-				textBox2.setPosition({ 280, 158 });
-				textBox3.setPosition({ 280, 206 });				
-				textBox4.setPosition({ 280, 254 });
-				textBox5.setPosition({ 280, 302 });
-				textBox6.setPosition({ 280, 350 });
 
 				invalT1.setPosition({ 205,96 });
 				invalT2.setPosition({ 205,144 });
@@ -863,12 +796,12 @@ int main()
 
 		if (clickItem)
 		{	
-			t1Box = { ImVec2(197,88), "##itemT1InputWindow", "##itemT1Input", t1In, guiFont };
-			t2Box = { ImVec2(197,136), "##itemT2InputWindow", "##itemT2Input", t2In, guiFont };
-			t3Box = { ImVec2(197,184), "##itemT3InputWindow", "##itemT3Input", t3In, guiFont };
-			t4Box = { ImVec2(197, 232), "##itemT4InputWindow", "##itemT4Input", t4In, guiFont };
-			t5Box = { ImVec2(197,280), "##itemT5InputWindow", "##itemT5Input", t5In, guiFont };
-			t6Box = { ImVec2(197,328), "##itemT6InputWindow", "##itemT6Input", t6In, guiFont };
+			t1Box.draw(ImVec2(197,88), "##itemT1InputWindow", "##itemT1Input");
+			t2Box.draw(ImVec2(197,136), "##itemT2InputWindow", "##itemT2Input");
+			t3Box.draw(ImVec2(197,184), "##itemT3InputWindow", "##itemT3Input");
+			t4Box.draw(ImVec2(197, 232), "##itemT4InputWindow", "##itemT4Input");
+			t5Box.draw(ImVec2(197,280), "##itemT5InputWindow", "##itemT5Input");
+			t6Box.draw(ImVec2(197,328), "##itemT6InputWindow", "##itemT6Input");
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -978,6 +911,8 @@ int main()
 						}
 					}
 
+					//TODO: Fix this idk what this even does
+					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
@@ -991,8 +926,8 @@ int main()
 
 							original_item_id1 = items[selectedRow].item_id1;
 
-							strncpy_s(t1In, items[selectedRow].item_id1.c_str(), sizeof(t1In) - 1);
-							t1In[sizeof(t1In) - 1] = '\0';
+							strncpy_s(t1Box.getInput(), items[selectedRow].item_id1.c_str(), sizeof(t1Box.getInput()) - 1);
+							t1Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
 							strncpy_s(t2In, items[selectedRow].item_name1.c_str(), sizeof(t2In) - 1);
 							t2In[sizeof(t2In) - 1] = '\0';
 							snprintf(t3In, sizeof(t3In), "%d", items[selectedRow].aisle_no1);
@@ -1002,6 +937,7 @@ int main()
 							snprintf(t6In, sizeof(t6In), "%d", items[selectedRow].no_of_items1);
 						}
 					}
+					*/
 				}
 
 				ImGui::EndChild();
@@ -1013,22 +949,13 @@ int main()
 
 		if (clickItem)
 		{
-			if (mouseDetector.isOn(textBox1, window) 
-			 || mouseDetector.isOn(textBox2, window) 
-			 || mouseDetector.isOn(textBox3, window) 
-			 || mouseDetector.isOn(textBox4, window) 
-			 || mouseDetector.isOn(textBox5, window) 
-			 || mouseDetector.isOn(textBox6, window)){window.setMouseCursor(textCursor);}
-
 			if (mouseDetector.isOn(submitButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -1040,7 +967,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -1052,7 +979,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -1064,7 +991,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -1076,7 +1003,7 @@ int main()
 							invalT4.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
+						if (t5Box.getInput() == "")
 						{
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
@@ -1088,7 +1015,7 @@ int main()
 							invalT5.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t6In[0] == '\0')
+						if (t6Box.getInput() == "")
 						{
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
@@ -1102,7 +1029,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 							
 							std::stoi(t3InTEST);
 						}
@@ -1121,7 +1048,7 @@ int main()
 
 						try
 						{
-							std::string t5InTEST(t5In);
+							std::string t5InTEST(t5Box.getInput());
 
 							std::stof(t5InTEST);
 						}
@@ -1140,7 +1067,7 @@ int main()
 
 						try
 						{
-							std::string t6InTEST(t6In);
+							std::string t6InTEST(t6Box.getInput());
 
 							std::stoi(t6InTEST);
 						}
@@ -1159,7 +1086,7 @@ int main()
 
 						if (notNull && valNums)
 						{
-							std::string item_idStr(t1In);
+							std::string item_idStr(t1Box.getInput());
 							std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -1196,10 +1123,10 @@ int main()
 
 							if (primaryKeyIsVal)
 							{
-								std::string item_nameStr(t2In);
+								std::string item_nameStr(t2Box.getInput());
 								std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
 
-								int aisle_no = atoi(t3In);
+								int aisle_no = atoi(t3Box.getInput());
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
@@ -1235,7 +1162,7 @@ int main()
 
 								if (valAisleNo)
 								{
-									std::string section_idStr(t4In);
+									std::string section_idStr(t4Box.getInput());
 									std::wstring section_id(section_idStr.begin(), section_idStr.end());
 
 									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -1272,8 +1199,8 @@ int main()
 
 									if (valSectionID)
 									{
-										float item_price = atof(t5In);
-										int no_of_items = atoi(t6In);
+										float item_price = atof(t5Box.getInput());
+										int no_of_items = atoi(t6Box.getInput());
 
 										std::wstring insertQuery = L"INSERT INTO item (item_id, item_name, aisle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
 
@@ -1293,13 +1220,6 @@ int main()
 										if (SQL_SUCCEEDED(retSQL))
 										{
 											std::cout << "Insert successful!" << std::endl;
-
-											t1In[0] = '\0';
-											t2In[0] = '\0';
-											t3In[0] = '\0';
-											t4In[0] = '\0';
-											t5In[0] = '\0';
-											t6In[0] = '\0';
 
 											SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1371,13 +1291,11 @@ int main()
 
 			if (mouseDetector.isOn(modifyButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -1389,7 +1307,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -1401,7 +1319,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -1413,7 +1331,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -1425,7 +1343,7 @@ int main()
 							invalT4.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
+						if (t5Box.getInput() == "")
 						{
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
@@ -1437,7 +1355,7 @@ int main()
 							invalT5.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t6In[0] == '\0')
+						if (t6Box.getInput() == "")
 						{
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
@@ -1451,7 +1369,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stoi(t3InTEST);
 						}
@@ -1470,7 +1388,7 @@ int main()
 
 						try
 						{
-							std::string t5InTEST(t5In);
+							std::string t5InTEST(t5Box.getInput());
 
 							std::stof(t5InTEST);
 						}
@@ -1489,7 +1407,7 @@ int main()
 
 						try
 						{
-							std::string t6InTEST(t6In);
+							std::string t6InTEST(t6Box.getInput());
 
 							std::stoi(t6InTEST);
 						}
@@ -1511,15 +1429,15 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							std::wstring original_item_idW(original_item_id1.begin(), original_item_id1.end());
-							std::string item_idStr(t1In);
+							std::string item_idStr(t1Box.getInput());
 							std::wstring item_id(item_idStr.begin(), item_idStr.end());
-							std::string item_nameStr(t2In);
+							std::string item_nameStr(t2Box.getInput());
 							std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
-							int aisle_no = atoi(t3In);
-							std::string section_idStr(t4In);
+							int aisle_no = atoi(t3Box.getInput());
+							std::string section_idStr(t4Box.getInput());
 							std::wstring section_id(section_idStr.begin(), section_idStr.end());
-							float item_price = atof(t5In);
-							int no_of_items = atoi(t6In);
+							float item_price = atof(t5Box.getInput());
+							int no_of_items = atoi(t6Box.getInput());
 
 							std::wstring updateQuery = L"UPDATE item SET item_id = ?, item_name = ?, aisle_no = ?, section_id = ?, item_price = ?, no_of_items = ? WHERE item_id = ?";
 
@@ -1544,13 +1462,6 @@ int main()
 
 								submitButton.setColor(sf::Color::White);
 								submitButton.setPosition({ 210,400 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
-								t3In[0] = '\0';
-								t4In[0] = '\0';
-								t5In[0] = '\0';
-								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1619,17 +1530,8 @@ int main()
 
 		if (mouseDetector.isOn(aisleHeaderBox, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = false;
 				clickAisle = true;
 				clickSection = false;
@@ -1639,9 +1541,6 @@ int main()
 				clickGO = false;
 
 				background.setTexture(aisleBackgroundTexture);
-
-				textBox1.setPosition({ 310, 110 });
-				textBox2.setPosition({ 310, 158 });
 
 				invalT1.setPosition({ 235,97 });
 				invalT2.setPosition({ 235,145 });
@@ -1663,8 +1562,8 @@ int main()
 
 		if (clickAisle)
 		{
-			t1Box = { ImVec2(227,88), "##aisleT1InputWindow", "##aisleT1Input", t1In, guiFont };
-			t2Box = { ImVec2(227,136), "##aisleT2InputWindow", "##aisleT2Input", t2In, guiFont };
+			t1Box.draw(ImVec2(227,88), "##aisleT1InputWindow", "##aisleT1Input");
+			t2Box.draw(ImVec2(227,136), "##aisleT2InputWindow", "##aisleT2Input");
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -1775,8 +1674,8 @@ int main()
 
 							original_aisle_no2 = aisles[selectedRow].aisle_no2;
 
-							snprintf(t1In, sizeof(t2In), "%d", aisles[selectedRow].aisle_no2);
-							snprintf(t2In, sizeof(t2In), "%d", aisles[selectedRow].no_of_sections2);
+							snprintf(t1Box.getInput(), sizeof(t2Box.getInput()), "%d", aisles[selectedRow].aisle_no2);
+							snprintf(t2Box.getInput(), sizeof(t2Box.getInput()), "%d", aisles[selectedRow].no_of_sections2);
 						}
 					}
 				}
@@ -1790,17 +1689,13 @@ int main()
 
 		if (clickAisle)
 		{
-			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window)) {window.setMouseCursor(textCursor);}
-
 			if (mouseDetector.isOn(submitButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -1813,7 +1708,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -1828,7 +1723,7 @@ int main()
 
 						try
 						{
-							std::string t1InTEST(t1In);
+							std::string t1InTEST(t1Box.getInput());
 
 							std::stoi(t1InTEST);
 						}
@@ -1847,7 +1742,7 @@ int main()
 
 						try
 						{
-							std::string t2InTEST(t2In);
+							std::string t2InTEST(t2Box.getInput());
 
 							std::stoi(t2InTEST);
 						}
@@ -1866,7 +1761,7 @@ int main()
 
 						if (notNull && valNums)
 						{
-							int aisle_no = atoi(t1In);
+							int aisle_no = atoi(t1Box.getInput());
 
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
@@ -1904,7 +1799,7 @@ int main()
 							{
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-								int no_of_sections = atoi(t2In);
+								int no_of_sections = atoi(t2Box.getInput());
 
 								std::wstring insertQuery = L"INSERT INTO aisle (aisle_no, no_of_sections) VALUES (?,?)";
 
@@ -1918,9 +1813,6 @@ int main()
 								if (SQL_SUCCEEDED(retSQL))
 								{
 									std::cout << "Insert successful!" << std::endl;
-
-									t1In[0] = '\0';
-									t2In[0] = '\0';
 
 									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -1976,13 +1868,11 @@ int main()
 
 			if (mouseDetector.isOn(modifyButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -1994,7 +1884,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -2008,7 +1898,7 @@ int main()
 
 						try
 						{
-							std::string t1InTEST(t1In);
+							std::string t1InTEST(t1Box.getInput());
 
 							std::stoi(t1InTEST);
 						}
@@ -2027,7 +1917,7 @@ int main()
 
 						try
 						{
-							std::string t2InTEST(t2In);
+							std::string t2InTEST(t2Box.getInput());
 
 							std::stoi(t2InTEST);
 						}
@@ -2049,8 +1939,8 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							int original_aisle_no = original_aisle_no2;
-							int aisle_no = atoi(t1In);
-							int no_of_sections = atoi(t2In);
+							int aisle_no = atoi(t1Box.getInput());
+							int no_of_sections = atoi(t2Box.getInput());
 
 							std::wstring updateQuery = L"UPDATE aisle SET aisle_no = ?, no_of_sections = ? WHERE aisle_no = ?";
 
@@ -2071,9 +1961,6 @@ int main()
 
 								submitButton.setColor(sf::Color::White);
 								submitButton.setPosition({ 210,220 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2128,17 +2015,8 @@ int main()
 
 		if (mouseDetector.isOn(sectionHeaderBox, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = true;
@@ -2148,10 +2026,6 @@ int main()
 				clickGO = false;
 
 				background.setTexture(sectionBackgroundTexture);
-
-				textBox1.setPosition({ 300, 110 });
-				textBox2.setPosition({ 300, 158 });
-				textBox3.setPosition({ 300, 206 });
 
 				invalT1.setPosition({ 225,96 });
 				invalT2.setPosition({ 225,144 });
@@ -2174,9 +2048,9 @@ int main()
 
 		if (clickSection)
 		{
-			t1Box = { ImVec2(217,88), "##sectionT1InputWindow", "##sectionT1Input", t1In, guiFont };
-			t2Box = { ImVec2(217,136), "##sectionT2InputWindow", "##sectionT2Input", t2In, guiFont };
-			t3Box = { ImVec2(217,184), "##sectionT3InputWindow", "##sectionT3Input", t3In, guiFont };
+			t1Box.draw(ImVec2(217,88), "##sectionT1InputWindow", "##sectionT1Input");
+			t2Box.draw(ImVec2(217,136), "##sectionT2InputWindow", "##sectionT2Input");
+			t3Box.draw(ImVec2(217,184), "##sectionT3InputWindow", "##sectionT3Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2276,7 +2150,8 @@ int main()
 							}
 						}
 					}
-
+					//TODO: Fix this idk what this even does
+					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
@@ -2290,13 +2165,14 @@ int main()
 
 							original_section_id3 = sections[selectedRow].section_id3;
 
-							strncpy_s(t1In, sections[selectedRow].section_id3.c_str(), sizeof(t1In) - 1);
-							t1In[sizeof(t1In) - 1] = '\0';
-							strncpy_s(t2In, sections[selectedRow].section_name3.c_str(), sizeof(t2In) - 1);
-							t2In[sizeof(t2In) - 1] = '\0';
-							snprintf(t3In, sizeof(t3In), "%d", sections[selectedRow].aisle_no3);
+							strncpy_s(t1Box.getInput(), sections[selectedRow].section_id3.c_str(), sizeof(t1Box.getInput()) - 1);
+							t1Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
+							strncpy_s(t2Box.getInput(), sections[selectedRow].section_name3.c_str(), sizeof(t2Box.getInput()) - 1);
+							t2Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
+							snprintf(t3Box.getInput(), sizeof(t3Box.getInput()), "%d", sections[selectedRow].aisle_no3);
 						}
 					}
+					*/
 				}
 
 				ImGui::EndChild();
@@ -2308,19 +2184,15 @@ int main()
 
 		if (clickSection)
 		{
-			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window) || mouseDetector.isOn(textBox3, window)){window.setMouseCursor(textCursor);}
-
 			if (mouseDetector.isOn(submitButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
 
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -2332,7 +2204,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -2344,7 +2216,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -2358,7 +2230,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stoi(t3InTEST);
 						}
@@ -2377,7 +2249,7 @@ int main()
 
 						if (notNull && valNums)
 						{
-							std::string section_idStr(t1In);
+							std::string section_idStr(t1Box.getInput());
 							std::wstring section_id(section_idStr.begin(), section_idStr.end());
 
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -2414,9 +2286,9 @@ int main()
 
 							if (primaryKeyIsVal)
 							{
-								std::string section_nameStr(t2In);
+								std::string section_nameStr(t2Box.getInput());
 								std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
-								int aisle_no = std::atoi(t3In);
+								int aisle_no = std::atoi(t3Box.getInput());
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
@@ -2467,10 +2339,6 @@ int main()
 									if (SQL_SUCCEEDED(retSQL))
 									{
 										std::cout << "Insert successful!" << std::endl;
-
-										t1In[0] = '\0';
-										t2In[0] = '\0';
-										t3In[0] = '\0';
 
 										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2529,13 +2397,11 @@ int main()
 
 			if (mouseDetector.isOn(modifyButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -2547,7 +2413,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -2559,7 +2425,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -2573,7 +2439,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t2Box.getInput());
 
 							std::stoi(t3InTEST);
 						}
@@ -2595,11 +2461,11 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							std::wstring original_section_id(original_section_id3.begin(), original_section_id3.end());
-							std::string section_idStr(t1In);
+							std::string section_idStr(t1Box.getInput());
 							std::wstring section_id(section_idStr.begin(), section_idStr.end());
-							std::string section_nameStr(t2In);
+							std::string section_nameStr(t2Box.getInput());
 							std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
-							int aisle_no = atoi(t3In);;
+							int aisle_no = atoi(t3Box.getInput());;
 
 							std::wstring updateQuery = L"UPDATE section SET section_id = ?, section_name = ?, aisle_no = ? WHERE section_id = ?";
 
@@ -2621,10 +2487,6 @@ int main()
 
 								submitButton.setColor(sf::Color::White);
 								submitButton.setPosition({ 210,250 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
-								t3In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2682,17 +2544,8 @@ int main()
 
 		if (mouseDetector.isOn(supplierHeaderBox, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = false;
@@ -2702,11 +2555,6 @@ int main()
 				clickGO = false;
 
 				background.setTexture(supplierBackgroundTexture);
-
-				textBox1.setPosition({ 310, 110 });
-				textBox2.setPosition({ 310, 158 });
-				textBox3.setPosition({ 310, 206 });
-				textBox4.setPosition({ 310, 254 });
 
 				invalT1.setPosition({ 235,96 });
 				invalT2.setPosition({ 235,144 });
@@ -2730,10 +2578,10 @@ int main()
 
 		if (clickSupplier)
 		{
-			t1Box = { ImVec2(227,88), "##supplierT1InputWindow", "##supplierT1Input", t1In, guiFont };
-			t2Box = { ImVec2(227,136), "##supplierT2InputWindow", "##supplierT2Input", t2In, guiFont };
-			t3Box = { ImVec2(227,184), "##supplierT3InputWindow", "##supplierT3Input", t3In, guiFont };
-			t4Box = { ImVec2(227,232), "##supplierT4InputWindow", "##suuplierT4Input", t4In, guiFont };
+			t1Box.draw(ImVec2(227,88), "##supplierT1InputWindow", "##supplierT1Input");
+			t2Box.draw(ImVec2(227,136), "##supplierT2InputWindow", "##supplierT2Input");
+			t3Box.draw(ImVec2(227,184), "##supplierT3InputWindow", "##supplierT3Input");
+			t4Box.draw(ImVec2(227,232), "##supplierT4InputWindow", "##suuplierT4Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2836,7 +2684,8 @@ int main()
 							}
 						}
 					}
-
+					//TODO fix this idk what it even does
+					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
@@ -2859,6 +2708,7 @@ int main()
 							t4In[sizeof(t4In) - 1] = '\0';
 						}
 					}
+					*/
 				}
 
 				ImGui::EndChild();
@@ -2870,17 +2720,13 @@ int main()
 
 		if (clickSupplier)
 		{
-			if (mouseDetector.isOn(textBox1, window) || mouseDetector.isOn(textBox2, window)|| mouseDetector.isOn(textBox3, window) || mouseDetector.isOn(textBox4, window)){window.setMouseCursor(textCursor);}
-
 			if (mouseDetector.isOn(submitButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -2892,7 +2738,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -2904,7 +2750,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -2916,7 +2762,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -2930,7 +2776,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stof(t3InTEST);
 						}
@@ -2949,7 +2795,7 @@ int main()
 
 						if (notNull && valNums)
 						{
-							std::string supplier_idStr(t1In);
+							std::string supplier_idStr(t1Box.getInput());
 							std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
 
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -2987,7 +2833,7 @@ int main()
 
 							if (primaryKeyIsVal)
 							{
-								std::string item_idStr(t2In);
+								std::string item_idStr(t2Box.getInput());
 								std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -3024,8 +2870,8 @@ int main()
 
 								if (valItemID)
 								{
-									float item_cost = atof(t3In);
-									std::string supplier_nameStr(t4In);
+									float item_cost = atof(t3Box.getInput());
+									std::string supplier_nameStr(t4Box.getInput());
 									std::wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
 
 									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -3044,11 +2890,6 @@ int main()
 									if (SQL_SUCCEEDED(retSQL))
 									{
 										std::cout << "Insert successful!" << std::endl;
-
-										t1In[0] = '\0';
-										t2In[0] = '\0';
-										t3In[0] = '\0';
-										t4In[0] = '\0';
 
 										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3112,13 +2953,11 @@ int main()
 
 			if (mouseDetector.isOn(modifyButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -3130,7 +2969,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -3142,7 +2981,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -3154,7 +2993,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -3168,7 +3007,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stof(t3InTEST);
 						}
@@ -3190,12 +3029,12 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							std::wstring original_supplier_id(original_supplier_id4.begin(), original_supplier_id4.end());
-							std::string supplier_idStr(t1In);
+							std::string supplier_idStr(t1Box.getInput());
 							std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
-							std::string item_idStr(t2In);
+							std::string item_idStr(t2Box.getInput());
 							std::wstring item_id(item_idStr.begin(), item_idStr.end());
-							float item_cost = atof(t3In);
-							std::string supplier_nameStr(t4In);
+							float item_cost = atof(t3Box.getInput());
+							std::string supplier_nameStr(t4Box.getInput());
 							std::wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
 
 							std::wstring updateQuery = L"UPDATE supplier SET supplier_id = ?, item_id = ?, item_cost = ?, supplier_name = ? WHERE supplier_id = ?";
@@ -3219,11 +3058,6 @@ int main()
 
 								submitButton.setColor(sf::Color::White);
 								submitButton.setPosition({ 210,300 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
-								t3In[0] = '\0';
-								t4In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3282,17 +3116,8 @@ int main()
 
 		if (mouseDetector.isOn(transactionHeaderBox, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = false;
@@ -3302,13 +3127,6 @@ int main()
 				clickGO = false;
 
 				background.setTexture(transactionBackgroundTexture);
-
-				textBox1.setPosition({ 330, 110 });
-				textBox2.setPosition({ 330, 158 });
-				textBox3.setPosition({ 330, 206 });
-				textBox4.setPosition({ 330, 254 });
-				textBox5.setPosition({ 330, 302 });
-				textBox6.setPosition({ 330, 350 });
 
 				invalT1.setPosition({ 255,96 });
 				invalT2.setPosition({ 255,144 });
@@ -3334,12 +3152,12 @@ int main()
 
 		if (clickTransaction)
 		{
-			t1Box = { ImVec2(247,88), "##transactionT1InputWindow", "##transactionT1Input", t1In, guiFont };
-			t2Box = { ImVec2(247,136), "##transactionT2InputWindow", "##transactionT2Input", t2In, guiFont };
-			t3Box = { ImVec2(247,184), "##transactionT3InputWindow", "##transactionT3Input", t3In, guiFont };
-			t4Box = { ImVec2(247,232), "##transactionT4InputWindow", "##transactionT4Input", t4In, guiFont };
-			t5Box = { ImVec2(247,280), "##transactionT5InputWindow", "##transactionT5Input", t5In, guiFont };
-			t6Box = { ImVec2(247,328), "##transactionT6InputWindow", "##transactionT6Input", t6In, guiFont };
+			t1Box.draw(ImVec2(247,88), "##transactionT1InputWindow", "##transactionT1Input");
+			t2Box.draw(ImVec2(247,136), "##transactionT2InputWindow", "##transactionT2Input");
+			t3Box.draw(ImVec2(247,184), "##transactionT3InputWindow", "##transactionT3Input");
+			t4Box.draw(ImVec2(247,232), "##transactionT4InputWindow", "##transactionT4Input");
+			t5Box.draw(ImVec2(247,280), "##transactionT5InputWindow", "##transactionT5Input");
+			t6Box.draw(ImVec2(247,328), "##transactionT6InputWindow", "##transactionT6Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -3450,6 +3268,8 @@ int main()
 						}
 					}
 
+					//TODO fix this idk what it even does
+					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
@@ -3474,6 +3294,7 @@ int main()
 							t6In[sizeof(t6In) - 1] = '\0';
 						}
 					}
+					*/
 				}
 
 				ImGui::EndChild();
@@ -3485,22 +3306,13 @@ int main()
 
 		if (clickTransaction)
 		{
-			if (mouseDetector.isOn(textBox1, window)
-				|| mouseDetector.isOn(textBox2, window)
-				|| mouseDetector.isOn(textBox3, window)
-				|| mouseDetector.isOn(textBox4, window)
-				|| mouseDetector.isOn(textBox5, window)
-				|| mouseDetector.isOn(textBox6, window)) {window.setMouseCursor(textCursor);}
-
 			if (mouseDetector.isOn(submitButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -3512,7 +3324,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -3524,7 +3336,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -3536,7 +3348,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -3548,7 +3360,7 @@ int main()
 							invalT4.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
+						if (t5Box.getInput() == "")
 						{
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
@@ -3560,7 +3372,7 @@ int main()
 							invalT5.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t6In[0] == '\0')
+						if (t6Box.getInput() == "")
 						{
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
@@ -3574,7 +3386,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stof(t3InTEST);
 						}
@@ -3593,7 +3405,7 @@ int main()
 
 						try
 						{
-							std::string t4InTEST(t4In);
+							std::string t4InTEST(t4Box.getInput());
 
 							std::stof(t4InTEST);
 						}
@@ -3612,7 +3424,7 @@ int main()
 
 						try
 						{
-							std::string t5InTEST(t5In);
+							std::string t5InTEST(t5Box.getInput());
 
 							std::stof(t5InTEST);
 						}
@@ -3631,7 +3443,7 @@ int main()
 
 						if (notNull && valNums)
 						{
-							std::string transaction_idStr(t1In);
+							std::string transaction_idStr(t1Box.getInput());
 							std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
 
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -3669,7 +3481,7 @@ int main()
 							if (primaryKeyIsVal)
 							{
 
-								std::string item_idStr(t2In);
+								std::string item_idStr(t2Box.getInput());
 								std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -3706,10 +3518,10 @@ int main()
 
 								if (valItemID)
 								{
-									float item_price = atof(t3In);
-									float tax_amount = atof(t4In);
-									float transaction_total = atof(t5In);
-									std::string transaction_dateStr(t6In);
+									float item_price = atof(t3Box.getInput());
+									float tax_amount = atof(t4Box.getInput());
+									float transaction_total = atof(t5Box.getInput());
+									std::string transaction_dateStr(t6Box.getInput());
 									std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
 									std::wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date) VALUES (?,?,?,?,?,?)";
@@ -3730,13 +3542,6 @@ int main()
 									if (SQL_SUCCEEDED(retSQL))
 									{
 										std::cout << "Insert successful!" << std::endl;
-
-										t1In[0] = '\0';
-										t2In[0] = '\0';
-										t3In[0] = '\0';
-										t4In[0] = '\0';
-										t5In[0] = '\0';
-										t6In[0] = '\0';
 
 										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3803,13 +3608,11 @@ int main()
 
 			if (mouseDetector.isOn(modifyButton, window))
 			{
-				window.setMouseCursor(handCursor);
-
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 				{
 					if (clock.getElapsedTime().asSeconds() >= 0.3)
 					{
-						if (t1In[0] == '\0')
+						if (t1Box.getInput() == "")
 						{
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
@@ -3821,7 +3624,7 @@ int main()
 							invalT1.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t2In[0] == '\0')
+						if (t2Box.getInput() == "")
 						{
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
@@ -3833,7 +3636,7 @@ int main()
 							invalT2.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t3In[0] == '\0')
+						if (t3Box.getInput() == "")
 						{
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
@@ -3845,7 +3648,7 @@ int main()
 							invalT3.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t4In[0] == '\0')
+						if (t4Box.getInput() == "")
 						{
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
@@ -3857,7 +3660,7 @@ int main()
 							invalT4.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t5In[0] == '\0')
+						if (t5Box.getInput() == "")
 						{
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
@@ -3869,7 +3672,7 @@ int main()
 							invalT5.setOutlineColor(sf::Color::Transparent);
 						}
 
-						if (t6In[0] == '\0')
+						if (t6Box.getInput() == "")
 						{
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
@@ -3883,7 +3686,7 @@ int main()
 
 						try
 						{
-							std::string t3InTEST(t3In);
+							std::string t3InTEST(t3Box.getInput());
 
 							std::stof(t3InTEST);
 						}
@@ -3902,7 +3705,7 @@ int main()
 
 						try
 						{
-							std::string t4InTEST(t4In);
+							std::string t4InTEST(t4Box.getInput());
 
 							std::stof(t4InTEST);
 						}
@@ -3921,7 +3724,7 @@ int main()
 
 						try
 						{
-							std::string t5InTEST(t5In);
+							std::string t5InTEST(t5Box.getInput());
 
 							std::stof(t5InTEST);
 						}
@@ -3943,14 +3746,14 @@ int main()
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
 							std::wstring original_transaction_idW(original_transaction_id5.begin(), original_transaction_id5.end());
-							std::string transaction_idStr(t1In);
+							std::string transaction_idStr(t1Box.getInput());
 							std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
-							std::string item_idStr(t2In);
+							std::string item_idStr(t2Box.getInput());
 							std::wstring item_id(item_idStr.begin(), item_idStr.end());
-							float item_price = atof(t3In);
-							float tax_amount = atof(t4In);
-							float transaction_total = atof(t5In);
-							std::string transaction_dateStr(t6In);
+							float item_price = atof(t3Box.getInput());
+							float tax_amount = atof(t4Box.getInput());
+							float transaction_total = atof(t5Box.getInput());
+							std::string transaction_dateStr(t6Box.getInput());
 							std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
 							std::wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ? WHERE transaction_id = ?";
@@ -3977,13 +3780,6 @@ int main()
 
 								submitButton.setColor(sf::Color::White);
 								submitButton.setPosition({ 210,400 });
-
-								t1In[0] = '\0';
-								t2In[0] = '\0';
-								t3In[0] = '\0';
-								t4In[0] = '\0';
-								t5In[0] = '\0';
-								t6In[0] = '\0';
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -4048,17 +3844,8 @@ int main()
 
 		if (mouseDetector.isOn(searchButton, window))
 		{
-			window.setMouseCursor(handCursor);
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				t1In[0] = '\0';
-				t2In[0] = '\0';
-				t3In[0] = '\0';
-				t4In[0] = '\0';
-				t5In[0] = '\0';
-				t6In[0] = '\0';
-
 				clickItem = false;
 				clickAisle = false;
 				clickSection = false;
@@ -4098,7 +3885,7 @@ int main()
 			ImGui::Combo("##hidden", &current_option, options, IM_ARRAYSIZE(options));
 
 			ImGui::SetNextItemWidth(135.f);
-			ImGui::InputText("##searcht1Input", t1In, sizeof(t1In));
+			ImGui::InputText("##searcht1Input", t1Box.getInput(), sizeof(t1Box.getInput()));
 
 			if (ImGui::Button("Go"))
 			{
@@ -4113,7 +3900,7 @@ int main()
 					showSearchSupplier = true;
 					showSearchTransaction = true;
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4129,7 +3916,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string item_idStr(t1In);
+						std::string item_idStr(t1Box.getInput());
 						std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -4335,7 +4122,7 @@ int main()
 					showSearchSupplier = false;
 					showSearchTransaction = false;
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4352,7 +4139,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string aisle_noStr(t1In);
+						std::string aisle_noStr(t1Box.getInput());
 						std::wstring aisle_no(aisle_noStr.begin(), aisle_noStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -4485,7 +4272,7 @@ int main()
 					showSearchTransaction = false;
 
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4501,7 +4288,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string section_idStr(t1In);
+						std::string section_idStr(t1Box.getInput());
 						std::wstring section_id(section_idStr.begin(), section_idStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -4633,7 +4420,7 @@ int main()
 					showSearchSupplier = true;
 					showSearchTransaction = false;
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4649,7 +4436,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string supplier_idStr(t1In);
+						std::string supplier_idStr(t1Box.getInput());
 						std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -4752,7 +4539,7 @@ int main()
 					showSearchSupplier = false;
 					showSearchTransaction = true;
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4768,7 +4555,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string transaction_idStr(t1In);
+						std::string transaction_idStr(t1Box.getInput());
 						std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -4875,7 +4662,7 @@ int main()
 					showSearchSupplier = false;
 					showSearchTransaction = true;
 
-					if (t1In[0] == '\0')
+					if (t1Box.getInput() == "")
 					{
 						notNull = false;
 						clickGO = false;
@@ -4891,7 +4678,7 @@ int main()
 
 					if (notNull)
 					{
-						std::string transaction_dateStr(t1In);
+						std::string transaction_dateStr(t1Box.getInput());
 						std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
 						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
@@ -5349,14 +5136,6 @@ int main()
 				ImGui::End();
 			}
 		}
-
-		if (mouseDetector.isOn(background, window) && !mouseDetector.isOn(submitButton, window) && !mouseDetector.isOn(modifyButton, window)
-												   && !mouseDetector.isOn(textBox1, window) && !mouseDetector.isOn(textBox2, window)
-												   && !mouseDetector.isOn(textBox3, window) && !mouseDetector.isOn(textBox4, window)
-												   && !mouseDetector.isOn(textBox5, window) && !mouseDetector.isOn(textBox6, window)
-												   && !mouseDetector.isOn(itemHeaderBox, window) && !mouseDetector.isOn(aisleHeaderBox, window)
-												   && !mouseDetector.isOn(sectionHeaderBox, window) && !mouseDetector.isOn(supplierHeaderBox, window)
-												   && !mouseDetector.isOn(transactionHeaderBox, window) && !mouseDetector.isOn(searchButton, window)) {window.setMouseCursor(arrowCursor);}
 
 		window.clear();
 		window.draw(background);
