@@ -25,7 +25,7 @@
     <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp">
       <Filter>ImGUI Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiTextBox.cpp">
+    <ClCompile Include="ImGuiObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiButton.cpp">
@@ -82,7 +82,7 @@
     <ClInclude Include="MouseDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiTextBox.h">
+    <ClInclude Include="ImGuiObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiButton.h">

@@ -5,8 +5,7 @@
 #include <sql.h>
 #include <imgui-SFML.h>
 #include "MouseDetector.h"
-#include "ImGuiTextBox.h"
-#include "ImGuiButton.h"
+#include "ImGuiObject.h"
 
 bool IsDriverInstalled() 
 {
@@ -97,12 +96,12 @@ int main()
 
 	sf::Clock loginClock;
 
-	ImGuiTextBox serverBox;
-	ImGuiTextBox portBox;
-	ImGuiTextBox databaseBox;
-	ImGuiTextBox uidBox;
-	ImGuiTextBox pwdBox;
-	ImGuiButton logInButton;
+	ImGuiObject serverBox;
+	ImGuiObject portBox;
+	ImGuiObject databaseBox;
+	ImGuiObject uidBox;
+	ImGuiObject pwdBox;
+	ImGuiObject logInButton;
 
 	while (loginwindow.isOpen())
 	{
@@ -157,8 +156,6 @@ int main()
 
 			else
 			{
-				std::cerr << "Connection failed" << std::endl;
-
 				int error = MessageBoxW(
 					nullptr,
 					L"One or more of the inputs are incorrect.\n"
@@ -730,12 +727,12 @@ int main()
 	char search_transaction_id5[46], search_item_id5[46], search_transaction_date5[46];
 	float search_item_price5, search_tax_amount5, search_transaction_total5;
 
-	ImGuiTextBox t1Box;
-	ImGuiTextBox t2Box;
-	ImGuiTextBox t3Box;
-	ImGuiTextBox t4Box;
-	ImGuiTextBox t5Box;
-	ImGuiTextBox t6Box;
+	ImGuiObject t1Box;
+	ImGuiObject t2Box;
+	ImGuiObject t3Box;
+	ImGuiObject t4Box;
+	ImGuiObject t5Box;
+	ImGuiObject t6Box;
 	
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------

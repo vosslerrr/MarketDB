@@ -154,7 +154,7 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp" />
     <ClCompile Include="ImGuiButton.cpp" />
-    <ClCompile Include="ImGuiTextBox.cpp" />
+    <ClCompile Include="ImGuiObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseDetector.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGuiButton.h" />
-    <ClInclude Include="ImGuiTextBox.h" />
+    <ClInclude Include="ImGuiObject.h" />
     <ClInclude Include="MouseDetector.h" />
   </ItemGroup>
   <ItemGroup>
