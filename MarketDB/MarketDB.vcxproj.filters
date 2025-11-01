@@ -30,16 +30,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="aisleBackground.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="background.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="buttonBox.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="itemBackground.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="loginBox.png">
@@ -49,15 +40,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="modifyBox.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="sectionBackground.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="supplierBackground.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="transactionBackground.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="backgrounds.png">

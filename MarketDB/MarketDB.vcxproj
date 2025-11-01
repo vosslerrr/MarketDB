@@ -167,17 +167,11 @@
     <ClInclude Include="MouseDetector.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="aisleBackground.png" />
-    <Image Include="background.png" />
     <Image Include="backgrounds.png" />
     <Image Include="buttonBox.png" />
-    <Image Include="itemBackground.png" />
     <Image Include="loginBox.png" />
     <Image Include="loginColumns.png" />
     <Image Include="modifyBox.png" />
-    <Image Include="sectionBackground.png" />
-    <Image Include="supplierBackground.png" />
-    <Image Include="transactionBackground.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

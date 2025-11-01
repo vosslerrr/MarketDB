@@ -81,7 +81,7 @@ int main()
 	SQLSetEnvAttr(envSQL, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
 	SQLAllocHandle(SQL_HANDLE_DBC, envSQL, &dbconSQL);
 
-	sf::RenderWindow loginwindow = sf::RenderWindow(sf::VideoMode({ 800,600 }), "Login", sf::Style::Close);
+	sf::RenderWindow loginwindow = sf::RenderWindow(sf::VideoMode({ 800,600 }), "Log In", sf::Style::Close);
 	loginwindow.setFramerateLimit(60);
 
 	ImGui::SFML::Init(loginwindow);
@@ -349,6 +349,12 @@ int main()
 	window.setFramerateLimit(60);
 
 	ImGui::SFML::Init(window);
+	ImGuiIO& io2 = ImGui::GetIO();
+	io2.Fonts->AddFontFromFileTTF("arial.ttf", 20.f);
+	ImGui::SFML::UpdateFontTexture();
+	io2.FontDefault = io2.Fonts->Fonts.back();
+	ImFont* headerFont = io2.Fonts->AddFontFromFileTTF("arial.ttf", 36.f);
+	ImGui::SFML::UpdateFontTexture();
 
 	sf::Texture backgroundTexture;
 	backgroundTexture.loadFromFile("backgrounds.png");
@@ -362,25 +368,11 @@ int main()
 
 	currBackground.setTextureRect(backgrounds[0]);
 
-	sf::RectangleShape itemHeaderBox({57,23});
-	itemHeaderBox.setOrigin({ itemHeaderBox.getGeometricCenter().x, itemHeaderBox.getGeometricCenter().y });
-	itemHeaderBox.setPosition({112,28});
-
-	sf::RectangleShape aisleHeaderBox({ 69,23 });
-	aisleHeaderBox.setOrigin({ aisleHeaderBox.getGeometricCenter().x, aisleHeaderBox.getGeometricCenter().y });
-	aisleHeaderBox.setPosition({ 237,28 });
-
-	sf::RectangleShape sectionHeaderBox({ 104,23 });
-	sectionHeaderBox.setOrigin({ sectionHeaderBox.getGeometricCenter().x, sectionHeaderBox.getGeometricCenter().y });
-	sectionHeaderBox.setPosition({ 388,28 });
-
-	sf::RectangleShape supplierHeaderBox({ 116,23 });
-	supplierHeaderBox.setOrigin({ supplierHeaderBox.getGeometricCenter().x, supplierHeaderBox.getGeometricCenter().y });
-	supplierHeaderBox.setPosition({ 563,28 });
-
-	sf::RectangleShape transactionHeaderBox({ 165,23 });
-	transactionHeaderBox.setOrigin({ transactionHeaderBox.getGeometricCenter().x, transactionHeaderBox.getGeometricCenter().y });
-	transactionHeaderBox.setPosition({ 764,28 });
+	ImGuiObject itemButton{  headerFont };
+	ImGuiObject aisleButton{ headerFont };
+	ImGuiObject sectionButton{ headerFont };
+	ImGuiObject supplierButton{ headerFont };
+	ImGuiObject transactionButton{ headerFont };
 
 	sf::RectangleShape searchButton({44,43});
 	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
@@ -712,33 +704,38 @@ int main()
 
 		ImGui::SFML::Update(window, clock.restart());
 
-		if (mouseDetector.isOn(itemHeaderBox, window))
+		itemButton.drawHeaderButton(ImVec2(69, 0), "##itemButton", "Item");
+		aisleButton.drawHeaderButton(ImVec2(190, 0), "##aisleButton", "Aisle");
+		sectionButton.drawHeaderButton(ImVec2(324, 0), "##sectionButton", "Section");
+		supplierButton.drawHeaderButton(ImVec2(493, 0), "##supplierButton", "Supplier");
+		transactionButton.drawHeaderButton(ImVec2(670, 0), "##transactionButton", "Transaction");
+
+		if (itemButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = true;
-				clickAisle = false;
-				clickSection = false;
-				clickSupplier = false;
-				clickTransaction = false;
-				clickSearch = false;
-				clickGO = false;
+			clickItem = true;
+			clickAisle = false;
+			clickSection = false;
+			clickSupplier = false;
+			clickTransaction = false;
+			clickSearch = false;
+			clickGO = false;
 
-				currBackground.setTextureRect(backgrounds[1]);
+			currBackground.setTextureRect(backgrounds[1]);
 
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
 
-				submitButton.setPosition({ 210,400 });
-				submitButton.setColor(sf::Color::White);
+			submitButton.setPosition({ 210,400 });
+			submitButton.setColor(sf::Color::White);
 
-				modifyButton.setPosition({ 0,0 });
-				modifyButton.setColor(sf::Color::Transparent);
-			}
+			modifyButton.setPosition({ 0,0 });
+			modifyButton.setColor(sf::Color::Transparent);
+
+			itemButton.setPressedOff();
 		}
 
 		if (clickItem)
@@ -1475,33 +1472,32 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(aisleHeaderBox, window))
+		if (aisleButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = false;
-				clickAisle = true;
-				clickSection = false;
-				clickSupplier = false;
-				clickTransaction = false;
-				clickSearch = false;
-				clickGO = false;
+			clickItem = false;
+			clickAisle = true;
+			clickSection = false;
+			clickSupplier = false;
+			clickTransaction = false;
+			clickSearch = false;
+			clickGO = false;
 
-				currBackground.setTextureRect(backgrounds[2]);
+			currBackground.setTextureRect(backgrounds[2]);
 				
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
 
-				submitButton.setPosition({ 210,220 });
-				submitButton.setColor(sf::Color::White);
+			submitButton.setPosition({ 210,220 });
+			submitButton.setColor(sf::Color::White);
 
-				modifyButton.setPosition({ 0,0 });
-				modifyButton.setColor(sf::Color::Transparent);
-			}
+			modifyButton.setPosition({ 0,0 });
+			modifyButton.setColor(sf::Color::Transparent);
+
+			aisleButton.setPressedOff();
 		}
 
 		if (clickAisle)
@@ -1957,33 +1953,32 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(sectionHeaderBox, window))
+		if (sectionButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = false;
-				clickAisle = false;
-				clickSection = true;
-				clickSupplier = false;
-				clickTransaction = false;
-				clickSearch = false;
-				clickGO = false;
+			clickItem = false;
+			clickAisle = false;
+			clickSection = true;
+			clickSupplier = false;
+			clickTransaction = false;
+			clickSearch = false;
+			clickGO = false;
 
-				currBackground.setTextureRect(backgrounds[3]);
+			currBackground.setTextureRect(backgrounds[3]);
 
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
 
-				submitButton.setPosition({ 210,250 });
-				submitButton.setColor(sf::Color::White);
+			submitButton.setPosition({ 210,250 });
+			submitButton.setColor(sf::Color::White);
 
-				modifyButton.setPosition({ 0,0 });
-				modifyButton.setColor(sf::Color::Transparent);
-			}
+			modifyButton.setPosition({ 0,0 });
+			modifyButton.setColor(sf::Color::Transparent);
+
+			sectionButton.setPressedOff();
 		}
 
 		if (clickSection)
@@ -2482,33 +2477,32 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(supplierHeaderBox, window))
+		if (supplierButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = false;
-				clickAisle = false;
-				clickSection = false;
-				clickSupplier = true;
-				clickTransaction = false;
-				clickSearch = false;
-				clickGO = false;
+			clickItem = false;
+			clickAisle = false;
+			clickSection = false;
+			clickSupplier = true;
+			clickTransaction = false;
+			clickSearch = false;
+			clickGO = false;
 
-				currBackground.setTextureRect(backgrounds[4]);
+			currBackground.setTextureRect(backgrounds[4]);
 
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
 
-				submitButton.setPosition({ 210,300 });
-				submitButton.setColor(sf::Color::White);
+			submitButton.setPosition({ 210,300 });
+			submitButton.setColor(sf::Color::White);
 
-				modifyButton.setPosition({ 0,0 });
-				modifyButton.setColor(sf::Color::Transparent);
-			}
+			modifyButton.setPosition({ 0,0 });
+			modifyButton.setColor(sf::Color::Transparent);
+
+			supplierButton.setPressedOff();
 		}
 
 		if (clickSupplier)
@@ -3049,33 +3043,32 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(transactionHeaderBox, window))
+		if (transactionButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = false;
-				clickAisle = false;
-				clickSection = false;
-				clickSupplier = false;
-				clickTransaction = true;
-				clickSearch = false;
-				clickGO = false;
+			clickItem = false;
+			clickAisle = false;
+			clickSection = false;
+			clickSupplier = false;
+			clickTransaction = true;
+			clickSearch = false;
+			clickGO = false;
 
-				currBackground.setTextureRect(backgrounds[5]);
+			currBackground.setTextureRect(backgrounds[5]);
 
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
 
-				submitButton.setPosition({ 210,400 });
-				submitButton.setColor(sf::Color::White);
+			submitButton.setPosition({ 210,400 });
+			submitButton.setColor(sf::Color::White);
 
-				modifyButton.setPosition({ 0,0 });
-				modifyButton.setColor(sf::Color::Transparent);
-			}
+			modifyButton.setPosition({ 0,0 });
+			modifyButton.setColor(sf::Color::Transparent);
+
+			transactionButton.setPressedOff();
 		}
 
 		if (clickTransaction)
