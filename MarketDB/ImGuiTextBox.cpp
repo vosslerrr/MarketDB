@@ -2,7 +2,7 @@
 
 ImGuiTextBox::ImGuiTextBox(){}
 
-void ImGuiTextBox::draw(ImVec2 l_windowPos, const char* l_name, const char* l_label)
+void ImGuiTextBox::drawTextBox(ImVec2 l_windowPos, const char* l_name, const char* l_label)
 {
 	ImGui::SetNextWindowPos(l_windowPos);
 	ImGui::SetNextWindowSize(m_windowSize);

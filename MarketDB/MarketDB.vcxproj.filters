@@ -25,7 +25,12 @@
     <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp">
       <Filter>ImGUI Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiTextBox.cpp" />
+    <ClCompile Include="ImGuiTextBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="aisleBackground.png">
@@ -78,6 +83,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiTextBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

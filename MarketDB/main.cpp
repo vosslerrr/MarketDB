@@ -3,8 +3,10 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 #include <sql.h>
+#include <imgui-SFML.h>
 #include "MouseDetector.h"
 #include "ImGuiTextBox.h"
+#include "ImGuiButton.h"
 
 bool IsDriverInstalled() 
 {
@@ -100,6 +102,7 @@ int main()
 	ImGuiTextBox databaseBox;
 	ImGuiTextBox uidBox;
 	ImGuiTextBox pwdBox;
+	ImGuiButton logInButton;
 
 	while (loginwindow.isOpen())
 	{
@@ -116,18 +119,14 @@ int main()
 
 		ImGui::SFML::Update(loginwindow, loginClock.restart());
 
-		serverBox.draw(ImVec2(317, 279), "##ServerInputWindow", "##ServerInput");
-		portBox.draw(ImVec2(317, 319), "##PortInputWindow", "##PortInput");
-		databaseBox.draw(ImVec2(317, 359), "##DatabaseInputWindow", "##DatabaseInput");
-		uidBox.draw(ImVec2(317, 399), "##UIDInputWindow", "##UIDInput");
-		pwdBox.draw(ImVec2(317, 439), "##PWDInputWindow", "##PWDInput");
+		serverBox.drawTextBox(ImVec2(317, 279), "##ServerInputWindow", "##ServerInput");
+		portBox.drawTextBox(ImVec2(317, 319), "##PortInputWindow", "##PortInput");
+		databaseBox.drawTextBox(ImVec2(317, 359), "##DatabaseInputWindow", "##DatabaseInput");
+		uidBox.drawTextBox(ImVec2(317, 399), "##UIDInputWindow", "##UIDInput");
+		pwdBox.drawTextBox(ImVec2(317, 439), "##PWDInputWindow", "##PWDInput");
+		logInButton.drawButton(ImVec2(360, 475), "##logInButton", "Log In");
 
-		ImGui::SetNextWindowPos(ImVec2(360, 475));
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(100.f / 255.f, 200.f / 255.f, 183.f / 255.f, 1.f));
-		ImGui::Begin("##logInButton", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
-
-		if (ImGui::Button("Log In"))
+		if (logInButton.isPressed())
 		{
 			std::string serverInStr(serverBox.getInput());
 			std::wstring wServerInput(serverInStr.begin(), serverInStr.end());
@@ -169,10 +168,9 @@ int main()
 					MB_OK | MB_ICONWARNING
 				);
 			}
-		}
 
-		ImGui::PopStyleColor(2);
-		ImGui::End();
+			logInButton.setPressedOff();
+		}
 
 		loginwindow.clear();
 		loginwindow.draw(loginBackground);
@@ -796,12 +794,12 @@ int main()
 
 		if (clickItem)
 		{	
-			t1Box.draw(ImVec2(197,88), "##itemT1InputWindow", "##itemT1Input");
-			t2Box.draw(ImVec2(197,136), "##itemT2InputWindow", "##itemT2Input");
-			t3Box.draw(ImVec2(197,184), "##itemT3InputWindow", "##itemT3Input");
-			t4Box.draw(ImVec2(197, 232), "##itemT4InputWindow", "##itemT4Input");
-			t5Box.draw(ImVec2(197,280), "##itemT5InputWindow", "##itemT5Input");
-			t6Box.draw(ImVec2(197,328), "##itemT6InputWindow", "##itemT6Input");
+			t1Box.drawTextBox(ImVec2(197,88), "##itemT1InputWindow", "##itemT1Input");
+			t2Box.drawTextBox(ImVec2(197,136), "##itemT2InputWindow", "##itemT2Input");
+			t3Box.drawTextBox(ImVec2(197,184), "##itemT3InputWindow", "##itemT3Input");
+			t4Box.drawTextBox(ImVec2(197, 232), "##itemT4InputWindow", "##itemT4Input");
+			t5Box.drawTextBox(ImVec2(197,280), "##itemT5InputWindow", "##itemT5Input");
+			t6Box.drawTextBox(ImVec2(197,328), "##itemT6InputWindow", "##itemT6Input");
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -1562,8 +1560,8 @@ int main()
 
 		if (clickAisle)
 		{
-			t1Box.draw(ImVec2(227,88), "##aisleT1InputWindow", "##aisleT1Input");
-			t2Box.draw(ImVec2(227,136), "##aisleT2InputWindow", "##aisleT2Input");
+			t1Box.drawTextBox(ImVec2(227,88), "##aisleT1InputWindow", "##aisleT1Input");
+			t2Box.drawTextBox(ImVec2(227,136), "##aisleT2InputWindow", "##aisleT2Input");
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2048,9 +2046,9 @@ int main()
 
 		if (clickSection)
 		{
-			t1Box.draw(ImVec2(217,88), "##sectionT1InputWindow", "##sectionT1Input");
-			t2Box.draw(ImVec2(217,136), "##sectionT2InputWindow", "##sectionT2Input");
-			t3Box.draw(ImVec2(217,184), "##sectionT3InputWindow", "##sectionT3Input");
+			t1Box.drawTextBox(ImVec2(217,88), "##sectionT1InputWindow", "##sectionT1Input");
+			t2Box.drawTextBox(ImVec2(217,136), "##sectionT2InputWindow", "##sectionT2Input");
+			t3Box.drawTextBox(ImVec2(217,184), "##sectionT3InputWindow", "##sectionT3Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2578,10 +2576,10 @@ int main()
 
 		if (clickSupplier)
 		{
-			t1Box.draw(ImVec2(227,88), "##supplierT1InputWindow", "##supplierT1Input");
-			t2Box.draw(ImVec2(227,136), "##supplierT2InputWindow", "##supplierT2Input");
-			t3Box.draw(ImVec2(227,184), "##supplierT3InputWindow", "##supplierT3Input");
-			t4Box.draw(ImVec2(227,232), "##supplierT4InputWindow", "##suuplierT4Input");
+			t1Box.drawTextBox(ImVec2(227,88), "##supplierT1InputWindow", "##supplierT1Input");
+			t2Box.drawTextBox(ImVec2(227,136), "##supplierT2InputWindow", "##supplierT2Input");
+			t3Box.drawTextBox(ImVec2(227,184), "##supplierT3InputWindow", "##supplierT3Input");
+			t4Box.drawTextBox(ImVec2(227,232), "##supplierT4InputWindow", "##suuplierT4Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -3152,12 +3150,12 @@ int main()
 
 		if (clickTransaction)
 		{
-			t1Box.draw(ImVec2(247,88), "##transactionT1InputWindow", "##transactionT1Input");
-			t2Box.draw(ImVec2(247,136), "##transactionT2InputWindow", "##transactionT2Input");
-			t3Box.draw(ImVec2(247,184), "##transactionT3InputWindow", "##transactionT3Input");
-			t4Box.draw(ImVec2(247,232), "##transactionT4InputWindow", "##transactionT4Input");
-			t5Box.draw(ImVec2(247,280), "##transactionT5InputWindow", "##transactionT5Input");
-			t6Box.draw(ImVec2(247,328), "##transactionT6InputWindow", "##transactionT6Input");
+			t1Box.drawTextBox(ImVec2(247,88), "##transactionT1InputWindow", "##transactionT1Input");
+			t2Box.drawTextBox(ImVec2(247,136), "##transactionT2InputWindow", "##transactionT2Input");
+			t3Box.drawTextBox(ImVec2(247,184), "##transactionT3InputWindow", "##transactionT3Input");
+			t4Box.drawTextBox(ImVec2(247,232), "##transactionT4InputWindow", "##transactionT4Input");
+			t5Box.drawTextBox(ImVec2(247,280), "##transactionT5InputWindow", "##transactionT5Input");
+			t6Box.drawTextBox(ImVec2(247,328), "##transactionT6InputWindow", "##transactionT6Input");
 
 			static int selectedRow = -1;
 			int currentRow = 0;
