@@ -28,9 +28,6 @@
     <ClCompile Include="ImGuiObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="aisleBackground.png">
@@ -63,6 +60,9 @@
     <Image Include="transactionBackground.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="backgrounds.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -83,9 +83,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

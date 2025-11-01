@@ -351,21 +351,16 @@ int main()
 	ImGui::SFML::Init(window);
 
 	sf::Texture backgroundTexture;
-	backgroundTexture.loadFromFile("background.png");
-	sf::Texture itemBackgroundTexture;
-	itemBackgroundTexture.loadFromFile("itemBackground.png");
-	sf::Texture aisleBackgroundTexture;
-	aisleBackgroundTexture.loadFromFile("aisleBackground.png");
-	sf::Texture sectionBackgroundTexture;
-	sectionBackgroundTexture.loadFromFile("sectionBackground.png");
-	sf::Texture supplierBackgroundTexture;
-	supplierBackgroundTexture.loadFromFile("supplierBackground.png");
-	sf::Texture transactionBackgroundTexture;
-	transactionBackgroundTexture.loadFromFile("transactionBackground.png");
+	backgroundTexture.loadFromFile("backgrounds.png");
+	sf::Sprite currBackground{ backgroundTexture };
+	sf::IntRect backgrounds[6];
 
-	sf::Sprite background(backgroundTexture);
-	background.setOrigin({640,360});
-	background.setPosition({ 640,360 });
+	for (int i = 0; i < 6; i++)
+	{
+		backgrounds[i] = sf::IntRect({ {1280 * i, 0}, {1280,720} });
+	}
+
+	currBackground.setTextureRect(backgrounds[0]);
 
 	sf::RectangleShape itemHeaderBox({57,23});
 	itemHeaderBox.setOrigin({ itemHeaderBox.getGeometricCenter().x, itemHeaderBox.getGeometricCenter().y });
@@ -390,42 +385,6 @@ int main()
 	sf::RectangleShape searchButton({44,43});
 	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
 	searchButton.setPosition({1170,24});
-
-	sf::RectangleShape invalT1({150,26});
-	invalT1.setPosition({205,96});
-	invalT1.setOutlineThickness(2);
-	invalT1.setOutlineColor(sf::Color::Transparent);
-	invalT1.setFillColor(sf::Color::Transparent);
-
-	sf::RectangleShape invalT2({ 150,26 });
-	invalT2.setPosition({ 205,144 });
-	invalT2.setOutlineThickness(2);
-	invalT2.setOutlineColor(sf::Color::Transparent);
-	invalT2.setFillColor(sf::Color::Transparent);
-
-	sf::RectangleShape invalT3({ 150,26 });
-	invalT3.setPosition({ 205,192 });
-	invalT3.setOutlineThickness(2);
-	invalT3.setOutlineColor(sf::Color::Transparent);
-	invalT3.setFillColor(sf::Color::Transparent);
-
-	sf::RectangleShape invalT4({ 150,26 });
-	invalT4.setPosition({ 205,240 });
-	invalT4.setOutlineThickness(2);
-	invalT4.setOutlineColor(sf::Color::Transparent);
-	invalT4.setFillColor(sf::Color::Transparent);
-
-	sf::RectangleShape invalT5({ 150,26 });
-	invalT5.setPosition({ 205,288 });
-	invalT5.setOutlineThickness(2);
-	invalT5.setOutlineColor(sf::Color::Transparent);
-	invalT5.setFillColor(sf::Color::Transparent);
-
-	sf::RectangleShape invalT6({ 150,26 });
-	invalT6.setPosition({ 205,336 });
-	invalT6.setOutlineThickness(2);
-	invalT6.setOutlineColor(sf::Color::Transparent);
-	invalT6.setFillColor(sf::Color::Transparent);
 
 	sf::Texture submitButtonTexture;
 	submitButtonTexture.loadFromFile("buttonBox.png");
@@ -765,21 +724,14 @@ int main()
 				clickSearch = false;
 				clickGO = false;
 
-				background.setTexture(itemBackgroundTexture);
+				currBackground.setTextureRect(backgrounds[1]);
 
-				invalT1.setPosition({ 205,96 });
-				invalT2.setPosition({ 205,144 });
-				invalT3.setPosition({ 205,192 });
-				invalT4.setPosition({ 205,240 });
-				invalT5.setPosition({ 205,288 });
-				invalT6.setPosition({ 205,336 });
-
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(sf::Color::White);
@@ -955,11 +907,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -967,11 +919,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -979,11 +931,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t3Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -991,11 +943,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						if (t5Box.getInput() == "")
@@ -1003,11 +955,11 @@ int main()
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						else
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setValid();
 						}
 
 						if (t6Box.getInput() == "")
@@ -1015,11 +967,11 @@ int main()
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						else
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						try
@@ -1034,11 +986,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t3Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -1053,11 +1005,11 @@ int main()
 							valNums = false;
 							valT5 = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						if (valT5)
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setValid();
 						}
 
 						try
@@ -1072,11 +1024,11 @@ int main()
 							valNums = false;
 							valT6 = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						if (valT6)
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -1096,7 +1048,7 @@ int main()
 									std::cout << "Item ID already exists!" << std::endl;
 									primaryKeyIsVal = false;
 
-									invalT1.setOutlineColor(sf::Color::Red);
+									t1Box.setInvalid();
 
 									int primaryKeyError = MessageBoxW(
 										nullptr,
@@ -1110,7 +1062,7 @@ int main()
 								{
 									primaryKeyIsVal = true;
 
-									invalT1.setOutlineColor(sf::Color::Transparent);
+									t1Box.setValid();
 								}
 							}
 
@@ -1135,7 +1087,7 @@ int main()
 										std::cout << "aisle no does not exist" << std::endl;
 										valAisleNo = false;
 
-										invalT3.setOutlineColor(sf::Color::Red);
+										t3Box.setInvalid();
 
 										int foreignKeyAisleError = MessageBoxW(
 											nullptr,
@@ -1149,7 +1101,7 @@ int main()
 									{
 										valAisleNo = true;
 
-										invalT3.setOutlineColor(sf::Color::Transparent);
+										t3Box.setValid();
 									}
 								}
 
@@ -1172,7 +1124,7 @@ int main()
 											std::cout << "section id does not exist" << std::endl;
 											valSectionID = false;
 
-											invalT4.setOutlineColor(sf::Color::Red);
+											t4Box.setInvalid();
 
 											int foreignKeyAisleError = MessageBoxW(
 												nullptr,
@@ -1186,7 +1138,7 @@ int main()
 										{
 											valSectionID = true;
 
-											invalT4.setOutlineColor(sf::Color::Transparent);
+											t4Box.setValid();
 										}
 									}
 
@@ -1295,11 +1247,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -1307,11 +1259,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -1319,11 +1271,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -1331,11 +1283,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						if (t5Box.getInput() == "")
@@ -1343,11 +1295,11 @@ int main()
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						else
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						if (t6Box.getInput() == "")
@@ -1355,11 +1307,11 @@ int main()
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						else
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						try
@@ -1374,11 +1326,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -1393,11 +1345,11 @@ int main()
 							valNums = false;
 							valT5 = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						if (valT5)
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						try
@@ -1412,11 +1364,11 @@ int main()
 							valNums = false;
 							valT6 = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						if (valT6)
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -1535,17 +1487,14 @@ int main()
 				clickSearch = false;
 				clickGO = false;
 
-				background.setTexture(aisleBackgroundTexture);
-
-				invalT1.setPosition({ 235,97 });
-				invalT2.setPosition({ 235,145 });
+				currBackground.setTextureRect(backgrounds[2]);
 				
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setPosition({ 210,220 });
 				submitButton.setColor(sf::Color::White);
@@ -1695,12 +1644,12 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
 							notNull = true;
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -1708,12 +1657,12 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
 							notNull = true;
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						try
@@ -1728,11 +1677,11 @@ int main()
 							valT1 = false;
 							valNums = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						if (valT1)
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						try
@@ -1747,11 +1696,11 @@ int main()
 							valT2 = false;
 							valNums = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT2)
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -1770,7 +1719,7 @@ int main()
 									std::cout << "Aisle No. already exists!" << std::endl;
 									primaryKeyIsVal = false;
 
-									invalT1.setOutlineColor(sf::Color::Red);
+									t1Box.setInvalid();
 
 									int primaryKeyError = MessageBoxW(
 										nullptr,
@@ -1784,7 +1733,7 @@ int main()
 								{
 									primaryKeyIsVal = true;
 
-									invalT1.setOutlineColor(sf::Color::Transparent);
+									t1Box.setValid();
 								}
 							}
 
@@ -1872,11 +1821,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -1884,11 +1833,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						try
@@ -1903,11 +1852,11 @@ int main()
 							valNums = false;
 							valT1 = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						if (valT1)
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						try
@@ -1922,11 +1871,11 @@ int main()
 							valNums = false;
 							valT2 = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT2)
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -2020,18 +1969,14 @@ int main()
 				clickSearch = false;
 				clickGO = false;
 
-				background.setTexture(sectionBackgroundTexture);
+				currBackground.setTextureRect(backgrounds[3]);
 
-				invalT1.setPosition({ 225,96 });
-				invalT2.setPosition({ 225,144 });
-				invalT3.setPosition({ 225,192 });
-
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setPosition({ 210,250 });
 				submitButton.setColor(sf::Color::White);
@@ -2192,11 +2137,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -2204,11 +2149,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -2216,11 +2161,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -2235,11 +2180,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -2259,7 +2204,7 @@ int main()
 									std::cout << "Section ID already exists!" << std::endl;
 									primaryKeyIsVal = false;
 
-									invalT1.setOutlineColor(sf::Color::Red);
+									t1Box.setInvalid();
 
 									int primaryKeyError = MessageBoxW(
 										nullptr,
@@ -2273,7 +2218,7 @@ int main()
 								{
 									primaryKeyIsVal = true;
 
-									invalT1.setOutlineColor(sf::Color::Transparent);
+									t1Box.setValid();
 								}
 							}
 
@@ -2297,7 +2242,7 @@ int main()
 										std::cout << "aisle no does not exist" << std::endl;
 										valAisleNo = false;
 
-										invalT3.setOutlineColor(sf::Color::Red);
+										t2Box.setInvalid();
 
 										int foreignKeyAisleError = MessageBoxW(
 											nullptr,
@@ -2311,7 +2256,7 @@ int main()
 									{
 										valAisleNo = true;
 
-										invalT3.setOutlineColor(sf::Color::Transparent);
+										t3Box.setValid();
 									}
 								}
 
@@ -2401,11 +2346,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -2413,11 +2358,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -2425,11 +2370,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -2444,11 +2389,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -2549,19 +2494,14 @@ int main()
 				clickSearch = false;
 				clickGO = false;
 
-				background.setTexture(supplierBackgroundTexture);
+				currBackground.setTextureRect(backgrounds[4]);
 
-				invalT1.setPosition({ 235,96 });
-				invalT2.setPosition({ 235,144 });
-				invalT3.setPosition({ 235,192 });
-				invalT4.setPosition({ 235,240 });
-
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setPosition({ 210,300 });
 				submitButton.setColor(sf::Color::White);
@@ -2726,11 +2666,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -2738,11 +2678,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -2750,11 +2690,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -2762,11 +2702,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						try
@@ -2781,11 +2721,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -2805,7 +2745,7 @@ int main()
 									std::cout << "Supplier ID already exists!" << std::endl;
 									primaryKeyIsVal = false;
 
-									invalT1.setOutlineColor(sf::Color::Red);
+									t1Box.setInvalid();
 
 									int primaryKeyError = MessageBoxW(
 										nullptr,
@@ -2819,7 +2759,7 @@ int main()
 								{
 									primaryKeyIsVal = true;
 
-									invalT1.setOutlineColor(sf::Color::Transparent);
+									t1Box.setValid();
 								}
 							}
 
@@ -2843,7 +2783,7 @@ int main()
 										std::cout << "Item ID does exists!" << std::endl;
 										valItemID = false;
 
-										invalT2.setOutlineColor(sf::Color::Red);
+										t2Box.setInvalid();
 
 										int primaryKeyError = MessageBoxW(
 											nullptr,
@@ -2857,7 +2797,7 @@ int main()
 									{
 										valItemID = true;
 
-										invalT2.setOutlineColor(sf::Color::Transparent);
+										t2Box.setValid();
 									}
 								}
 
@@ -2957,11 +2897,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -2969,11 +2909,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -2981,11 +2921,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -2993,11 +2933,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						try
@@ -3012,11 +2952,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (notNull && valNums)
@@ -3121,21 +3061,14 @@ int main()
 				clickSearch = false;
 				clickGO = false;
 
-				background.setTexture(transactionBackgroundTexture);
+				currBackground.setTextureRect(backgrounds[5]);
 
-				invalT1.setPosition({ 255,96 });
-				invalT2.setPosition({ 255,144 });
-				invalT3.setPosition({ 255,192 });
-				invalT4.setPosition({ 255,240 });
-				invalT5.setPosition({ 255,288 });
-				invalT6.setPosition({ 255,336 });
-
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setPosition({ 210,400 });
 				submitButton.setColor(sf::Color::White);
@@ -3312,11 +3245,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -3324,11 +3257,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -3336,11 +3269,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -3348,11 +3281,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						if (t5Box.getInput() == "")
@@ -3360,11 +3293,11 @@ int main()
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						else
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						if (t6Box.getInput() == "")
@@ -3372,11 +3305,11 @@ int main()
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						else
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						try
@@ -3391,11 +3324,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -3410,11 +3343,11 @@ int main()
 							valNums = false;
 							valT4 = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						if (valT4)
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						try
@@ -3429,11 +3362,11 @@ int main()
 							valNums = false;
 							valT5 = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						if (valT5)
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						if (notNull && valNums)
@@ -3453,7 +3386,7 @@ int main()
 									std::cout << "Transaction ID already exists" << std::endl;
 									primaryKeyIsVal = false;
 
-									invalT1.setOutlineColor(sf::Color::Red);
+									t1Box.setInvalid();
 
 									int primaryKeyError = MessageBoxW(
 										nullptr,
@@ -3467,7 +3400,7 @@ int main()
 								{
 									primaryKeyIsVal = true;
 
-									invalT1.setOutlineColor(sf::Color::Transparent);
+									t1Box.setValid();
 								}
 							}
 
@@ -3491,7 +3424,7 @@ int main()
 										std::cout << "Item ID does exists!" << std::endl;
 										valItemID = false;
 
-										invalT2.setOutlineColor(sf::Color::Red);
+										t2Box.setInvalid();
 
 										int primaryKeyError = MessageBoxW(
 											nullptr,
@@ -3505,7 +3438,7 @@ int main()
 									{
 										valItemID = true;
 
-										invalT2.setOutlineColor(sf::Color::Transparent);
+										t2Box.setValid();
 									}
 								}
 
@@ -3612,11 +3545,11 @@ int main()
 							std::cerr  << "Empty t1" << std::endl;
 							notNull = false;
 
-							invalT1.setOutlineColor(sf::Color::Red);
+							t1Box.setInvalid();
 						}
 						else
 						{
-							invalT1.setOutlineColor(sf::Color::Transparent);
+							t1Box.setValid();
 						}
 
 						if (t2Box.getInput() == "")
@@ -3624,11 +3557,11 @@ int main()
 							std::cerr  << "Empty t2" << std::endl;
 							notNull = false;
 
-							invalT2.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT2.setOutlineColor(sf::Color::Transparent);
+							t2Box.setValid();
 						}
 
 						if (t3Box.getInput() == "")
@@ -3636,11 +3569,11 @@ int main()
 							std::cerr  << "Empty t3" << std::endl;
 							notNull = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						else
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						if (t4Box.getInput() == "")
@@ -3648,11 +3581,11 @@ int main()
 							std::cerr  << "Empty t4" << std::endl;
 							notNull = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						else
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						if (t5Box.getInput() == "")
@@ -3660,11 +3593,11 @@ int main()
 							std::cerr  << "Empty t5" << std::endl;
 							notNull = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						else
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						if (t6Box.getInput() == "")
@@ -3672,11 +3605,11 @@ int main()
 							std::cerr  << "Empty t6" << std::endl;
 							notNull = false;
 
-							invalT6.setOutlineColor(sf::Color::Red);
+							t6Box.setInvalid();
 						}
 						else
 						{
-							invalT6.setOutlineColor(sf::Color::Transparent);
+							t6Box.setValid();
 						}
 
 						try
@@ -3691,11 +3624,11 @@ int main()
 							valNums = false;
 							valT3 = false;
 
-							invalT3.setOutlineColor(sf::Color::Red);
+							t2Box.setInvalid();
 						}
 						if (valT3)
 						{
-							invalT3.setOutlineColor(sf::Color::Transparent);
+							t3Box.setValid();
 						}
 
 						try
@@ -3710,11 +3643,11 @@ int main()
 							valNums = false;
 							valT4 = false;
 
-							invalT4.setOutlineColor(sf::Color::Red);
+							t4Box.setInvalid();
 						}
 						if (valT4)
 						{
-							invalT4.setOutlineColor(sf::Color::Transparent);
+							t4Box.setValid();
 						}
 
 						try
@@ -3729,11 +3662,11 @@ int main()
 							valNums = false;
 							valT5 = false;
 
-							invalT5.setOutlineColor(sf::Color::Red);
+							t5Box.setInvalid();
 						}
 						if (valT5)
 						{
-							invalT5.setOutlineColor(sf::Color::Transparent);
+							t5Box.setInvalid();
 						}
 
 						if (notNull && valNums)
@@ -3849,14 +3782,14 @@ int main()
 				clickSearch = true;
 				clickGO = false;
 				
-				background.setTexture(backgroundTexture);
+				currBackground.setTextureRect(backgrounds[0]);
 
-				invalT1.setOutlineColor(sf::Color::Transparent);
-				invalT2.setOutlineColor(sf::Color::Transparent);
-				invalT3.setOutlineColor(sf::Color::Transparent);
-				invalT4.setOutlineColor(sf::Color::Transparent);
-				invalT5.setOutlineColor(sf::Color::Transparent);
-				invalT6.setOutlineColor(sf::Color::Transparent);
+				t1Box.setValid();
+				t2Box.setValid();
+				t3Box.setValid();
+				t4Box.setValid();
+				t5Box.setValid();
+				t6Box.setValid();
 
 				submitButton.setColor(sf::Color::Transparent);
 				modifyButton.setColor(sf::Color::Transparent);
@@ -5133,15 +5066,9 @@ int main()
 		}
 
 		window.clear();
-		window.draw(background);
+		window.draw(currBackground);
 		window.draw(submitButton);
 		window.draw(modifyButton);
-		window.draw(invalT1);
-		window.draw(invalT2);
-		window.draw(invalT3);
-		window.draw(invalT4);
-		window.draw(invalT5);
-		window.draw(invalT6);
 		ImGui::SFML::Render(window);
 		window.display();
 	}

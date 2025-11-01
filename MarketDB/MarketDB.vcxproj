@@ -153,7 +153,6 @@
     <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp" />
-    <ClCompile Include="ImGuiButton.cpp" />
     <ClCompile Include="ImGuiObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseDetector.cpp">
@@ -164,13 +163,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImGuiButton.h" />
     <ClInclude Include="ImGuiObject.h" />
     <ClInclude Include="MouseDetector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="aisleBackground.png" />
     <Image Include="background.png" />
+    <Image Include="backgrounds.png" />
     <Image Include="buttonBox.png" />
     <Image Include="itemBackground.png" />
     <Image Include="loginBox.png" />
