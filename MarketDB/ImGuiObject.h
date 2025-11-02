@@ -4,13 +4,14 @@
 class ImGuiObject
 {
 public:
-	ImGuiObject();
-	ImGuiObject( ImFont* l_font);
+	ImGuiObject(const char* l_name, const char* l_label);
+	ImGuiObject(const char* l_name, const char* l_label, ImFont* l_font);
  
-	void drawTextBox(ImVec2 l_windowPos, const char* l_name, const char* l_label);
-	void drawButton(ImVec2 l_windowPos, const char* l_name, const char* l_label);
-	void drawHeaderButton(ImVec2 l_windowPos, const char* l_name, const char* l_label);
+	void drawTextBox(ImVec2 l_windowPos);
+	void drawButton(ImVec2 l_windowPos);
+	void drawHeaderButton(ImVec2 l_windowPos);
 
+	void setInputEmpty();
 	char* getInput();
 
 	bool isPressed();
@@ -19,9 +20,12 @@ public:
 	void setInvalid();
 	void setValid();
 private:
-	char m_input[128] = "";
-	ImVec2 m_windowSize{231,45};
-	bool m_pressed{ false };
+	ImVec2 m_windowSize{ 231,45 };
 	float m_borderSize{ 0.f };
-	ImFont* m_font;
+	const char* m_name{};
+	const char* m_label{};
+	char m_input[128] = "";
+	ImFont* m_font{};
+
+	bool m_pressed{ false };
 };

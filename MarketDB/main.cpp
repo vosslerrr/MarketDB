@@ -96,12 +96,12 @@ int main()
 
 	sf::Clock loginClock;
 
-	ImGuiObject serverBox;
-	ImGuiObject portBox;
-	ImGuiObject databaseBox;
-	ImGuiObject uidBox;
-	ImGuiObject pwdBox;
-	ImGuiObject logInButton;
+	ImGuiObject serverBox{ "##ServerInputWindow", "##ServerInput" };
+	ImGuiObject portBox{ "##PortInputWindow", "##PortInput" };
+	ImGuiObject databaseBox{ "##DatabaseInputWindow", "##DatabaseInput" };
+	ImGuiObject uidBox{ "##UIDInputWindow", "##UIDInput" };
+	ImGuiObject pwdBox{ "##PWDInputWindow", "##PWDInput" };
+	ImGuiObject logInButton{ "##logInButton", "Log In" };
 
 	while (loginwindow.isOpen())
 	{
@@ -118,12 +118,12 @@ int main()
 
 		ImGui::SFML::Update(loginwindow, loginClock.restart());
 
-		serverBox.drawTextBox(ImVec2(317, 279), "##ServerInputWindow", "##ServerInput");
-		portBox.drawTextBox(ImVec2(317, 319), "##PortInputWindow", "##PortInput");
-		databaseBox.drawTextBox(ImVec2(317, 359), "##DatabaseInputWindow", "##DatabaseInput");
-		uidBox.drawTextBox(ImVec2(317, 399), "##UIDInputWindow", "##UIDInput");
-		pwdBox.drawTextBox(ImVec2(317, 439), "##PWDInputWindow", "##PWDInput");
-		logInButton.drawButton(ImVec2(360, 475), "##logInButton", "Log In");
+		serverBox.drawTextBox(ImVec2(317, 279));
+		portBox.drawTextBox(ImVec2(317, 319));
+		databaseBox.drawTextBox(ImVec2(317, 359));
+		uidBox.drawTextBox(ImVec2(317, 399));
+		pwdBox.drawTextBox(ImVec2(317, 439));
+		logInButton.drawButton(ImVec2(360, 475));
 
 		if (logInButton.isPressed())
 		{
@@ -341,10 +341,10 @@ int main()
 		SQLFreeHandle(SQL_HANDLE_STMT, hCreateStmt);
 	}
 
-/*----------------------------------------------------------------------------------------------------------------------------------------------- 
--------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------------------------------------------------------*/
-	
+	/*-----------------------------------------------------------------------------------------------------------------------------------------------
+	-------------------------------------------------------------------------------------------------------------------------------------------------
+	-----------------------------------------------------------------------------------------------------------------------------------------------*/
+
 	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode({ 1280,720 }), "MarketDB", sf::Style::Close);
 	window.setFramerateLimit(60);
 
@@ -368,15 +368,9 @@ int main()
 
 	currBackground.setTextureRect(backgrounds[0]);
 
-	ImGuiObject itemButton{  headerFont };
-	ImGuiObject aisleButton{ headerFont };
-	ImGuiObject sectionButton{ headerFont };
-	ImGuiObject supplierButton{ headerFont };
-	ImGuiObject transactionButton{ headerFont };
-
-	sf::RectangleShape searchButton({44,43});
+	sf::RectangleShape searchButton({ 44,43 });
 	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
-	searchButton.setPosition({1170,24});
+	searchButton.setPosition({ 1170,24 });
 
 	sf::Texture submitButtonTexture;
 	submitButtonTexture.loadFromFile("buttonBox.png");
@@ -389,7 +383,7 @@ int main()
 	modifyButtonTexture.loadFromFile("modifyBox.png");
 	sf::Sprite modifyButton(modifyButtonTexture);
 	modifyButton.setOrigin({ 24,8 });
-	modifyButton.setPosition({0,0});
+	modifyButton.setPosition({ 0,0 });
 	modifyButton.setColor(sf::Color::Transparent);
 
 	MouseDetector mouseDetector;
@@ -437,9 +431,9 @@ int main()
 
 	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT item_id, item_name, aisle_no, section_id, item_price, no_of_items FROM item", SQL_NTS);
 
-	char item_id1[46], item_name1[46], section_id1[46];
-	int aisle_no1, no_of_items1;
-	float item_price1;
+	char item_id1[46]{}, item_name1[46]{}, section_id1[46]{};
+	int aisle_no1{}, no_of_items1{};
+	float item_price1{};
 
 	SQLBindCol(handleSQL, 1, SQL_C_CHAR, item_id1, sizeof(item_id1), nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_name1, sizeof(item_name1), nullptr);
@@ -478,7 +472,7 @@ int main()
 
 	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no, no_of_sections FROM aisle", SQL_NTS);
 
-	int aisle_no2, no_of_sections2;
+	int aisle_no2{}, no_of_sections2{};
 
 	SQLBindCol(handleSQL, 1, SQL_C_SLONG, &aisle_no2, 0, nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_SLONG, &no_of_sections2, 0, nullptr);
@@ -510,8 +504,8 @@ int main()
 
 	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT section_id, section_name, aisle_no FROM section", SQL_NTS);
 
-	char section_id3[46], section_name3[46];
-	int aisle_no3;
+	char section_id3[46]{}, section_name3[46]{};
+	int aisle_no3{};
 
 	SQLBindCol(handleSQL, 1, SQL_C_CHAR, section_id3, sizeof(section_id3), nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_CHAR, section_name3, sizeof(section_name3), nullptr);
@@ -546,8 +540,8 @@ int main()
 
 	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT supplier_id, item_id, item_cost, supplier_name FROM supplier", SQL_NTS);
 
-	char supplier_id4[46], item_id4[46], supplier_name4[46];
-	float item_cost4;
+	char supplier_id4[46]{}, item_id4[46]{}, supplier_name4[46]{};
+	float item_cost4{};
 
 	SQLBindCol(handleSQL, 1, SQL_C_CHAR, supplier_id4, sizeof(supplier_id4), nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id4, sizeof(item_id4), nullptr);
@@ -586,8 +580,8 @@ int main()
 
 	SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
 
-	char transaction_id5[46], item_id5[46], transaction_date5[46];
-	float item_price5, tax_amount5, transaction_total5;
+	char transaction_id5[46]{}, item_id5[46]{}, transaction_date5[46]{};
+	float item_price5{}, tax_amount5{}, transaction_total5{};
 
 	SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
 	SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
@@ -624,10 +618,10 @@ int main()
 
 	std::vector<SearchItem> searchitems;
 
-	char search_item_id1[46], search_item_name1[46], search_section_id1[46];
-	int search_aisle_no1, search_no_of_items1;
-	float search_item_price1;
-	
+	char search_item_id1[46]{}, search_item_name1[46]{}, search_section_id1[46]{};
+	int search_aisle_no1{}, search_no_of_items1{};
+	float search_item_price1{};
+
 	// search aisle construction
 	struct SearchAisle {
 		int search_aisle_no2;
@@ -636,7 +630,7 @@ int main()
 
 	std::vector<SearchAisle> searchaisles;
 
-	int search_aisle_no2, search_no_of_sections2;
+	int search_aisle_no2{}, search_no_of_sections2{};
 
 	// search section construction
 	struct SearchSection {
@@ -647,8 +641,8 @@ int main()
 
 	std::vector<SearchSection> searchsections;
 
-	char search_section_id3[46], search_section_name3[46];
-	int search_aisle_no3;
+	char search_section_id3[46]{}, search_section_name3[46]{};
+	int search_aisle_no3{};
 
 	// search supplier construction
 	struct SearchSupplier {
@@ -660,8 +654,8 @@ int main()
 
 	std::vector<SearchSupplier> searchsuppliers;
 
-	char search_supplier_id4[46], search_item_id4[46], search_supplier_name4[46];
-	float search_item_cost4;
+	char search_supplier_id4[46]{}, search_item_id4[46]{}, search_supplier_name4[46]{};
+	float search_item_cost4{};
 
 	// search transaction construction
 	struct SearchTransaction {
@@ -675,15 +669,20 @@ int main()
 
 	std::vector<SearchTransaction> searchtransactions;
 
-	char search_transaction_id5[46], search_item_id5[46], search_transaction_date5[46];
-	float search_item_price5, search_tax_amount5, search_transaction_total5;
+	char search_transaction_id5[46]{}, search_item_id5[46]{}, search_transaction_date5[46]{};
+	float search_item_price5{}, search_tax_amount5{}, search_transaction_total5{};
 
-	ImGuiObject t1Box;
-	ImGuiObject t2Box;
-	ImGuiObject t3Box;
-	ImGuiObject t4Box;
-	ImGuiObject t5Box;
-	ImGuiObject t6Box;
+	ImGuiObject t1Box{ "##itemT1InputWindow", "##itemT1Input" };
+	ImGuiObject t2Box{ "##itemT2InputWindow", "##itemT2Input" };
+	ImGuiObject t3Box{ "##itemT3InputWindow", "##itemT3Input" };
+	ImGuiObject t4Box{ "##itemT4InputWindow", "##itemT4Input" };
+	ImGuiObject t5Box{ "##itemT5InputWindow", "##itemT5Input" };
+	ImGuiObject t6Box{ "##itemT6InputWindow", "##itemT6Input" };
+	ImGuiObject itemButton{ "##itemButton", "Item", headerFont };
+	ImGuiObject aisleButton{ "##aisleButton", "Aisle", headerFont };
+	ImGuiObject sectionButton{ "##sectionButton", "Section", headerFont };
+	ImGuiObject supplierButton{ "##supplierButton", "Supplier", headerFont };
+	ImGuiObject transactionButton{ "##transactionButton", "Transaction", headerFont };
 	
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -704,11 +703,11 @@ int main()
 
 		ImGui::SFML::Update(window, clock.restart());
 
-		itemButton.drawHeaderButton(ImVec2(69, 0), "##itemButton", "Item");
-		aisleButton.drawHeaderButton(ImVec2(190, 0), "##aisleButton", "Aisle");
-		sectionButton.drawHeaderButton(ImVec2(324, 0), "##sectionButton", "Section");
-		supplierButton.drawHeaderButton(ImVec2(493, 0), "##supplierButton", "Supplier");
-		transactionButton.drawHeaderButton(ImVec2(670, 0), "##transactionButton", "Transaction");
+		itemButton.drawHeaderButton(ImVec2(69, 0));
+		aisleButton.drawHeaderButton(ImVec2(190, 0));
+		sectionButton.drawHeaderButton(ImVec2(324, 0));
+		supplierButton.drawHeaderButton(ImVec2(493, 0));
+		transactionButton.drawHeaderButton(ImVec2(670, 0));
 
 		if (itemButton.isPressed())
 		{
@@ -740,12 +739,12 @@ int main()
 
 		if (clickItem)
 		{	
-			t1Box.drawTextBox(ImVec2(197,88), "##itemT1InputWindow", "##itemT1Input");
-			t2Box.drawTextBox(ImVec2(197,136), "##itemT2InputWindow", "##itemT2Input");
-			t3Box.drawTextBox(ImVec2(197,184), "##itemT3InputWindow", "##itemT3Input");
-			t4Box.drawTextBox(ImVec2(197, 232), "##itemT4InputWindow", "##itemT4Input");
-			t5Box.drawTextBox(ImVec2(197,280), "##itemT5InputWindow", "##itemT5Input");
-			t6Box.drawTextBox(ImVec2(197,328), "##itemT6InputWindow", "##itemT6Input");
+			t1Box.drawTextBox(ImVec2(197,88));
+			t2Box.drawTextBox(ImVec2(197,136));
+			t3Box.drawTextBox(ImVec2(197,184));
+			t4Box.drawTextBox(ImVec2(197, 232));
+			t5Box.drawTextBox(ImVec2(197,280));
+			t6Box.drawTextBox(ImVec2(197,328));
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -1502,8 +1501,8 @@ int main()
 
 		if (clickAisle)
 		{
-			t1Box.drawTextBox(ImVec2(227,88), "##aisleT1InputWindow", "##aisleT1Input");
-			t2Box.drawTextBox(ImVec2(227,136), "##aisleT2InputWindow", "##aisleT2Input");
+			t1Box.drawTextBox(ImVec2(227,88));
+			t2Box.drawTextBox(ImVec2(227,136));
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -1983,9 +1982,9 @@ int main()
 
 		if (clickSection)
 		{
-			t1Box.drawTextBox(ImVec2(217,88), "##sectionT1InputWindow", "##sectionT1Input");
-			t2Box.drawTextBox(ImVec2(217,136), "##sectionT2InputWindow", "##sectionT2Input");
-			t3Box.drawTextBox(ImVec2(217,184), "##sectionT3InputWindow", "##sectionT3Input");
+			t1Box.drawTextBox(ImVec2(217,88));
+			t2Box.drawTextBox(ImVec2(217,136));
+			t3Box.drawTextBox(ImVec2(217,184));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2507,10 +2506,10 @@ int main()
 
 		if (clickSupplier)
 		{
-			t1Box.drawTextBox(ImVec2(227,88), "##supplierT1InputWindow", "##supplierT1Input");
-			t2Box.drawTextBox(ImVec2(227,136), "##supplierT2InputWindow", "##supplierT2Input");
-			t3Box.drawTextBox(ImVec2(227,184), "##supplierT3InputWindow", "##supplierT3Input");
-			t4Box.drawTextBox(ImVec2(227,232), "##supplierT4InputWindow", "##suuplierT4Input");
+			t1Box.drawTextBox(ImVec2(227,88));
+			t2Box.drawTextBox(ImVec2(227,136));
+			t3Box.drawTextBox(ImVec2(227,184));
+			t4Box.drawTextBox(ImVec2(227,232));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -3073,12 +3072,12 @@ int main()
 
 		if (clickTransaction)
 		{
-			t1Box.drawTextBox(ImVec2(247,88), "##transactionT1InputWindow", "##transactionT1Input");
-			t2Box.drawTextBox(ImVec2(247,136), "##transactionT2InputWindow", "##transactionT2Input");
-			t3Box.drawTextBox(ImVec2(247,184), "##transactionT3InputWindow", "##transactionT3Input");
-			t4Box.drawTextBox(ImVec2(247,232), "##transactionT4InputWindow", "##transactionT4Input");
-			t5Box.drawTextBox(ImVec2(247,280), "##transactionT5InputWindow", "##transactionT5Input");
-			t6Box.drawTextBox(ImVec2(247,328), "##transactionT6InputWindow", "##transactionT6Input");
+			t1Box.drawTextBox(ImVec2(247,88));
+			t2Box.drawTextBox(ImVec2(247,136));
+			t3Box.drawTextBox(ImVec2(247,184));
+			t4Box.drawTextBox(ImVec2(247,232));
+			t5Box.drawTextBox(ImVec2(247,280));
+			t6Box.drawTextBox(ImVec2(247,328));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
