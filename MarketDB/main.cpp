@@ -4,7 +4,7 @@
 #include <sqltypes.h>
 #include <sql.h>
 #include <imgui-SFML.h>
-#include "MouseDetector.h"
+#include <SFML/Graphics.hpp>
 #include "ImGuiObject.h"
 
 bool IsDriverInstalled() 
@@ -368,11 +368,6 @@ int main()
 
 	currBackground.setTextureRect(backgrounds[0]);
 
-	sf::RectangleShape searchButton({ 44,43 });
-	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
-	searchButton.setPosition({ 1170,24 });
-
-	MouseDetector mouseDetector;
 	sf::Clock clock;
 	bool notNull = true;
 	bool valNums = true;
@@ -669,7 +664,8 @@ int main()
 	ImGuiObject sectionButton{ "##sectionButton", "Section", headerFont };
 	ImGuiObject supplierButton{ "##supplierButton", "Supplier", headerFont };
 	ImGuiObject transactionButton{ "##transactionButton", "Transaction", headerFont };
-	ImGuiObject subModButton{ "subModButton", "Submit" };
+	ImGuiObject searchButton{ "##searchButton", "Search", headerFont };
+	ImGuiObject subModButton{ "##subModButton", "Submit" };
 	
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -695,6 +691,7 @@ int main()
 		sectionButton.drawHeaderButton(ImVec2(324, 0));
 		supplierButton.drawHeaderButton(ImVec2(493, 0));
 		transactionButton.drawHeaderButton(ImVec2(670, 0));
+		searchButton.drawHeaderButton(ImVec2(1075, 0));
 
 		if (itemButton.isPressed())
 		{
@@ -3595,27 +3592,26 @@ int main()
 			}
 		}
 
-		if (mouseDetector.isOn(searchButton, window))
+		if (searchButton.isPressed())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				clickItem = false;
-				clickAisle = false;
-				clickSection = false;
-				clickSupplier = false;
-				clickTransaction = false;
-				clickSearch = true;
-				clickGO = false;
+			clickItem = false;
+			clickAisle = false;
+			clickSection = false;
+			clickSupplier = false;
+			clickTransaction = false;
+			clickSearch = true;
+			clickGO = false;
 				
-				currBackground.setTextureRect(backgrounds[0]);
+			currBackground.setTextureRect(backgrounds[0]);
 
-				t1Box.setValid();
-				t2Box.setValid();
-				t3Box.setValid();
-				t4Box.setValid();
-				t5Box.setValid();
-				t6Box.setValid();
-			}
+			t1Box.setValid();
+			t2Box.setValid();
+			t3Box.setValid();
+			t4Box.setValid();
+			t5Box.setValid();
+			t6Box.setValid();
+
+			searchButton.setPressedOff();
 		}
 
 		if (clickSearch)

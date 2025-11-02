@@ -155,16 +155,9 @@
     <ClCompile Include="..\External\SFML_imgui\imgui-SFML.cpp" />
     <ClCompile Include="ImGuiObject.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MouseDetector.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\External\imgui;$(SolutionDir)\External\SFML_imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGuiObject.h" />
-    <ClInclude Include="MouseDetector.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="backgrounds.png" />

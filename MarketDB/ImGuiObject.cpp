@@ -1,5 +1,4 @@
 #include "ImGuiObject.h"
-#include <iostream>
 
 ImGuiObject::ImGuiObject(const char* l_name, const char* l_label) 
 {
