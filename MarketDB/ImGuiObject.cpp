@@ -94,4 +94,12 @@ void ImGuiObject::setValid()
 	m_borderSize = 0.f;
 }
 
+const char* ImGuiObject::getLabel()
+{
+	return m_label;
+}
 
+void ImGuiObject::setLabel(const char* l_label)
+{
+	m_label = l_label;
+}

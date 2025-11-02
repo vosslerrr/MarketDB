@@ -11,8 +11,11 @@ public:
 	void drawButton(ImVec2 l_windowPos);
 	void drawHeaderButton(ImVec2 l_windowPos);
 
-	void setInputEmpty();
 	char* getInput();
+	void setInputEmpty();
+
+	const char* getLabel();
+	void setLabel(const char* l_label);
 
 	bool isPressed();
 	void setPressedOff();

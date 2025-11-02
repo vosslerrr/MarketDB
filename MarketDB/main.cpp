@@ -372,20 +372,6 @@ int main()
 	searchButton.setOrigin({ searchButton.getGeometricCenter().x, searchButton.getGeometricCenter().y });
 	searchButton.setPosition({ 1170,24 });
 
-	sf::Texture submitButtonTexture;
-	submitButtonTexture.loadFromFile("buttonBox.png");
-	sf::Sprite submitButton(submitButtonTexture);
-	submitButton.setOrigin({ 24,8 });
-	submitButton.setPosition({ 0,0 });
-	submitButton.setColor(sf::Color::Transparent);
-
-	sf::Texture modifyButtonTexture;
-	modifyButtonTexture.loadFromFile("modifyBox.png");
-	sf::Sprite modifyButton(modifyButtonTexture);
-	modifyButton.setOrigin({ 24,8 });
-	modifyButton.setPosition({ 0,0 });
-	modifyButton.setColor(sf::Color::Transparent);
-
 	MouseDetector mouseDetector;
 	sf::Clock clock;
 	bool notNull = true;
@@ -683,6 +669,7 @@ int main()
 	ImGuiObject sectionButton{ "##sectionButton", "Section", headerFont };
 	ImGuiObject supplierButton{ "##supplierButton", "Supplier", headerFont };
 	ImGuiObject transactionButton{ "##transactionButton", "Transaction", headerFont };
+	ImGuiObject subModButton{ "subModButton", "Submit" };
 	
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -728,12 +715,6 @@ int main()
 			t5Box.setValid();
 			t6Box.setValid();
 
-			submitButton.setPosition({ 210,400 });
-			submitButton.setColor(sf::Color::White);
-
-			modifyButton.setPosition({ 0,0 });
-			modifyButton.setColor(sf::Color::Transparent);
-
 			itemButton.setPressedOff();
 		}
 
@@ -744,7 +725,8 @@ int main()
 			t3Box.drawTextBox(ImVec2(197,184));
 			t4Box.drawTextBox(ImVec2(197, 232));
 			t5Box.drawTextBox(ImVec2(197,280));
-			t6Box.drawTextBox(ImVec2(197,328));
+			t6Box.drawTextBox(ImVec2(197, 328));
+			subModButton.drawButton(ImVec2(175,380));
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -840,12 +822,6 @@ int main()
 
 								items.erase(items.begin() + selectedRow);
 								selectedRow = -1;
-
-								submitButton.setPosition({ 210,400 });
-								submitButton.setColor(sf::Color::White);
-
-								modifyButton.setPosition({ 0,0 });
-								modifyButton.setColor(sf::Color::Transparent);
 							}
 							else
 							{
@@ -861,11 +837,7 @@ int main()
 					{
 						if (selectedRow >= 0 && selectedRow < items.size())
 						{
-							submitButton.setColor(sf::Color::Transparent);
-							submitButton.setPosition({ 0,0 });
-							
-							modifyButton.setColor(sf::Color::White);
-							modifyButton.setPosition({ 210,400 });
+							subModButton.setLabel("Modify");
 
 							original_item_id1 = items[selectedRow].item_id1;
 
@@ -892,582 +864,566 @@ int main()
 
 		if (clickItem)
 		{
-			if (mouseDetector.isOn(submitButton, window))
+			if (subModButton.getLabel() == "Submit" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
+					std::cerr << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr << "Empty t3" << std::endl;
+					notNull = false;
+
+					t3Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				if (t5Box.getInput() == "")
+				{
+					std::cerr << "Empty t5" << std::endl;
+					notNull = false;
+
+					t5Box.setInvalid();
+				}
+				else
+				{
+					t5Box.setValid();
+				}
+
+				if (t6Box.getInput() == "")
+				{
+					std::cerr << "Empty t6" << std::endl;
+					notNull = false;
+
+					t6Box.setInvalid();
+				}
+				else
+				{
+					t6Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stoi(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t3Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t5InTEST(t5Box.getInput());
+
+					std::stof(t5InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t5 number" << std::endl;
+					valNums = false;
+					valT5 = false;
+
+					t5Box.setInvalid();
+				}
+				if (valT5)
+				{
+					t5Box.setValid();
+				}
+
+				try
+				{
+					std::string t6InTEST(t6Box.getInput());
+
+					std::stoi(t6InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t6 number" << std::endl;
+					valNums = false;
+					valT6 = false;
+
+					t6Box.setInvalid();
+				}
+				if (valT6)
+				{
+					t6Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					std::string item_idStr(t1Box.getInput());
+					std::wstring item_id(item_idStr.begin(), item_idStr.end());
+
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+					SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
+					retSQL = SQLExecute(handleSQL);
+
+					if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 					{
-						if (t1Box.getInput() == "")
+						if (SQLFetch(handleSQL) == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+							std::cout << "Item ID already exists!" << std::endl;
+							primaryKeyIsVal = false;
 
 							t1Box.setInvalid();
-						}
-						else
-						{
-							t1Box.setValid();
-						}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
-
-							t3Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
-
-						if (t4Box.getInput() == "")
-						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
-
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
-
-						if (t5Box.getInput() == "")
-						{
-							std::cerr  << "Empty t5" << std::endl;
-							notNull = false;
-
-							t5Box.setInvalid();
-						}
-						else
-						{
-							t5Box.setValid();
-						}
-
-						if (t6Box.getInput() == "")
-						{
-							std::cerr  << "Empty t6" << std::endl;
-							notNull = false;
-
-							t6Box.setInvalid();
-						}
-						else
-						{
-							t6Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-							
-							std::stoi(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t3Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						try
-						{
-							std::string t5InTEST(t5Box.getInput());
-
-							std::stof(t5InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t5 number" << std::endl;
-							valNums = false;
-							valT5 = false;
-
-							t5Box.setInvalid();
-						}
-						if (valT5)
-						{
-							t5Box.setValid();
-						}
-
-						try
-						{
-							std::string t6InTEST(t6Box.getInput());
-
-							std::stoi(t6InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t6 number" << std::endl;
-							valNums = false;
-							valT6 = false;
-
-							t6Box.setInvalid();
-						}
-						if (valT6)
-						{
-							t6Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							std::string item_idStr(t1Box.getInput());
-							std::wstring item_id(item_idStr.begin(), item_idStr.end());
-
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
-							retSQL = SQLExecute(handleSQL);
-
-							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO) 
-							{
-								if (SQLFetch(handleSQL) == SQL_SUCCESS) 
-								{
-									std::cout << "Item ID already exists!" << std::endl;
-									primaryKeyIsVal = false;
-
-									t1Box.setInvalid();
-
-									int primaryKeyError = MessageBoxW(
-										nullptr,
-										L"Item I.D. is already in use.\n\n"
-										L"Please try again.",
-										L"Duplicate Primary Key!",
-										MB_OK | MB_ICONWARNING
-									);
-								}
-								else 
-								{
-									primaryKeyIsVal = true;
-
-									t1Box.setValid();
-								}
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-							if (primaryKeyIsVal)
-							{
-								std::string item_nameStr(t2Box.getInput());
-								std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
-
-								int aisle_no = atoi(t3Box.getInput());
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
-								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, nullptr);
-								retSQL = SQLExecute(handleSQL);
-
-								if (retSQL == SQL_SUCCESS)
-								{
-									if (SQLFetch(handleSQL) != SQL_SUCCESS)
-									{
-										std::cout << "aisle no does not exist" << std::endl;
-										valAisleNo = false;
-
-										t3Box.setInvalid();
-
-										int foreignKeyAisleError = MessageBoxW(
-											nullptr,
-											L"Aisle No. does not exist.\n\n"
-											L"Please try again.",
-											L"Foreign Key Constraint!",
-											MB_OK | MB_ICONWARNING
-										);
-									}
-									else
-									{
-										valAisleNo = true;
-
-										t3Box.setValid();
-									}
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-								if (valAisleNo)
-								{
-									std::string section_idStr(t4Box.getInput());
-									std::wstring section_id(section_idStr.begin(), section_idStr.end());
-
-									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-									SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT section_id FROM section WHERE section_id = ?", SQL_NTS);
-									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)section_id.c_str(), 0, nullptr);
-									retSQL = SQLExecute(handleSQL);
-
-									if (retSQL == SQL_SUCCESS)
-									{
-										if (SQLFetch(handleSQL) != SQL_SUCCESS)
-										{
-											std::cout << "section id does not exist" << std::endl;
-											valSectionID = false;
-
-											t4Box.setInvalid();
-
-											int foreignKeyAisleError = MessageBoxW(
-												nullptr,
-												L"Section I.D. does not exist.\n\n"
-												L"Please try again.",
-												L"Foreign Key Constraint!",
-												MB_OK | MB_ICONWARNING
-											);
-										}
-										else
-										{
-											valSectionID = true;
-
-											t4Box.setValid();
-										}
-									}
-
-									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-									if (valSectionID)
-									{
-										float item_price = atof(t5Box.getInput());
-										int no_of_items = atoi(t6Box.getInput());
-
-										std::wstring insertQuery = L"INSERT INTO item (item_id, item_name, aisle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
-
-										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-										SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-										SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-										SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
-										SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-										SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
-										SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
-										SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
-
-										retSQL = SQLExecute(handleSQL);
-
-										if (SQL_SUCCEEDED(retSQL))
-										{
-											std::cout << "Insert successful!" << std::endl;
-
-											SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-											SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT item_id, item_name, aisle_no, section_id, item_price, no_of_items FROM item", SQL_NTS);
-
-											char item_id[46], item_name[46], section_id[46];
-											int aisle_no, no_of_items;
-											float item_price;
-
-											SQLBindCol(handleSQL, 1, SQL_C_CHAR, item_id, sizeof(item_id), nullptr);
-											SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_name, sizeof(item_name), nullptr);
-											SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no, 0, nullptr);
-											SQLBindCol(handleSQL, 4, SQL_C_CHAR, section_id, sizeof(section_id), nullptr);
-											SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &item_price, 0, nullptr);
-											SQLBindCol(handleSQL, 6, SQL_C_SLONG, &no_of_items, 0, nullptr);
-
-											items.clear();
-
-											while (SQLFetch(handleSQL) == SQL_SUCCESS)
-											{
-												items.push_back({
-													item_id,
-													item_name,
-													aisle_no,
-													section_id,
-													item_price,
-													no_of_items
-													});
-											}
-
-											SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-										}
-
-										else
-										{
-											std::cerr  << "Insert failed!" << std::endl;
-										}
-
-										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-									}
-								}
-							}
-						}
-
-						else
-						{
-							int error = MessageBoxW(
+							int primaryKeyError = MessageBoxW(
 								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
+								L"Item I.D. is already in use.\n\n"
 								L"Please try again.",
-								L"Invalid/Empty Inputs!",
+								L"Duplicate Primary Key!",
 								MB_OK | MB_ICONWARNING
 							);
 						}
-						notNull = true;
-						valNums = true;
-						valT1 = true;
-						valT2 = true;
-						valT3 = true;
-						valT4 = true;
-						valT5 = true;
-						valT6 = true;
-
-						clock.restart();
-					}
-				}
-			}
-
-			if (mouseDetector.isOn(modifyButton, window))
-			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
-					{
-						if (t1Box.getInput() == "")
-						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
-
-							t1Box.setInvalid();
-						}
 						else
 						{
+							primaryKeyIsVal = true;
+
 							t1Box.setValid();
 						}
+					}
 
-						if (t2Box.getInput() == "")
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+					if (primaryKeyIsVal)
+					{
+						std::string item_nameStr(t2Box.getInput());
+						std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
+
+						int aisle_no = atoi(t3Box.getInput());
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
+
+						if (retSQL == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
-
-						if (t4Box.getInput() == "")
-						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
-
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
-
-						if (t5Box.getInput() == "")
-						{
-							std::cerr  << "Empty t5" << std::endl;
-							notNull = false;
-
-							t5Box.setInvalid();
-						}
-						else
-						{
-							t5Box.setInvalid();
-						}
-
-						if (t6Box.getInput() == "")
-						{
-							std::cerr  << "Empty t6" << std::endl;
-							notNull = false;
-
-							t6Box.setInvalid();
-						}
-						else
-						{
-							t6Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-
-							std::stoi(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						try
-						{
-							std::string t5InTEST(t5Box.getInput());
-
-							std::stof(t5InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t5 number" << std::endl;
-							valNums = false;
-							valT5 = false;
-
-							t5Box.setInvalid();
-						}
-						if (valT5)
-						{
-							t5Box.setInvalid();
-						}
-
-						try
-						{
-							std::string t6InTEST(t6Box.getInput());
-
-							std::stoi(t6InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t6 number" << std::endl;
-							valNums = false;
-							valT6 = false;
-
-							t6Box.setInvalid();
-						}
-						if (valT6)
-						{
-							t6Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-							std::wstring original_item_idW(original_item_id1.begin(), original_item_id1.end());
-							std::string item_idStr(t1Box.getInput());
-							std::wstring item_id(item_idStr.begin(), item_idStr.end());
-							std::string item_nameStr(t2Box.getInput());
-							std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
-							int aisle_no = atoi(t3Box.getInput());
-							std::string section_idStr(t4Box.getInput());
-							std::wstring section_id(section_idStr.begin(), section_idStr.end());
-							float item_price = atof(t5Box.getInput());
-							int no_of_items = atoi(t6Box.getInput());
-
-							std::wstring updateQuery = L"UPDATE item SET item_id = ?, item_name = ?, aisle_no = ?, section_id = ?, item_price = ?, no_of_items = ? WHERE item_id = ?";
-
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
-
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
-							SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
-							SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_item_idW.c_str(), 0, NULL);
-
-							SQLRETURN ret = SQLExecute(handleSQL);
-
-							if (SQL_SUCCEEDED(ret))
+							if (SQLFetch(handleSQL) != SQL_SUCCESS)
 							{
-								std::cout << "Item updated successfully!" << std::endl;
+								std::cout << "aisle no does not exist" << std::endl;
+								valAisleNo = false;
 
-								modifyButton.setColor(sf::Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
+								t3Box.setInvalid();
 
-								submitButton.setColor(sf::Color::White);
-								submitButton.setPosition({ 210,400 });
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-								SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT item_id, item_name, aisle_no, section_id, item_price, no_of_items FROM item", SQL_NTS);
-
-								char item_id[46], item_name[46], section_id[46];
-								int aisle_no, no_of_items;
-								float item_price;
-
-								SQLBindCol(handleSQL, 1, SQL_C_CHAR, item_id, sizeof(item_id), nullptr);
-								SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_name, sizeof(item_name), nullptr);
-								SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no, 0, nullptr);
-								SQLBindCol(handleSQL, 4, SQL_C_CHAR, section_id, sizeof(section_id), nullptr);
-								SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &item_price, 0, nullptr);
-								SQLBindCol(handleSQL, 6, SQL_C_SLONG, &no_of_items, 0, nullptr);
-
-								items.clear();
-
-								while (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									items.push_back({
-										item_id,
-										item_name,
-										aisle_no,
-										section_id,
-										item_price,
-										no_of_items
-										});
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+								int foreignKeyAisleError = MessageBoxW(
+									nullptr,
+									L"Aisle No. does not exist.\n\n"
+									L"Please try again.",
+									L"Foreign Key Constraint!",
+									MB_OK | MB_ICONWARNING
+								);
 							}
 							else
 							{
-								std::cerr  << "Failed to update item!" << std::endl;
+								valAisleNo = true;
+
+								t3Box.setValid();
+							}
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+						if (valAisleNo)
+						{
+							std::string section_idStr(t4Box.getInput());
+							std::wstring section_id(section_idStr.begin(), section_idStr.end());
+
+							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT section_id FROM section WHERE section_id = ?", SQL_NTS);
+							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)section_id.c_str(), 0, nullptr);
+							retSQL = SQLExecute(handleSQL);
+
+							if (retSQL == SQL_SUCCESS)
+							{
+								if (SQLFetch(handleSQL) != SQL_SUCCESS)
+								{
+									std::cout << "section id does not exist" << std::endl;
+									valSectionID = false;
+
+									t4Box.setInvalid();
+
+									int foreignKeyAisleError = MessageBoxW(
+										nullptr,
+										L"Section I.D. does not exist.\n\n"
+										L"Please try again.",
+										L"Foreign Key Constraint!",
+										MB_OK | MB_ICONWARNING
+									);
+								}
+								else
+								{
+									valSectionID = true;
+
+									t4Box.setValid();
+								}
 							}
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-						}
 
-						else
-						{
-							int error = MessageBoxW(
-								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
-								L"Please try again.",
-								L"Invalid/Empty Inputs!",
-								MB_OK | MB_ICONWARNING
-							);
-						}
-						notNull = true;
-						valNums = true;
-						valT1 = true;
-						valT2 = true;
-						valT3 = true;
-						valT4 = true;
-						valT5 = true;
-						valT6 = true;
+							if (valSectionID)
+							{
+								float item_price = atof(t5Box.getInput());
+								int no_of_items = atoi(t6Box.getInput());
 
-						clock.restart();
+								std::wstring insertQuery = L"INSERT INTO item (item_id, item_name, aisle_no, section_id, item_price, no_of_items) VALUES (?,?,?,?,?,?)";
+
+								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+								SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+
+								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+								SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
+								SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+								SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
+								SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
+								SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
+
+								retSQL = SQLExecute(handleSQL);
+
+								if (SQL_SUCCEEDED(retSQL))
+								{
+									std::cout << "Insert successful!" << std::endl;
+
+									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+									SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT item_id, item_name, aisle_no, section_id, item_price, no_of_items FROM item", SQL_NTS);
+
+									char item_id[46], item_name[46], section_id[46];
+									int aisle_no, no_of_items;
+									float item_price;
+
+									SQLBindCol(handleSQL, 1, SQL_C_CHAR, item_id, sizeof(item_id), nullptr);
+									SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_name, sizeof(item_name), nullptr);
+									SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no, 0, nullptr);
+									SQLBindCol(handleSQL, 4, SQL_C_CHAR, section_id, sizeof(section_id), nullptr);
+									SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &item_price, 0, nullptr);
+									SQLBindCol(handleSQL, 6, SQL_C_SLONG, &no_of_items, 0, nullptr);
+
+									items.clear();
+
+									while (SQLFetch(handleSQL) == SQL_SUCCESS)
+									{
+										items.push_back({
+											item_id,
+											item_name,
+											aisle_no,
+											section_id,
+											item_price,
+											no_of_items
+											});
+									}
+
+									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+								}
+
+								else
+								{
+									std::cerr << "Insert failed!" << std::endl;
+								}
+
+								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+							}
+						}
 					}
 				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT1 = true;
+				valT2 = true;
+				valT3 = true;
+				valT4 = true;
+				valT5 = true;
+				valT6 = true;
+				
+				subModButton.setPressedOff();
+			}
+
+			if (subModButton.getLabel() == "Modify" && subModButton.isPressed())
+			{
+				if (t1Box.getInput() == "")
+				{
+					std::cerr << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				if (t5Box.getInput() == "")
+				{
+					std::cerr << "Empty t5" << std::endl;
+					notNull = false;
+
+					t5Box.setInvalid();
+				}
+				else
+				{
+					t5Box.setInvalid();
+				}
+
+				if (t6Box.getInput() == "")
+				{
+					std::cerr << "Empty t6" << std::endl;
+					notNull = false;
+
+					t6Box.setInvalid();
+				}
+				else
+				{
+					t6Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stoi(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t5InTEST(t5Box.getInput());
+
+					std::stof(t5InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t5 number" << std::endl;
+					valNums = false;
+					valT5 = false;
+
+					t5Box.setInvalid();
+				}
+				if (valT5)
+				{
+					t5Box.setInvalid();
+				}
+
+				try
+				{
+					std::string t6InTEST(t6Box.getInput());
+
+					std::stoi(t6InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr << "invalid t6 number" << std::endl;
+					valNums = false;
+					valT6 = false;
+
+					t6Box.setInvalid();
+				}
+				if (valT6)
+				{
+					t6Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+					std::wstring original_item_idW(original_item_id1.begin(), original_item_id1.end());
+					std::string item_idStr(t1Box.getInput());
+					std::wstring item_id(item_idStr.begin(), item_idStr.end());
+					std::string item_nameStr(t2Box.getInput());
+					std::wstring item_name(item_nameStr.begin(), item_nameStr.end());
+					int aisle_no = atoi(t3Box.getInput());
+					std::string section_idStr(t4Box.getInput());
+					std::wstring section_id(section_idStr.begin(), section_idStr.end());
+					float item_price = atof(t5Box.getInput());
+					int no_of_items = atoi(t6Box.getInput());
+
+					std::wstring updateQuery = L"UPDATE item SET item_id = ?, item_name = ?, aisle_no = ?, section_id = ?, item_price = ?, no_of_items = ? WHERE item_id = ?";
+
+					SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_name.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+					SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
+					SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_items, 0, NULL);
+					SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_item_idW.c_str(), 0, NULL);
+
+					SQLRETURN ret = SQLExecute(handleSQL);
+
+					if (SQL_SUCCEEDED(ret))
+					{
+						std::cout << "Item updated successfully!" << std::endl;
+
+						subModButton.setLabel("Submit");
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT item_id, item_name, aisle_no, section_id, item_price, no_of_items FROM item", SQL_NTS);
+
+						char item_id[46], item_name[46], section_id[46];
+						int aisle_no, no_of_items;
+						float item_price;
+
+						SQLBindCol(handleSQL, 1, SQL_C_CHAR, item_id, sizeof(item_id), nullptr);
+						SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_name, sizeof(item_name), nullptr);
+						SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no, 0, nullptr);
+						SQLBindCol(handleSQL, 4, SQL_C_CHAR, section_id, sizeof(section_id), nullptr);
+						SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &item_price, 0, nullptr);
+						SQLBindCol(handleSQL, 6, SQL_C_SLONG, &no_of_items, 0, nullptr);
+
+						items.clear();
+
+						while (SQLFetch(handleSQL) == SQL_SUCCESS)
+						{
+							items.push_back({
+								item_id,
+								item_name,
+								aisle_no,
+								section_id,
+								item_price,
+								no_of_items
+								});
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+					else
+					{
+						std::cerr << "Failed to update item!" << std::endl;
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT1 = true;
+				valT2 = true;
+				valT3 = true;
+				valT4 = true;
+				valT5 = true;
+				valT6 = true;
+
+				subModButton.setPressedOff();
 			}
 		}
 
@@ -1490,12 +1446,6 @@ int main()
 			t5Box.setValid();
 			t6Box.setValid();
 
-			submitButton.setPosition({ 210,220 });
-			submitButton.setColor(sf::Color::White);
-
-			modifyButton.setPosition({ 0,0 });
-			modifyButton.setColor(sf::Color::Transparent);
-
 			aisleButton.setPressedOff();
 		}
 
@@ -1503,6 +1453,7 @@ int main()
 		{
 			t1Box.drawTextBox(ImVec2(227,88));
 			t2Box.drawTextBox(ImVec2(227,136));
+			subModButton.drawButton(ImVec2(175,200));
 			
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -1587,11 +1538,7 @@ int main()
 								aisles.erase(aisles.begin() + selectedRow);
 								selectedRow = -1;
 
-								submitButton.setPosition({ 210,220 });
-								submitButton.setColor(sf::Color::White);
-
-								modifyButton.setPosition({ 0,0 });
-								modifyButton.setColor(sf::Color::Transparent);
+								subModButton.setLabel("Submit");
 							}
 							else
 							{
@@ -1605,11 +1552,7 @@ int main()
 					{
 						if (selectedRow >= 0 && selectedRow < aisles.size())
 						{
-							submitButton.setColor(sf::Color::Transparent);
-							submitButton.setPosition({ 0,0 });
-
-							modifyButton.setColor(sf::Color::White);
-							modifyButton.setPosition({ 210,220 });
+							subModButton.setLabel("Modify");
 
 							original_aisle_no2 = aisles[selectedRow].aisle_no2;
 
@@ -1628,327 +1571,311 @@ int main()
 
 		if (clickAisle)
 		{
-			if (mouseDetector.isOn(submitButton, window))
+			if (subModButton.getLabel() == "Submit" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					notNull = true;
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					notNull = true;
+					t2Box.setValid();
+				}
+
+				try
+				{
+					std::string t1InTEST(t1Box.getInput());
+
+					std::stoi(t1InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t1 number" << std::endl;
+					valT1 = false;
+					valNums = false;
+
+					t1Box.setInvalid();
+				}
+				if (valT1)
+				{
+					t1Box.setValid();
+				}
+
+				try
+				{
+					std::string t2InTEST(t2Box.getInput());
+
+					std::stoi(t2InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t2 number" << std::endl;
+					valT2 = false;
+					valNums = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT2)
+				{
+					t2Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					int aisle_no = atoi(t1Box.getInput());
+
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+					SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+					retSQL = SQLExecute(handleSQL);
+
+					if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 					{
-						if (t1Box.getInput() == "")
+						if (SQLFetch(handleSQL) == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+							std::cout << "Aisle No. already exists!" << std::endl;
+							primaryKeyIsVal = false;
 
 							t1Box.setInvalid();
-						}
-						else
-						{
-							notNull = true;
-							t1Box.setValid();
-						}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							notNull = true;
-							t2Box.setValid();
-						}
-
-						try
-						{
-							std::string t1InTEST(t1Box.getInput());
-
-							std::stoi(t1InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t1 number" << std::endl;
-							valT1 = false;
-							valNums = false;
-
-							t1Box.setInvalid();
-						}
-						if (valT1)
-						{
-							t1Box.setValid();
-						}
-
-						try
-						{
-							std::string t2InTEST(t2Box.getInput());
-
-							std::stoi(t2InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t2 number" << std::endl;
-							valT2 = false;
-							valNums = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT2)
-						{
-							t2Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							int aisle_no = atoi(t1Box.getInput());
-
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-							retSQL = SQLExecute(handleSQL);
-
-							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-							{
-								if (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									std::cout << "Aisle No. already exists!" << std::endl;
-									primaryKeyIsVal = false;
-
-									t1Box.setInvalid();
-
-									int primaryKeyError = MessageBoxW(
-										nullptr,
-										L"Aisle No. is already in use.\n\n"
-										L"Please try again.",
-										L"Duplicate Primary Key!",
-										MB_OK | MB_ICONWARNING
-									);
-								}
-								else
-								{
-									primaryKeyIsVal = true;
-
-									t1Box.setValid();
-								}
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-							if (primaryKeyIsVal)
-							{
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-								int no_of_sections = atoi(t2Box.getInput());
-
-								std::wstring insertQuery = L"INSERT INTO aisle (aisle_no, no_of_sections) VALUES (?,?)";
-
-								SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-								SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_sections, 0, NULL);
-
-								retSQL = SQLExecute(handleSQL);
-
-								if (SQL_SUCCEEDED(retSQL))
-								{
-									std::cout << "Insert successful!" << std::endl;
-
-									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-									SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no, no_of_sections FROM aisle", SQL_NTS);
-
-									int aisle_no2, no_of_sections2;
-
-									SQLBindCol(handleSQL, 1, SQL_C_SLONG, &aisle_no2, 0, nullptr);
-									SQLBindCol(handleSQL, 2, SQL_C_SLONG, &no_of_sections2, 0, nullptr);
-
-									aisles.clear();
-
-									while (SQLFetch(handleSQL) == SQL_SUCCESS)
-									{
-										aisles.push_back({
-											aisle_no2,
-											no_of_sections2
-											});
-									}
-
-									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-								}
-
-								else
-								{
-									std::cerr  << "Insert failed!" << std::endl;
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-							}
-						}
-
-						else
-						{
-							int error = MessageBoxW(
+							int primaryKeyError = MessageBoxW(
 								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
+								L"Aisle No. is already in use.\n\n"
 								L"Please try again.",
-								L"Invalid/Empty Inputs!",
+								L"Duplicate Primary Key!",
 								MB_OK | MB_ICONWARNING
 							);
 						}
-						valT1 = true;
-						valT2 = true;
-						notNull = true;
-						valNums = true;
+						else
+						{
+							primaryKeyIsVal = true;
 
-						clock.restart();
+							t1Box.setValid();
+						}
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+					if (primaryKeyIsVal)
+					{
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						int no_of_sections = atoi(t2Box.getInput());
+
+						std::wstring insertQuery = L"INSERT INTO aisle (aisle_no, no_of_sections) VALUES (?,?)";
+
+						SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
+
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+						SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_sections, 0, NULL);
+
+						retSQL = SQLExecute(handleSQL);
+
+						if (SQL_SUCCEEDED(retSQL))
+						{
+							std::cout << "Insert successful!" << std::endl;
+
+							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+							SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no, no_of_sections FROM aisle", SQL_NTS);
+
+							int aisle_no2, no_of_sections2;
+
+							SQLBindCol(handleSQL, 1, SQL_C_SLONG, &aisle_no2, 0, nullptr);
+							SQLBindCol(handleSQL, 2, SQL_C_SLONG, &no_of_sections2, 0, nullptr);
+
+							aisles.clear();
+
+							while (SQLFetch(handleSQL) == SQL_SUCCESS)
+							{
+								aisles.push_back({
+									aisle_no2,
+									no_of_sections2
+									});
+							}
+
+							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+						}
+
+						else
+						{
+							std::cerr  << "Insert failed!" << std::endl;
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 					}
 				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				valT1 = true;
+				valT2 = true;
+				notNull = true;
+				valNums = true;
+
+				subModButton.setPressedOff();
 			}
 
-			if (mouseDetector.isOn(modifyButton, window))
+			if (subModButton.getLabel() == "Modify" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
-					{
-						if (t1Box.getInput() == "")
-						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
 
-							t1Box.setInvalid();
-						}
-						else
-						{
-							t1Box.setValid();
-						}
-
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						try
-						{
-							std::string t1InTEST(t1Box.getInput());
-
-							std::stoi(t1InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t1 number" << std::endl;
-							valNums = false;
-							valT1 = false;
-
-							t1Box.setInvalid();
-						}
-						if (valT1)
-						{
-							t1Box.setValid();
-						}
-
-						try
-						{
-							std::string t2InTEST(t2Box.getInput());
-
-							std::stoi(t2InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t2 number" << std::endl;
-							valNums = false;
-							valT2 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT2)
-						{
-							t2Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-							int original_aisle_no = original_aisle_no2;
-							int aisle_no = atoi(t1Box.getInput());
-							int no_of_sections = atoi(t2Box.getInput());
-
-							std::wstring updateQuery = L"UPDATE aisle SET aisle_no = ?, no_of_sections = ? WHERE aisle_no = ?";
-
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
-
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_sections, 0, NULL);
-							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &original_aisle_no, 0, NULL);
-
-							SQLRETURN ret = SQLExecute(handleSQL);
-
-							if (SQL_SUCCEEDED(ret))
-							{
-								std::cout << "Item updated successfully!" << std::endl;
-
-								modifyButton.setColor(sf::Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
-
-								submitButton.setColor(sf::Color::White);
-								submitButton.setPosition({ 210,220 });
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-								SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no, no_of_sections FROM aisle", SQL_NTS);
-
-								int aisle_no2, no_of_sections2;
-
-								SQLBindCol(handleSQL, 1, SQL_C_SLONG, &aisle_no2, 0, nullptr);
-								SQLBindCol(handleSQL, 2, SQL_C_SLONG, &no_of_sections2, 0, nullptr);
-
-								aisles.clear();
-
-								while (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									aisles.push_back({
-										aisle_no2,
-										no_of_sections2
-										});
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-							}
-							else
-							{
-								std::cerr  << "Failed to update item!" << std::endl;
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-						}
-
-						else 
-						{
-							int error = MessageBoxW(
-								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
-								L"Please try again.",
-								L"Invalid/Empty Inputs!",
-								MB_OK | MB_ICONWARNING
-							);
-						}
-						valT1 = true;
-						valT2 = true;
-						notNull = true;
-						valNums = true;
-
-						clock.restart();
-					}
+					t1Box.setInvalid();
 				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				try
+				{
+					std::string t1InTEST(t1Box.getInput());
+
+					std::stoi(t1InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t1 number" << std::endl;
+					valNums = false;
+					valT1 = false;
+
+					t1Box.setInvalid();
+				}
+				if (valT1)
+				{
+					t1Box.setValid();
+				}
+
+				try
+				{
+					std::string t2InTEST(t2Box.getInput());
+
+					std::stoi(t2InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t2 number" << std::endl;
+					valNums = false;
+					valT2 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT2)
+				{
+					t2Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+					int original_aisle_no = original_aisle_no2;
+					int aisle_no = atoi(t1Box.getInput());
+					int no_of_sections = atoi(t2Box.getInput());
+
+					std::wstring updateQuery = L"UPDATE aisle SET aisle_no = ?, no_of_sections = ? WHERE aisle_no = ?";
+
+					SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+					SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &no_of_sections, 0, NULL);
+					SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &original_aisle_no, 0, NULL);
+
+					SQLRETURN ret = SQLExecute(handleSQL);
+
+					if (SQL_SUCCEEDED(ret))
+					{
+						std::cout << "Item updated successfully!" << std::endl;
+
+						subModButton.setLabel("Submit");
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no, no_of_sections FROM aisle", SQL_NTS);
+
+						int aisle_no2, no_of_sections2;
+
+						SQLBindCol(handleSQL, 1, SQL_C_SLONG, &aisle_no2, 0, nullptr);
+						SQLBindCol(handleSQL, 2, SQL_C_SLONG, &no_of_sections2, 0, nullptr);
+
+						aisles.clear();
+
+						while (SQLFetch(handleSQL) == SQL_SUCCESS)
+						{
+							aisles.push_back({
+								aisle_no2,
+								no_of_sections2
+								});
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+					else
+					{
+						std::cerr  << "Failed to update item!" << std::endl;
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+				}
+
+				else 
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				valT1 = true;
+				valT2 = true;
+				notNull = true;
+				valNums = true;
+
+				subModButton.setPressedOff();
 			}
 		}
 
@@ -1971,12 +1898,6 @@ int main()
 			t5Box.setValid();
 			t6Box.setValid();
 
-			submitButton.setPosition({ 210,250 });
-			submitButton.setColor(sf::Color::White);
-
-			modifyButton.setPosition({ 0,0 });
-			modifyButton.setColor(sf::Color::Transparent);
-
 			sectionButton.setPressedOff();
 		}
 
@@ -1985,6 +1906,7 @@ int main()
 			t1Box.drawTextBox(ImVec2(217,88));
 			t2Box.drawTextBox(ImVec2(217,136));
 			t3Box.drawTextBox(ImVec2(217,184));
+			subModButton.drawButton(ImVec2(175, 230));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2072,11 +1994,7 @@ int main()
 								sections.erase(sections.begin() + selectedRow);
 								selectedRow = -1;
 
-								submitButton.setPosition({ 210,250 });
-								submitButton.setColor(sf::Color::White);
-
-								modifyButton.setPosition({ 0,0 });
-								modifyButton.setColor(sf::Color::Transparent);
+								subModButton.setLabel("Submit");
 							}
 							else
 							{
@@ -2091,11 +2009,7 @@ int main()
 					{
 						if (selectedRow >= 0 && selectedRow < sections.size())
 						{
-							submitButton.setColor(sf::Color::Transparent);
-							submitButton.setPosition({ 0,0 });
-
-							modifyButton.setColor(sf::Color::White);
-							modifyButton.setPosition({ 210,250 });
+							subModButton.setLabel("Modify);
 
 							original_section_id3 = sections[selectedRow].section_id3;
 
@@ -2118,309 +2032,155 @@ int main()
 
 		if (clickSection)
 		{
-			if (mouseDetector.isOn(submitButton, window))
+			if (subModButton.getLabel() == "Submit" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
 
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stoi(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					std::string section_idStr(t1Box.getInput());
+					std::wstring section_id(section_idStr.begin(), section_idStr.end());
+
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+					SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT section_id FROM section WHERE section_id = ?", SQL_NTS);
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)section_id.c_str(), 0, nullptr);
+					retSQL = SQLExecute(handleSQL);
+
+					if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 					{
-
-						if (t1Box.getInput() == "")
+						if (SQLFetch(handleSQL) == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+							std::cout << "Section ID already exists!" << std::endl;
+							primaryKeyIsVal = false;
 
 							t1Box.setInvalid();
-						}
-						else
-						{
-							t1Box.setValid();
-						}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-
-							std::stoi(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							std::string section_idStr(t1Box.getInput());
-							std::wstring section_id(section_idStr.begin(), section_idStr.end());
-
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT section_id FROM section WHERE section_id = ?", SQL_NTS);
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)section_id.c_str(), 0, nullptr);
-							retSQL = SQLExecute(handleSQL);
-
-							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-							{
-								if (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									std::cout << "Section ID already exists!" << std::endl;
-									primaryKeyIsVal = false;
-
-									t1Box.setInvalid();
-
-									int primaryKeyError = MessageBoxW(
-										nullptr,
-										L"Section I.D. is already in use.\n\n"
-										L"Please try again.",
-										L"Duplicate Primary Key!",
-										MB_OK | MB_ICONWARNING
-									);
-								}
-								else
-								{
-									primaryKeyIsVal = true;
-
-									t1Box.setValid();
-								}
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-							if (primaryKeyIsVal)
-							{
-								std::string section_nameStr(t2Box.getInput());
-								std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
-								int aisle_no = std::atoi(t3Box.getInput());
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
-								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, nullptr);
-								retSQL = SQLExecute(handleSQL);
-
-								if (retSQL == SQL_SUCCESS)
-								{
-									if (SQLFetch(handleSQL) != SQL_SUCCESS)
-									{
-										std::cout << "aisle no does not exist" << std::endl;
-										valAisleNo = false;
-
-										t2Box.setInvalid();
-
-										int foreignKeyAisleError = MessageBoxW(
-											nullptr,
-											L"Aisle No. does not exist.\n\n"
-											L"Please try again.",
-											L"Foreign Key Constraint!",
-											MB_OK | MB_ICONWARNING
-										);
-									}
-									else
-									{
-										valAisleNo = true;
-
-										t3Box.setValid();
-									}
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-								if (valAisleNo)
-								{
-									std::wstring insertQuery = L"INSERT INTO section (section_id, section_name, aisle_no) VALUES (?,?,?)";
-
-									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-									SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_name.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-
-									retSQL = SQLExecute(handleSQL);
-
-									if (SQL_SUCCEEDED(retSQL))
-									{
-										std::cout << "Insert successful!" << std::endl;
-
-										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-										SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT section_id, section_name, aisle_no FROM section", SQL_NTS);
-
-										char section_id3[46], section_name3[46];
-										int aisle_no3;
-
-										SQLBindCol(handleSQL, 1, SQL_C_CHAR, section_id3, sizeof(section_id3), nullptr);
-										SQLBindCol(handleSQL, 2, SQL_C_CHAR, section_name3, sizeof(section_name3), nullptr);
-										SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no3, 0, nullptr);
-
-										sections.clear();
-
-										while (SQLFetch(handleSQL) == SQL_SUCCESS)
-										{
-											sections.push_back({
-												section_id3,
-												section_name3,
-												aisle_no3
-												});
-										}
-
-										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-									}
-
-									else
-									{
-										std::cerr  << "Insert failed!" << std::endl;
-									}
-
-									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-								}
-							}		
-						}
-
-						else
-						{
-							int error = MessageBoxW(
+							int primaryKeyError = MessageBoxW(
 								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
+								L"Section I.D. is already in use.\n\n"
 								L"Please try again.",
-								L"Invalid/Empty Inputs!",
+								L"Duplicate Primary Key!",
 								MB_OK | MB_ICONWARNING
 							);
 						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-
-						clock.restart();
-					}
-				}
-			}
-
-			if (mouseDetector.isOn(modifyButton, window))
-			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
-					{
-						if (t1Box.getInput() == "")
-						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
-
-							t1Box.setInvalid();
-						}
 						else
 						{
+							primaryKeyIsVal = true;
+
 							t1Box.setValid();
 						}
+					}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
+					if (primaryKeyIsVal)
+					{
+						std::string section_nameStr(t2Box.getInput());
+						std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
+						int aisle_no = std::atoi(t3Box.getInput());
 
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT aisle_no FROM aisle WHERE aisle_no = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
 
-							t2Box.setInvalid();
-						}
-						else
+						if (retSQL == SQL_SUCCESS)
 						{
-							t3Box.setValid();
-						}
+							if (SQLFetch(handleSQL) != SQL_SUCCESS)
+							{
+								std::cout << "aisle no does not exist" << std::endl;
+								valAisleNo = false;
 
-						try
-						{
-							std::string t3InTEST(t2Box.getInput());
+								t2Box.setInvalid();
 
-							std::stoi(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
+								int foreignKeyAisleError = MessageBoxW(
+									nullptr,
+									L"Aisle No. does not exist.\n\n"
+									L"Please try again.",
+									L"Foreign Key Constraint!",
+									MB_OK | MB_ICONWARNING
+								);
+							}
+							else
+							{
+								valAisleNo = true;
 
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
+								t3Box.setValid();
+							}
 						}
 
-						if (notNull && valNums)
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+						if (valAisleNo)
 						{
+							std::wstring insertQuery = L"INSERT INTO section (section_id, section_name, aisle_no) VALUES (?,?,?)";
+
 							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							std::wstring original_section_id(original_section_id3.begin(), original_section_id3.end());
-							std::string section_idStr(t1Box.getInput());
-							std::wstring section_id(section_idStr.begin(), section_idStr.end());
-							std::string section_nameStr(t2Box.getInput());
-							std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
-							int aisle_no = atoi(t3Box.getInput());;
-
-							std::wstring updateQuery = L"UPDATE section SET section_id = ?, section_name = ?, aisle_no = ? WHERE section_id = ?";
-
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+							SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
 
 							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_name.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
-							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_section_id.c_str(), 0, NULL);
 
-							SQLRETURN ret = SQLExecute(handleSQL);
+							retSQL = SQLExecute(handleSQL);
 
-							if (SQL_SUCCEEDED(ret))
+							if (SQL_SUCCEEDED(retSQL))
 							{
-								std::cout << "Item updated successfully!" << std::endl;
-
-								modifyButton.setColor(sf::Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
-
-								submitButton.setColor(sf::Color::White);
-								submitButton.setPosition({ 210,250 });
+								std::cout << "Insert successful!" << std::endl;
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -2446,33 +2206,167 @@ int main()
 
 								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 							}
+
 							else
 							{
-								std::cerr  << "Failed to update item!" << std::endl;
+								std::cerr  << "Insert failed!" << std::endl;
 							}
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
 						}
-
-						else
-						{
-							int error = MessageBoxW(
-								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
-								L"Please try again.",
-								L"Invalid/Empty Inputs!",
-								MB_OK | MB_ICONWARNING
-							);
-						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-
-						clock.restart();
-					}
+					}		
 				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
+
+				subModButton.setPressedOff();
+			}
+
+			if (subModButton.getLabel() == "Modify" && subModButton.isPressed())
+			{
+				if (t1Box.getInput() == "")
+				{
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t2Box.getInput());
+
+					std::stoi(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+					std::wstring original_section_id(original_section_id3.begin(), original_section_id3.end());
+					std::string section_idStr(t1Box.getInput());
+					std::wstring section_id(section_idStr.begin(), section_idStr.end());
+					std::string section_nameStr(t2Box.getInput());
+					std::wstring section_name(section_nameStr.begin(), section_nameStr.end());
+					int aisle_no = atoi(t3Box.getInput());;
+
+					std::wstring updateQuery = L"UPDATE section SET section_id = ?, section_name = ?, aisle_no = ? WHERE section_id = ?";
+
+					SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)section_name.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &aisle_no, 0, NULL);
+					SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_section_id.c_str(), 0, NULL);
+
+					SQLRETURN ret = SQLExecute(handleSQL);
+
+					if (SQL_SUCCEEDED(ret))
+					{
+						std::cout << "Item updated successfully!" << std::endl;
+
+						subModButton.setLabel("Submit");
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT section_id, section_name, aisle_no FROM section", SQL_NTS);
+
+						char section_id3[46], section_name3[46];
+						int aisle_no3;
+
+						SQLBindCol(handleSQL, 1, SQL_C_CHAR, section_id3, sizeof(section_id3), nullptr);
+						SQLBindCol(handleSQL, 2, SQL_C_CHAR, section_name3, sizeof(section_name3), nullptr);
+						SQLBindCol(handleSQL, 3, SQL_C_SLONG, &aisle_no3, 0, nullptr);
+
+						sections.clear();
+
+						while (SQLFetch(handleSQL) == SQL_SUCCESS)
+						{
+							sections.push_back({
+								section_id3,
+								section_name3,
+								aisle_no3
+								});
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+					else
+					{
+						std::cerr  << "Failed to update item!" << std::endl;
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+
+				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
 			}
 		}
 
@@ -2495,12 +2389,6 @@ int main()
 			t5Box.setValid();
 			t6Box.setValid();
 
-			submitButton.setPosition({ 210,300 });
-			submitButton.setColor(sf::Color::White);
-
-			modifyButton.setPosition({ 0,0 });
-			modifyButton.setColor(sf::Color::Transparent);
-
 			supplierButton.setPressedOff();
 		}
 
@@ -2510,6 +2398,7 @@ int main()
 			t2Box.drawTextBox(ImVec2(227,136));
 			t3Box.drawTextBox(ImVec2(227,184));
 			t4Box.drawTextBox(ImVec2(227,232));
+			subModButton.drawButton(ImVec2(175, 280));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -2600,11 +2489,7 @@ int main()
 								suppliers.erase(suppliers.begin() + selectedRow);
 								selectedRow = -1;
 
-								submitButton.setPosition({ 210,300 });
-								submitButton.setColor(sf::Color::White);
-
-								modifyButton.setPosition({ 0,0 });
-								modifyButton.setColor(sf::Color::Transparent);
+								subModButton.setLabel("Submit");
 							}
 							else
 							{
@@ -2619,11 +2504,7 @@ int main()
 					{
 						if (selectedRow >= 0 && selectedRow < suppliers.size())
 						{
-							submitButton.setColor(sf::Color::Transparent);
-							submitButton.setPosition({ 0,0 });
-
-							modifyButton.setColor(sf::Color::White);
-							modifyButton.setPosition({ 210,300 });
+							subModButton.setLabel("Modify);
 
 							original_supplier_id4 = suppliers[selectedRow].supplier_id4;
 
@@ -2648,344 +2529,172 @@ int main()
 
 		if (clickSupplier)
 		{
-			if (mouseDetector.isOn(submitButton, window))
+			if (subModButton.getLabel() == "Submit" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr  << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stof(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					std::string supplier_idStr(t1Box.getInput());
+					std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
+
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+					SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT supplier_id FROM supplier WHERE supplier_id = ?", SQL_NTS);
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)supplier_id.c_str(), 0, nullptr);
+					retSQL = SQLExecute(handleSQL);
+
+					if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 					{
-						if (t1Box.getInput() == "")
+						if (SQLFetch(handleSQL) == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+							std::cout << "Supplier ID already exists!" << std::endl;
+							primaryKeyIsVal = false;
 
 							t1Box.setInvalid();
-						}
-						else
-						{
-							t1Box.setValid();
-						}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
-
-						if (t4Box.getInput() == "")
-						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
-
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-
-							std::stof(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						if (notNull && valNums)
-						{
-							std::string supplier_idStr(t1Box.getInput());
-							std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
-
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT supplier_id FROM supplier WHERE supplier_id = ?", SQL_NTS);
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)supplier_id.c_str(), 0, nullptr);
-							retSQL = SQLExecute(handleSQL);
-
-							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-							{
-								if (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									std::cout << "Supplier ID already exists!" << std::endl;
-									primaryKeyIsVal = false;
-
-									t1Box.setInvalid();
-
-									int primaryKeyError = MessageBoxW(
-										nullptr,
-										L"Supplier I.D. is already in use.\n\n"
-										L"Please try again.",
-										L"Duplicate Primary Key!",
-										MB_OK | MB_ICONWARNING
-									);
-								}
-								else
-								{
-									primaryKeyIsVal = true;
-
-									t1Box.setValid();
-								}
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-
-							if (primaryKeyIsVal)
-							{
-								std::string item_idStr(t2Box.getInput());
-								std::wstring item_id(item_idStr.begin(), item_idStr.end());
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
-								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
-								retSQL = SQLExecute(handleSQL);
-
-								if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-								{
-									if (SQLFetch(handleSQL) != SQL_SUCCESS)
-									{
-										std::cout << "Item ID does exists!" << std::endl;
-										valItemID = false;
-
-										t2Box.setInvalid();
-
-										int primaryKeyError = MessageBoxW(
-											nullptr,
-											L"Item I.D. does not exist.\n\n"
-											L"Please try again.",
-											L"Foreign Key Constraint",
-											MB_OK | MB_ICONWARNING
-										);
-									}
-									else
-									{
-										valItemID = true;
-
-										t2Box.setValid();
-									}
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-								if (valItemID)
-								{
-									float item_cost = atof(t3Box.getInput());
-									std::string supplier_nameStr(t4Box.getInput());
-									std::wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
-
-									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-									std::wstring insertQuery = L"INSERT INTO supplier (supplier_id, item_id, item_cost, supplier_name) VALUES (?,?,?,?)";
-
-									SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_cost, 0, NULL);
-									SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_name.c_str(), 0, NULL);
-
-									retSQL = SQLExecute(handleSQL);
-
-									if (SQL_SUCCEEDED(retSQL))
-									{
-										std::cout << "Insert successful!" << std::endl;
-
-										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-										SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT supplier_id, item_id, item_cost, supplier_name FROM supplier", SQL_NTS);
-
-										char supplier_id4[46], item_id4[46], supplier_name4[46];
-										float item_cost4;
-
-										SQLBindCol(handleSQL, 1, SQL_C_CHAR, supplier_id4, sizeof(supplier_id4), nullptr);
-										SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id4, sizeof(item_id4), nullptr);
-										SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_cost4, 0, nullptr);
-										SQLBindCol(handleSQL, 4, SQL_C_CHAR, supplier_name4, sizeof(supplier_name4), nullptr);
-
-										suppliers.clear();
-
-										while (SQLFetch(handleSQL) == SQL_SUCCESS)
-										{
-											suppliers.push_back({
-												supplier_id4,
-												item_id4,
-												item_cost4,
-												supplier_name4
-												});
-										}
-
-										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-									}
-
-									else
-									{
-										std::cerr  << "Insert failed!" << std::endl;
-									}
-
-									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-								}
-
-								
-							}
-							
-						}
-
-						else
-						{
-							int error = MessageBoxW(
+							int primaryKeyError = MessageBoxW(
 								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
+								L"Supplier I.D. is already in use.\n\n"
 								L"Please try again.",
-								L"Invalid/Empty Inputs!",
+								L"Duplicate Primary Key!",
 								MB_OK | MB_ICONWARNING
 							);
 						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-
-						clock.restart();
-					}
-				}
-			}
-
-			if (mouseDetector.isOn(modifyButton, window))
-			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
-					{
-						if (t1Box.getInput() == "")
-						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
-
-							t1Box.setInvalid();
-						}
 						else
 						{
+							primaryKeyIsVal = true;
+
 							t1Box.setValid();
 						}
+					}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
 
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
+					if (primaryKeyIsVal)
+					{
+						std::string item_idStr(t2Box.getInput());
+						std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
 
-						if (t4Box.getInput() == "")
+						if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
+							if (SQLFetch(handleSQL) != SQL_SUCCESS)
+							{
+								std::cout << "Item ID does exists!" << std::endl;
+								valItemID = false;
 
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
+								t2Box.setInvalid();
 
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
+								int primaryKeyError = MessageBoxW(
+									nullptr,
+									L"Item I.D. does not exist.\n\n"
+									L"Please try again.",
+									L"Foreign Key Constraint",
+									MB_OK | MB_ICONWARNING
+								);
+							}
+							else
+							{
+								valItemID = true;
 
-							std::stof(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
+								t2Box.setValid();
+							}
 						}
 
-						if (notNull && valNums)
-						{
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							std::wstring original_supplier_id(original_supplier_id4.begin(), original_supplier_id4.end());
-							std::string supplier_idStr(t1Box.getInput());
-							std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
-							std::string item_idStr(t2Box.getInput());
-							std::wstring item_id(item_idStr.begin(), item_idStr.end());
+						if (valItemID)
+						{
 							float item_cost = atof(t3Box.getInput());
 							std::string supplier_nameStr(t4Box.getInput());
 							std::wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
 
-							std::wstring updateQuery = L"UPDATE supplier SET supplier_id = ?, item_id = ?, item_cost = ?, supplier_name = ? WHERE supplier_id = ?";
+							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+							std::wstring insertQuery = L"INSERT INTO supplier (supplier_id, item_id, item_cost, supplier_name) VALUES (?,?,?,?)";
+
+							SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
 
 							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_id.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_cost, 0, NULL);
 							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_name.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_supplier_id.c_str(), 0, NULL);
 
 							retSQL = SQLExecute(handleSQL);
 
 							if (SQL_SUCCEEDED(retSQL))
 							{
-								std::cout << "Item updated successfully!" << std::endl;
-
-								modifyButton.setColor(sf::Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
-
-								submitButton.setColor(sf::Color::White);
-								submitButton.setPosition({ 210,300 });
+								std::cout << "Insert successful!" << std::endl;
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3013,32 +2722,185 @@ int main()
 
 								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 							}
+
 							else
 							{
-								std::cerr  << "Failed to update item!" << std::endl;
+								std::cerr  << "Insert failed!" << std::endl;
 							}
 
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);						
-						}
-
-						else
-						{
-							int error = MessageBoxW(
-								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
-								L"Please try again.",
-								L"Invalid/Empty Inputs!",
-								MB_OK | MB_ICONWARNING
-							);
-						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-
-						clock.restart();
-					}
+							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+						}						
+					}	
 				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
+
+				subModButton.setPressedOff();
+			}
+
+			if (subModButton.getLabel() == "Modify" && subModButton.isPressed())
+			{
+				if (t1Box.getInput() == "")
+				{
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr  << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stof(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				if (notNull && valNums)
+				{
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+					std::wstring original_supplier_id(original_supplier_id4.begin(), original_supplier_id4.end());
+					std::string supplier_idStr(t1Box.getInput());
+					std::wstring supplier_id(supplier_idStr.begin(), supplier_idStr.end());
+					std::string item_idStr(t2Box.getInput());
+					std::wstring item_id(item_idStr.begin(), item_idStr.end());
+					float item_cost = atof(t3Box.getInput());
+					std::string supplier_nameStr(t4Box.getInput());
+					std::wstring supplier_name(supplier_nameStr.begin(), supplier_nameStr.end());
+
+					std::wstring updateQuery = L"UPDATE supplier SET supplier_id = ?, item_id = ?, item_cost = ?, supplier_name = ? WHERE supplier_id = ?";
+
+					SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_cost, 0, NULL);
+					SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)supplier_name.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_supplier_id.c_str(), 0, NULL);
+
+					retSQL = SQLExecute(handleSQL);
+
+					if (SQL_SUCCEEDED(retSQL))
+					{
+						std::cout << "Item updated successfully!" << std::endl;
+
+						subModButton.setLabel("Submit");
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT supplier_id, item_id, item_cost, supplier_name FROM supplier", SQL_NTS);
+
+						char supplier_id4[46], item_id4[46], supplier_name4[46];
+						float item_cost4;
+
+						SQLBindCol(handleSQL, 1, SQL_C_CHAR, supplier_id4, sizeof(supplier_id4), nullptr);
+						SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id4, sizeof(item_id4), nullptr);
+						SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_cost4, 0, nullptr);
+						SQLBindCol(handleSQL, 4, SQL_C_CHAR, supplier_name4, sizeof(supplier_name4), nullptr);
+
+						suppliers.clear();
+
+						while (SQLFetch(handleSQL) == SQL_SUCCESS)
+						{
+							suppliers.push_back({
+								supplier_id4,
+								item_id4,
+								item_cost4,
+								supplier_name4
+								});
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+					else
+					{
+						std::cerr  << "Failed to update item!" << std::endl;
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);						
+				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
+
+				subModButton.setPressedOff();
 			}
 		}
 
@@ -3061,12 +2923,6 @@ int main()
 			t5Box.setValid();
 			t6Box.setValid();
 
-			submitButton.setPosition({ 210,400 });
-			submitButton.setColor(sf::Color::White);
-
-			modifyButton.setPosition({ 0,0 });
-			modifyButton.setColor(sf::Color::Transparent);
-
 			transactionButton.setPressedOff();
 		}
 
@@ -3078,6 +2934,7 @@ int main()
 			t4Box.drawTextBox(ImVec2(247,232));
 			t5Box.drawTextBox(ImVec2(247,280));
 			t6Box.drawTextBox(ImVec2(247,328));
+			subModButton.drawButton(ImVec2(175, 380));
 
 			static int selectedRow = -1;
 			int currentRow = 0;
@@ -3175,11 +3032,7 @@ int main()
 								transactions.erase(transactions.begin() + selectedRow);
 								selectedRow = -1;
 
-								submitButton.setPosition({ 210,400 });
-								submitButton.setColor(sf::Color::White);
-
-								modifyButton.setPosition({ 0,0 });
-								modifyButton.setColor(sf::Color::Transparent);
+								subModButton.setLabel("Submit");
 							}
 							else
 							{
@@ -3195,11 +3048,7 @@ int main()
 					{
 						if (selectedRow >= 0 && selectedRow < transactions.size())
 						{
-							submitButton.setColor(sf::Color::Transparent);
-							submitButton.setPosition({ 0,0 });
-
-							modifyButton.setColor(sf::Color::White);
-							modifyButton.setPosition({ 210,400 });
+							subModButton.setLabel("Modify);
 
 							original_transaction_id5 = transactions[selectedRow].transaction_id5;
 
@@ -3226,480 +3075,238 @@ int main()
 
 		if (clickTransaction)
 		{
-			if (mouseDetector.isOn(submitButton, window))
+			if (subModButton.getLabel() == "Submit" && subModButton.isPressed())
 			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+				if (t1Box.getInput() == "")
 				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr  << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				if (t5Box.getInput() == "")
+				{
+					std::cerr  << "Empty t5" << std::endl;
+					notNull = false;
+
+					t5Box.setInvalid();
+				}
+				else
+				{
+					t5Box.setInvalid();
+				}
+
+				if (t6Box.getInput() == "")
+				{
+					std::cerr  << "Empty t6" << std::endl;
+					notNull = false;
+
+					t6Box.setInvalid();
+				}
+				else
+				{
+					t6Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stof(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t4InTEST(t4Box.getInput());
+
+					std::stof(t4InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t4 number" << std::endl;
+					valNums = false;
+					valT4 = false;
+
+					t4Box.setInvalid();
+				}
+				if (valT4)
+				{
+					t4Box.setValid();
+				}
+
+				try
+				{
+					std::string t5InTEST(t5Box.getInput());
+
+					std::stof(t5InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t6 number" << std::endl;
+					valNums = false;
+					valT5 = false;
+
+					t5Box.setInvalid();
+				}
+				if (valT5)
+				{
+					t5Box.setInvalid();
+				}
+
+				if (notNull && valNums)
+				{
+					std::string transaction_idStr(t1Box.getInput());
+					std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
+
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+					SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id FROM transaction WHERE transaction_id = ?", SQL_NTS);
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)transaction_id.c_str(), 0, nullptr);
+					retSQL = SQLExecute(handleSQL);
+
+					if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 					{
-						if (t1Box.getInput() == "")
+						if (SQLFetch(handleSQL) == SQL_SUCCESS)
 						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
+							std::cout << "Transaction ID already exists" << std::endl;
+							primaryKeyIsVal = false;
 
 							t1Box.setInvalid();
-						}
-						else
-						{
-							t1Box.setValid();
-						}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
-
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
-
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
-
-						if (t4Box.getInput() == "")
-						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
-
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
-
-						if (t5Box.getInput() == "")
-						{
-							std::cerr  << "Empty t5" << std::endl;
-							notNull = false;
-
-							t5Box.setInvalid();
-						}
-						else
-						{
-							t5Box.setInvalid();
-						}
-
-						if (t6Box.getInput() == "")
-						{
-							std::cerr  << "Empty t6" << std::endl;
-							notNull = false;
-
-							t6Box.setInvalid();
-						}
-						else
-						{
-							t6Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-
-							std::stof(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						try
-						{
-							std::string t4InTEST(t4Box.getInput());
-
-							std::stof(t4InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t4 number" << std::endl;
-							valNums = false;
-							valT4 = false;
-
-							t4Box.setInvalid();
-						}
-						if (valT4)
-						{
-							t4Box.setValid();
-						}
-
-						try
-						{
-							std::string t5InTEST(t5Box.getInput());
-
-							std::stof(t5InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t6 number" << std::endl;
-							valNums = false;
-							valT5 = false;
-
-							t5Box.setInvalid();
-						}
-						if (valT5)
-						{
-							t5Box.setInvalid();
-						}
-
-						if (notNull && valNums)
-						{
-							std::string transaction_idStr(t1Box.getInput());
-							std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
-
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-							SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id FROM transaction WHERE transaction_id = ?", SQL_NTS);
-							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)transaction_id.c_str(), 0, nullptr);
-							retSQL = SQLExecute(handleSQL);
-
-							if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-							{
-								if (SQLFetch(handleSQL) == SQL_SUCCESS)
-								{
-									std::cout << "Transaction ID already exists" << std::endl;
-									primaryKeyIsVal = false;
-
-									t1Box.setInvalid();
-
-									int primaryKeyError = MessageBoxW(
-										nullptr,
-										L"Transaction I.D. is already in use.\n\n"
-										L"Please try again.",
-										L"Duplicate Primary Key!",
-										MB_OK | MB_ICONWARNING
-									);
-								}
-								else
-								{
-									primaryKeyIsVal = true;
-
-									t1Box.setValid();
-								}
-							}
-
-							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-							if (primaryKeyIsVal)
-							{
-
-								std::string item_idStr(t2Box.getInput());
-								std::wstring item_id(item_idStr.begin(), item_idStr.end());
-
-								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-								SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
-								SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
-								retSQL = SQLExecute(handleSQL);
-
-								if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
-								{
-									if (SQLFetch(handleSQL) != SQL_SUCCESS)
-									{
-										std::cout << "Item ID does exists!" << std::endl;
-										valItemID = false;
-
-										t2Box.setInvalid();
-
-										int primaryKeyError = MessageBoxW(
-											nullptr,
-											L"Item I.D. does not exist.\n\n"
-											L"Please try again.",
-											L"Foreign Key Constraint",
-											MB_OK | MB_ICONWARNING
-										);
-									}
-									else
-									{
-										valItemID = true;
-
-										t2Box.setValid();
-									}
-								}
-
-								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-
-								if (valItemID)
-								{
-									float item_price = atof(t3Box.getInput());
-									float tax_amount = atof(t4Box.getInput());
-									float transaction_total = atof(t5Box.getInput());
-									std::string transaction_dateStr(t6Box.getInput());
-									std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
-
-									std::wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date) VALUES (?,?,?,?,?,?)";
-
-									SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-									SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
-
-									SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-									SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
-									SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
-									SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
-									SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
-
-									retSQL = SQLExecute(handleSQL);
-
-									if (SQL_SUCCEEDED(retSQL))
-									{
-										std::cout << "Insert successful!" << std::endl;
-
-										SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-										SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
-
-										char transaction_id5[46], item_id5[46], transaction_date5[46];
-										float item_price5, tax_amount5, transaction_total5;
-
-										SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
-										SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
-										SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
-										SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
-										SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
-										SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
-
-										transactions.clear();
-
-										while (SQLFetch(handleSQL) == SQL_SUCCESS)
-										{
-											transactions.push_back({
-												transaction_id5,
-												item_id5,
-												item_price5,
-												tax_amount5,
-												transaction_total5,
-												transaction_date5
-												});
-										}
-
-										SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-									}
-
-									else
-									{
-										std::cerr  << "Insert failed!" << std::endl;
-									}
-
-									SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
-								}
-							}
-						}
-
-						else
-						{
-							int error = MessageBoxW(
+							int primaryKeyError = MessageBoxW(
 								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
+								L"Transaction I.D. is already in use.\n\n"
 								L"Please try again.",
-								L"Invalid/Empty Inputs!",
+								L"Duplicate Primary Key!",
 								MB_OK | MB_ICONWARNING
 							);
 						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-						valT4 = true;
-						valT5 = true;
-
-						clock.restart();
-					}
-				}
-			}
-
-			if (mouseDetector.isOn(modifyButton, window))
-			{
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				{
-					if (clock.getElapsedTime().asSeconds() >= 0.3)
-					{
-						if (t1Box.getInput() == "")
-						{
-							std::cerr  << "Empty t1" << std::endl;
-							notNull = false;
-
-							t1Box.setInvalid();
-						}
 						else
 						{
+							primaryKeyIsVal = true;
+
 							t1Box.setValid();
 						}
+					}
 
-						if (t2Box.getInput() == "")
-						{
-							std::cerr  << "Empty t2" << std::endl;
-							notNull = false;
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t2Box.setValid();
-						}
+					if (primaryKeyIsVal)
+					{
 
-						if (t3Box.getInput() == "")
-						{
-							std::cerr  << "Empty t3" << std::endl;
-							notNull = false;
+						std::string item_idStr(t2Box.getInput());
+						std::wstring item_id(item_idStr.begin(), item_idStr.end());
 
-							t2Box.setInvalid();
-						}
-						else
-						{
-							t3Box.setValid();
-						}
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+						SQLPrepareW(handleSQL, (SQLWCHAR*)L"SELECT item_id FROM item WHERE item_id = ?", SQL_NTS);
+						SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 100, 0, (SQLPOINTER)item_id.c_str(), 0, nullptr);
+						retSQL = SQLExecute(handleSQL);
 
-						if (t4Box.getInput() == "")
+						if (retSQL == SQL_SUCCESS || retSQL == SQL_SUCCESS_WITH_INFO)
 						{
-							std::cerr  << "Empty t4" << std::endl;
-							notNull = false;
+							if (SQLFetch(handleSQL) != SQL_SUCCESS)
+							{
+								std::cout << "Item ID does exists!" << std::endl;
+								valItemID = false;
 
-							t4Box.setInvalid();
-						}
-						else
-						{
-							t4Box.setValid();
-						}
+								t2Box.setInvalid();
 
-						if (t5Box.getInput() == "")
-						{
-							std::cerr  << "Empty t5" << std::endl;
-							notNull = false;
+								int primaryKeyError = MessageBoxW(
+									nullptr,
+									L"Item I.D. does not exist.\n\n"
+									L"Please try again.",
+									L"Foreign Key Constraint",
+									MB_OK | MB_ICONWARNING
+								);
+							}
+							else
+							{
+								valItemID = true;
 
-							t5Box.setInvalid();
-						}
-						else
-						{
-							t5Box.setInvalid();
+								t2Box.setValid();
+							}
 						}
 
-						if (t6Box.getInput() == "")
-						{
-							std::cerr  << "Empty t6" << std::endl;
-							notNull = false;
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 
-							t6Box.setInvalid();
-						}
-						else
+						if (valItemID)
 						{
-							t6Box.setValid();
-						}
-
-						try
-						{
-							std::string t3InTEST(t3Box.getInput());
-
-							std::stof(t3InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t3 number" << std::endl;
-							valNums = false;
-							valT3 = false;
-
-							t2Box.setInvalid();
-						}
-						if (valT3)
-						{
-							t3Box.setValid();
-						}
-
-						try
-						{
-							std::string t4InTEST(t4Box.getInput());
-
-							std::stof(t4InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t4 number" << std::endl;
-							valNums = false;
-							valT4 = false;
-
-							t4Box.setInvalid();
-						}
-						if (valT4)
-						{
-							t4Box.setValid();
-						}
-
-						try
-						{
-							std::string t5InTEST(t5Box.getInput());
-
-							std::stof(t5InTEST);
-						}
-						catch (const std::exception& e)
-						{
-							std::cerr  << "invalid t6 number" << std::endl;
-							valNums = false;
-							valT5 = false;
-
-							t5Box.setInvalid();
-						}
-						if (valT5)
-						{
-							t5Box.setInvalid();
-						}
-
-						if (notNull && valNums)
-						{
-							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
-
-							std::wstring original_transaction_idW(original_transaction_id5.begin(), original_transaction_id5.end());
-							std::string transaction_idStr(t1Box.getInput());
-							std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
-							std::string item_idStr(t2Box.getInput());
-							std::wstring item_id(item_idStr.begin(), item_idStr.end());
 							float item_price = atof(t3Box.getInput());
 							float tax_amount = atof(t4Box.getInput());
 							float transaction_total = atof(t5Box.getInput());
 							std::string transaction_dateStr(t6Box.getInput());
 							std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
 
-							std::wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ? WHERE transaction_id = ?";
+							std::wstring insertQuery = L"INSERT INTO transaction (transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date) VALUES (?,?,?,?,?,?)";
 
-							SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+							SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+							SQLPrepare(handleSQL, (SQLWCHAR*)insertQuery.c_str(), SQL_NTS);
 
 							SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
 							SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
-							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &tax_amount, 0, NULL);
-							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &transaction_total, 0, NULL);
+							SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &item_price, 0, NULL);
+							SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &tax_amount, 0, NULL);
+							SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_FLOAT, 0, 0, &transaction_total, 0, NULL);
 							SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
-							SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_transaction_idW.c_str(), 0, NULL);
-
 
 							retSQL = SQLExecute(handleSQL);
 
 							if (SQL_SUCCEEDED(retSQL))
 							{
-								std::cout << "Item updated successfully!" << std::endl;
-
-								modifyButton.setColor(sf::Color::Transparent);
-								modifyButton.setPosition({ 0,0 });
-
-								submitButton.setColor(sf::Color::White);
-								submitButton.setPosition({ 210,400 });
+								std::cout << "Insert successful!" << std::endl;
 
 								SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
 
@@ -3731,34 +3338,260 @@ int main()
 
 								SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 							}
+
 							else
 							{
-								std::cerr << "Failed to update item!" << std::endl;
+								std::cerr  << "Insert failed!" << std::endl;
 							}
 
 							SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
 						}
-
-						else
-						{
-							int error = MessageBoxW(
-								nullptr,
-								L"One or more inputs are either invalid or empty.\n"
-								L"Invalid/Empty inputs are highlighted red.\n\n"
-								L"Please try again.",
-								L"Invalid/Empty Inputs!",
-								MB_OK | MB_ICONWARNING
-							);
-						}
-						notNull = true;
-						valNums = true;
-						valT3 = true;
-						valT4 = true;
-						valT5 = true;
-
-						clock.restart();
 					}
 				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
+				valT4 = true;
+				valT5 = true;
+
+				subModButton.setPressedOff();
+			}
+
+			if (subModButton.getLabel() == "Modify" && subModButton.isPressed())
+			{
+				if (t1Box.getInput() == "")
+				{
+					std::cerr  << "Empty t1" << std::endl;
+					notNull = false;
+
+					t1Box.setInvalid();
+				}
+				else
+				{
+					t1Box.setValid();
+				}
+
+				if (t2Box.getInput() == "")
+				{
+					std::cerr  << "Empty t2" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t2Box.setValid();
+				}
+
+				if (t3Box.getInput() == "")
+				{
+					std::cerr  << "Empty t3" << std::endl;
+					notNull = false;
+
+					t2Box.setInvalid();
+				}
+				else
+				{
+					t3Box.setValid();
+				}
+
+				if (t4Box.getInput() == "")
+				{
+					std::cerr  << "Empty t4" << std::endl;
+					notNull = false;
+
+					t4Box.setInvalid();
+				}
+				else
+				{
+					t4Box.setValid();
+				}
+
+				if (t5Box.getInput() == "")
+				{
+					std::cerr  << "Empty t5" << std::endl;
+					notNull = false;
+
+					t5Box.setInvalid();
+				}
+				else
+				{
+					t5Box.setInvalid();
+				}
+
+				if (t6Box.getInput() == "")
+				{
+					std::cerr  << "Empty t6" << std::endl;
+					notNull = false;
+
+					t6Box.setInvalid();
+				}
+				else
+				{
+					t6Box.setValid();
+				}
+
+				try
+				{
+					std::string t3InTEST(t3Box.getInput());
+
+					std::stof(t3InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t3 number" << std::endl;
+					valNums = false;
+					valT3 = false;
+
+					t2Box.setInvalid();
+				}
+				if (valT3)
+				{
+					t3Box.setValid();
+				}
+
+				try
+				{
+					std::string t4InTEST(t4Box.getInput());
+
+					std::stof(t4InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t4 number" << std::endl;
+					valNums = false;
+					valT4 = false;
+
+					t4Box.setInvalid();
+				}
+				if (valT4)
+				{
+					t4Box.setValid();
+				}
+
+				try
+				{
+					std::string t5InTEST(t5Box.getInput());
+
+					std::stof(t5InTEST);
+				}
+				catch (const std::exception& e)
+				{
+					std::cerr  << "invalid t6 number" << std::endl;
+					valNums = false;
+					valT5 = false;
+
+					t5Box.setInvalid();
+				}
+				if (valT5)
+				{
+					t5Box.setInvalid();
+				}
+
+				if (notNull && valNums)
+				{
+					SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+					std::wstring original_transaction_idW(original_transaction_id5.begin(), original_transaction_id5.end());
+					std::string transaction_idStr(t1Box.getInput());
+					std::wstring transaction_id(transaction_idStr.begin(), transaction_idStr.end());
+					std::string item_idStr(t2Box.getInput());
+					std::wstring item_id(item_idStr.begin(), item_idStr.end());
+					float item_price = atof(t3Box.getInput());
+					float tax_amount = atof(t4Box.getInput());
+					float transaction_total = atof(t5Box.getInput());
+					std::string transaction_dateStr(t6Box.getInput());
+					std::wstring transaction_date(transaction_dateStr.begin(), transaction_dateStr.end());
+
+					std::wstring updateQuery = L"UPDATE transaction SET transaction_id = ?, item_id = ?, item_price = ?, tax_amount = ?, transaction_total = ?, transaction_date = ? WHERE transaction_id = ?";
+
+					SQLPrepare(handleSQL, (SQLWCHAR*)updateQuery.c_str(), SQL_NTS);
+
+					SQLBindParameter(handleSQL, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)item_id.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 3, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &item_price, 0, NULL);
+					SQLBindParameter(handleSQL, 4, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &tax_amount, 0, NULL);
+					SQLBindParameter(handleSQL, 5, SQL_PARAM_INPUT, SQL_C_FLOAT, SQL_REAL, 0, 0, &transaction_total, 0, NULL);
+					SQLBindParameter(handleSQL, 6, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)transaction_date.c_str(), 0, NULL);
+					SQLBindParameter(handleSQL, 7, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WVARCHAR, 0, 0, (SQLPOINTER)original_transaction_idW.c_str(), 0, NULL);
+
+
+					retSQL = SQLExecute(handleSQL);
+
+					if (SQL_SUCCEEDED(retSQL))
+					{
+						std::cout << "Item updated successfully!" << std::endl;
+
+						subModButton.setLabel("Submit");
+
+						SQLAllocHandle(SQL_HANDLE_STMT, dbconSQL, &handleSQL);
+
+						SQLExecDirectW(handleSQL, (SQLWCHAR*)L"SELECT transaction_id, item_id, item_price, tax_amount, transaction_total, transaction_date FROM transaction", SQL_NTS);
+
+						char transaction_id5[46], item_id5[46], transaction_date5[46];
+						float item_price5, tax_amount5, transaction_total5;
+
+						SQLBindCol(handleSQL, 1, SQL_C_CHAR, transaction_id5, sizeof(transaction_id5), nullptr);
+						SQLBindCol(handleSQL, 2, SQL_C_CHAR, item_id5, sizeof(item_id5), nullptr);
+						SQLBindCol(handleSQL, 3, SQL_C_FLOAT, &item_price5, 0, nullptr);
+						SQLBindCol(handleSQL, 4, SQL_C_FLOAT, &tax_amount5, 0, nullptr);
+						SQLBindCol(handleSQL, 5, SQL_C_FLOAT, &transaction_total5, 0, nullptr);
+						SQLBindCol(handleSQL, 6, SQL_C_CHAR, transaction_date5, sizeof(transaction_date5), nullptr);
+
+						transactions.clear();
+
+						while (SQLFetch(handleSQL) == SQL_SUCCESS)
+						{
+							transactions.push_back({
+								transaction_id5,
+								item_id5,
+								item_price5,
+								tax_amount5,
+								transaction_total5,
+								transaction_date5
+								});
+						}
+
+						SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+					}
+					else
+					{
+						std::cerr << "Failed to update item!" << std::endl;
+					}
+
+					SQLFreeHandle(SQL_HANDLE_STMT, handleSQL);
+				}
+
+				else
+				{
+					int error = MessageBoxW(
+						nullptr,
+						L"One or more inputs are either invalid or empty.\n"
+						L"Invalid/Empty inputs are highlighted red.\n\n"
+						L"Please try again.",
+						L"Invalid/Empty Inputs!",
+						MB_OK | MB_ICONWARNING
+					);
+				}
+				notNull = true;
+				valNums = true;
+				valT3 = true;
+				valT4 = true;
+				valT5 = true;
+
+				subModButton.setPressedOff();
 			}
 		}
 
@@ -3782,9 +3615,6 @@ int main()
 				t4Box.setValid();
 				t5Box.setValid();
 				t6Box.setValid();
-
-				submitButton.setColor(sf::Color::Transparent);
-				modifyButton.setColor(sf::Color::Transparent);
 			}
 		}
 
@@ -5059,8 +4889,6 @@ int main()
 
 		window.clear();
 		window.draw(currBackground);
-		window.draw(submitButton);
-		window.draw(modifyButton);
 		ImGui::SFML::Render(window);
 		window.display();
 	}
