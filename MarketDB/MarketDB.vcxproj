@@ -161,10 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="backgrounds.png" />
-    <Image Include="buttonBox.png" />
-    <Image Include="loginBox.png" />
     <Image Include="loginColumns.png" />
-    <Image Include="modifyBox.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

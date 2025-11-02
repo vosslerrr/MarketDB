@@ -27,16 +27,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="buttonBox.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="loginBox.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="loginColumns.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="modifyBox.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="backgrounds.png">
