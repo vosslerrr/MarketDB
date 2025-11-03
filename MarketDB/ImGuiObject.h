@@ -12,6 +12,7 @@ public:
 	void drawHeaderButton(ImVec2 l_windowPos);
 
 	char* getInput();
+	void setInput(const char l_input[128]);
 	void setInputEmpty();
 
 	const char* getLabel();

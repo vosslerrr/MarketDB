@@ -21,7 +21,8 @@ void ImGuiObject::drawTextBox(ImVec2 l_windowPos)
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(155.f / 255.f, 173.f / 255.f, 183.f / 255.f, 1.f));
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
 	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.f, 0.f, 0.f, 1.f));
-	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground| ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground
+								| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 	ImGui::InputText(m_label, m_input, size_t(m_input));
 	ImGui::PopStyleColor(3);
 	ImGui::PopStyleVar();
@@ -33,7 +34,8 @@ void ImGuiObject::drawButton(ImVec2 l_windowPos)
 	ImGui::SetNextWindowPos(l_windowPos);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(100.f / 255.f, 200.f / 255.f, 183.f / 255.f, 1.f));
-	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground 
+								| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	if (ImGui::Button(m_label))
 	{
@@ -51,7 +53,8 @@ void ImGuiObject::drawHeaderButton(ImVec2 l_windowPos)
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, 0.f, 0.f, 1.f));
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(62.f / 255.f, 127.f / 255.f, 8.f / 255.f, 1.f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(56.f / 255.f, 114.f / 255.f, 8.f / 255.f, 1.f));
-	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin(m_name, nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground 
+								| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	if (ImGui::Button(m_label))
 	{
@@ -66,6 +69,11 @@ void ImGuiObject::drawHeaderButton(ImVec2 l_windowPos)
 char* ImGuiObject::getInput()
 {
 	return m_input;
+}
+
+void ImGuiObject::setInput(const char l_input[128])
+{
+	strcpy_s(m_input, sizeof(m_input), l_input);
 }
 
 void ImGuiObject::setInputEmpty()

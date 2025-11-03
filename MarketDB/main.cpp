@@ -705,6 +705,15 @@ int main()
 
 			currBackground.setTextureRect(backgrounds[1]);
 
+			subModButton.setLabel("Submit");
+
+			t1Box.setInputEmpty();
+			t2Box.setInputEmpty();
+			t3Box.setInputEmpty();
+			t4Box.setInputEmpty();
+			t5Box.setInputEmpty();
+			t6Box.setInputEmpty();
+
 			t1Box.setValid();
 			t2Box.setValid();
 			t3Box.setValid();
@@ -827,29 +836,20 @@ int main()
 						}
 					}
 
-					//TODO: Fix this idk what this even does
-					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
-						if (selectedRow >= 0 && selectedRow < items.size())
-						{
-							subModButton.setLabel("Modify");
+						subModButton.setLabel("Modify");
 
-							original_item_id1 = items[selectedRow].item_id1;
+						original_item_id1 = items[selectedRow].item_id1;
 
-							strncpy_s(t1Box.getInput(), items[selectedRow].item_id1.c_str(), sizeof(t1Box.getInput()) - 1);
-							t1Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
-							strncpy_s(t2In, items[selectedRow].item_name1.c_str(), sizeof(t2In) - 1);
-							t2In[sizeof(t2In) - 1] = '\0';
-							snprintf(t3In, sizeof(t3In), "%d", items[selectedRow].aisle_no1);
-							strncpy_s(t4In, items[selectedRow].section_id1.c_str(), sizeof(t4In) - 1);
-							t4In[sizeof(t4In) - 1] = '\0';
-							snprintf(t5In, sizeof(t5In), "%.2f", items[selectedRow].item_price1);
-							snprintf(t6In, sizeof(t6In), "%d", items[selectedRow].no_of_items1);
-						}
+						t1Box.setInput(items[selectedRow].item_id1.c_str());
+						t2Box.setInput(items[selectedRow].item_name1.c_str());
+						t3Box.setInput(std::to_string(items[selectedRow].aisle_no1).c_str());
+						t4Box.setInput(items[selectedRow].section_id1.c_str());
+						t5Box.setInput(std::to_string(items[selectedRow].item_price1).c_str());
+						t6Box.setInput(std::to_string(items[selectedRow].no_of_items1).c_str());
 					}
-					*/
 				}
 
 				ImGui::EndChild();
@@ -1435,7 +1435,16 @@ int main()
 			clickGO = false;
 
 			currBackground.setTextureRect(backgrounds[2]);
-				
+			
+			subModButton.setLabel("Submit");
+
+			t1Box.setInputEmpty();
+			t2Box.setInputEmpty();
+			t3Box.setInputEmpty();
+			t4Box.setInputEmpty();
+			t5Box.setInputEmpty();
+			t6Box.setInputEmpty();
+
 			t1Box.setValid();
 			t2Box.setValid();
 			t3Box.setValid();
@@ -1553,7 +1562,7 @@ int main()
 
 							original_aisle_no2 = aisles[selectedRow].aisle_no2;
 
-							snprintf(t1Box.getInput(), sizeof(t2Box.getInput()), "%d", aisles[selectedRow].aisle_no2);
+							snprintf(t1Box.getInput(), sizeof(t1Box.getInput()), "%d", aisles[selectedRow].aisle_no2);
 							snprintf(t2Box.getInput(), sizeof(t2Box.getInput()), "%d", aisles[selectedRow].no_of_sections2);
 						}
 					}
@@ -1888,6 +1897,15 @@ int main()
 
 			currBackground.setTextureRect(backgrounds[3]);
 
+			subModButton.setLabel("Submit");
+
+			t1Box.setInputEmpty();
+			t2Box.setInputEmpty();
+			t3Box.setInputEmpty();
+			t4Box.setInputEmpty();
+			t5Box.setInputEmpty();
+			t6Box.setInputEmpty();
+
 			t1Box.setValid();
 			t2Box.setValid();
 			t3Box.setValid();
@@ -1936,10 +1954,10 @@ int main()
 							{
 								switch (columnIndex)
 								{
-								case 0: return ascending ? a.section_id3 < b.section_id3 : a.section_id3 > b.section_id3;
-								case 1: return ascending ? a.section_name3 < b.section_name3 : a.section_name3 > b.section_name3;
-								case 2: return ascending ? a.aisle_no3 < b.aisle_no3 : a.aisle_no3 > b.aisle_no3;
-								default: return false;
+									case 0: return ascending ? a.section_id3 < b.section_id3 : a.section_id3 > b.section_id3;
+									case 1: return ascending ? a.section_name3 < b.section_name3 : a.section_name3 > b.section_name3;
+									case 2: return ascending ? a.aisle_no3 < b.aisle_no3 : a.aisle_no3 > b.aisle_no3;
+									default: return false;
 								}
 							});
 
@@ -1999,25 +2017,18 @@ int main()
 							}
 						}
 					}
-					//TODO: Fix this idk what this even does
-					/*
+
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
-						if (selectedRow >= 0 && selectedRow < sections.size())
-						{
-							subModButton.setLabel("Modify);
+						subModButton.setLabel("Modify");
 
-							original_section_id3 = sections[selectedRow].section_id3;
+						original_section_id3 = sections[selectedRow].section_id3;
 
-							strncpy_s(t1Box.getInput(), sections[selectedRow].section_id3.c_str(), sizeof(t1Box.getInput()) - 1);
-							t1Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
-							strncpy_s(t2Box.getInput(), sections[selectedRow].section_name3.c_str(), sizeof(t2Box.getInput()) - 1);
-							t2Box.getInput()[sizeof(t1Box.getInput()) - 1] = '\0';
-							snprintf(t3Box.getInput(), sizeof(t3Box.getInput()), "%d", sections[selectedRow].aisle_no3);
-						}
+						t1Box.setInput(sections[selectedRow].section_id3.c_str());
+						t2Box.setInput(sections[selectedRow].section_name3.c_str());
+						t3Box.setInput(std::to_string(sections[selectedRow].aisle_no3).c_str());
 					}
-					*/
 				}
 
 				ImGui::EndChild();
@@ -2379,6 +2390,15 @@ int main()
 
 			currBackground.setTextureRect(backgrounds[4]);
 
+			subModButton.setLabel("Submit");
+
+			t1Box.setInputEmpty();
+			t2Box.setInputEmpty();
+			t3Box.setInputEmpty();
+			t4Box.setInputEmpty();
+			t5Box.setInputEmpty();
+			t6Box.setInputEmpty();
+
 			t1Box.setValid();
 			t2Box.setValid();
 			t3Box.setValid();
@@ -2494,27 +2514,19 @@ int main()
 							}
 						}
 					}
-					//TODO fix this idk what it even does
-					/*
+
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
-						if (selectedRow >= 0 && selectedRow < suppliers.size())
-						{
-							subModButton.setLabel("Modify);
+						subModButton.setLabel("Modify");
 
-							original_supplier_id4 = suppliers[selectedRow].supplier_id4;
+						original_supplier_id4 = suppliers[selectedRow].supplier_id4;
 
-							strncpy_s(t1In, suppliers[selectedRow].supplier_id4.c_str(), sizeof(t1In) - 1);
-							t1In[sizeof(t1In) - 1] = '\0';
-							strncpy_s(t2In, suppliers[selectedRow].item_id4.c_str(), sizeof(t2In) - 1);
-							t2In[sizeof(t2In) - 1] = '\0';
-							snprintf(t3In, sizeof(t3In), "%.2f", suppliers[selectedRow].item_cost4);
-							strncpy_s(t4In, suppliers[selectedRow].supplier_name4.c_str(), sizeof(t4In) - 1);
-							t4In[sizeof(t4In) - 1] = '\0';
-						}
+						t1Box.setInput(suppliers[selectedRow].supplier_id4.c_str());
+						t2Box.setInput(suppliers[selectedRow].item_id4.c_str());
+						t3Box.setInput(std::to_string(suppliers[selectedRow].item_cost4).c_str());
+						t4Box.setInput(suppliers[selectedRow].supplier_name4.c_str());
 					}
-					*/
 				}
 
 				ImGui::EndChild();
@@ -2913,6 +2925,15 @@ int main()
 
 			currBackground.setTextureRect(backgrounds[5]);
 
+			subModButton.setLabel("Submit");
+
+			t1Box.setInputEmpty();
+			t2Box.setInputEmpty();
+			t3Box.setInputEmpty();
+			t4Box.setInputEmpty();
+			t5Box.setInputEmpty();
+			t6Box.setInputEmpty();
+
 			t1Box.setValid();
 			t2Box.setValid();
 			t3Box.setValid();
@@ -3038,29 +3059,20 @@ int main()
 						}
 					}
 
-					//TODO fix this idk what it even does
-					/*
 					ImGui::SameLine();
 					if (ImGui::Button("Modify"))
 					{
-						if (selectedRow >= 0 && selectedRow < transactions.size())
-						{
-							subModButton.setLabel("Modify);
+						subModButton.setLabel("Modify");
 
-							original_transaction_id5 = transactions[selectedRow].transaction_id5;
+						original_transaction_id5 = transactions[selectedRow].transaction_id5;
 
-							strncpy_s(t1In, transactions[selectedRow].transaction_id5.c_str(), sizeof(t1In) - 1);
-							t1In[sizeof(t1In) - 1] = '\0';
-							strncpy_s(t2In, transactions[selectedRow].item_id5.c_str(), sizeof(t2In) - 1);
-							t2In[sizeof(t2In) - 1] = '\0';
-							snprintf(t3In, sizeof(t3In), "%.2f", transactions[selectedRow].item_price5);
-							snprintf(t4In, sizeof(t4In), "%.2f", transactions[selectedRow].tax_amount5);
-							snprintf(t5In, sizeof(t5In), "%.2f", transactions[selectedRow].transaction_total5);
-							strncpy_s(t6In, transactions[selectedRow].transaction_date5.c_str(), sizeof(t6In) - 1);
-							t6In[sizeof(t6In) - 1] = '\0';
-						}
+						t1Box.setInput(transactions[selectedRow].transaction_id5.c_str());
+						t2Box.setInput(transactions[selectedRow].item_id5.c_str());
+						t3Box.setInput(std::to_string(transactions[selectedRow].item_price5).c_str());
+						t4Box.setInput(std::to_string(transactions[selectedRow].tax_amount5).c_str());
+						t5Box.setInput(std::to_string(transactions[selectedRow].transaction_total5).c_str());
+						t6Box.setInput(transactions[selectedRow].transaction_date5.c_str());
 					}
-					*/
 				}
 
 				ImGui::EndChild();
@@ -3603,13 +3615,6 @@ int main()
 			clickGO = false;
 				
 			currBackground.setTextureRect(backgrounds[0]);
-
-			t1Box.setValid();
-			t2Box.setValid();
-			t3Box.setValid();
-			t4Box.setValid();
-			t5Box.setValid();
-			t6Box.setValid();
 
 			searchButton.setPressedOff();
 		}
