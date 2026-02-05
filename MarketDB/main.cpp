@@ -3,7 +3,7 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 #include <sql.h>
-#include <imgui-SFML.h>
+#include <SFML_imgui/imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include "ImGuiObject.h"
 
