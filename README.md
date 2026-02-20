@@ -16,6 +16,8 @@
 
 ## Tutorial
 
+To start application, clone repo into empty directory, then build and run the main.cpp file located inside the MarketDB folder.
+
 ### Prerequisites
 
 This application requires Microsoft’s ODBC x86 driver in order to connect with the MySQL Server. This driver can be found at https://go.microsoft.com/fwlink/?linkid=2306655. 
