@@ -4,6 +4,16 @@
 :----------------------------------------------------------: |
 | [DDL Statements](#ddl-statements) - [Entity Relationship Diagram](#entity-relationship-diagram) |
 
+## Tech Stack
+
+* Source Code: C++
+* Libraries
+  * [SFML](https://www.sfml-dev.org/): Used for graphics rendering
+  * [Dear ImGUi](https://github.com/ocornut/imgui): Used for text inputs and table displays
+  * [ODBC](https://learn.microsoft.com/en-us/sql/odbc/microsoft-open-database-connectivity-odbc?view=sql-server-ver17): Used for MySQL database connectivity
+* Database: MySQL
+
+
 ## Tutorial
 
 ### Prerequisites
