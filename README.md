@@ -20,8 +20,8 @@ To start application, clone repo into empty directory, then build and run the ma
 
 ### Prerequisites
 
-This application requires Microsoft’s ODBC x86 driver in order to connect with the MySQL Server. This driver can be found at https://go.microsoft.com/fwlink/?linkid=2306655. 
-More information about the Microsoft ODBC driver can be found at https://learn.microsoft.com/en-us/sql/connect/odbc/microsoft-odbc-driver-for-sql-server?view=sql-server-ver16. 
+This application requires Microsoft’s ODBC x86 driver in order to connect with the MySQL Server. This driver can be found [here](https://go.microsoft.com/fwlink/?linkid=2306655). 
+More information about the Microsoft ODBC driver can be found [here](https://learn.microsoft.com/en-us/sql/connect/odbc/microsoft-odbc-driver-for-sql-server?view=sql-server-ver16). 
 If installation is successful, the application will launch with no errors. If driver was installed incorrectly, or if the incorrect driver was downloaded the following window will display upon launch of the application (Fig. 1).
 
 <p align="center">
@@ -82,7 +82,7 @@ If connection is unsuccessful, the following error message appears (Fig. 5):
 If connection is successful, the login window will close and the MarketDB home screen will appear and the user will be ready to use MarketDB.
 
 Upon successful connection, if the required tables are not setup inside of the database, the application automatically creates all required tables needed for full function. 
-See the MarketDB ERD and DDL Create Statements.txt for specific table requirements.
+See the MarketDB [ERD](#entity-relationship-diagram) and [DDL](#ddl-statments) Create Statements.txt for specific table requirements.
 
 ___
 
