@@ -82,7 +82,7 @@ If connection is unsuccessful, the following error message appears (Fig. 5):
 If connection is successful, the login window will close and the MarketDB home screen will appear and the user will be ready to use MarketDB.
 
 Upon successful connection, if the required tables are not setup inside of the database, the application automatically creates all required tables needed for full function. 
-See the MarketDB [ERD](#entity-relationship-diagram) and [DDL](#ddl-statments) Create Statements.txt for specific table requirements.
+See the MarketDB [ERD](#entity-relationship-diagram) and [DDL Statements](#ddl-statements) for specific table requirements.
 
 ___
 
@@ -127,7 +127,7 @@ For empty or invalid inputs, the following window will appear (Fig. 8):
 </p>
 
 All input boxes that have an error associated with them will be highlighted red. If an error message still occurs when all boxes have text in them, that means that there is a type mismatch in one of the boxes (string to int/float). 
-Please refer to the MarketDB ERD for specific types related to entity attributes.
+Please refer to the MarketDB [ERD](#entity-relationship-diagram) for specific types related to entity attributes.
 
 Another condition that must be met is unique primary keys. If a user tries to enter an Item I.D. (for this example int the item table) that is already in use, the following error message will appear (Fig. 9): 
 
@@ -139,7 +139,7 @@ Another condition that must be met is unique primary keys. If a user tries to en
   (Figure 9. Duplicate Primary Key! error window)
 </p>
 
-The primary key is always shown as the first column in the table located on the right side of the window for each entity (Item, Aisle, Section, etc.). Refer to the MarketDB ERD for exact primary key names.
+The primary key is always shown as the first column in the table located on the right side of the window for each entity (Item, Aisle, Section, etc.). Refer to the MarketDB [ERD](#entity-relationship-diagram) for exact primary key names.
 
 The last condition that must be met are foreign key constraints. If a user tries to enter an Aisle No or Section I.D. (for this example in the item table) that does not exist, the following error messages will appear (Fig 10., Fig 11.): 
 
@@ -159,7 +159,7 @@ The last condition that must be met are foreign key constraints. If a user tries
   (Figure 11. Foreign Key Constraint! (Aisle No.) error window)
 </p>
 
-For specific foreign key constraints please refer to the MarketDB ERD and DDL Create Statements.txt.
+For specific foreign key constraints please refer to the MarketDB [ERD](#entity-relationship-diagram) and [DDL Statements](#ddl-statements).
 
 Assuming all condition are met for a successful entry, pressing the submit button will automatically refresh the table shown in the window and the entry will be inserted into the MySQL database table.
 
