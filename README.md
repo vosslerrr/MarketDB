@@ -23,7 +23,7 @@ More information about the Microsoft ODBC driver can be found at https://learn.m
 If installation is successful, the application will launch with no errors. If driver was installed incorrectly, or if the incorrect driver was downloaded the following window will display upon launch of the application (Fig. 1).
 
 <p align="center">
-  <img width="400" height="235" alt="image" src="https://github.com/user-attachments/assets/bf593d48-a4ec-4edb-b071-e323d1d23fd3" />
+  <img width="625" height="306" alt="image" src="https://github.com/user-attachments/assets/b4bf93ed-3029-4072-8ad1-613146c8097b" />
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@ ___
 Upon launch of the application the following window will appear (Fig. 2)
 
 <p align="center">
-  <img width="975" height="767" alt="image" src="https://github.com/user-attachments/assets/324d1e11-852c-44ad-b8b9-4d58f6709bed" />
+  <img width="975" height="767" alt="image" src="https://github.com/user-attachments/assets/dbba6239-e0af-4062-8ecd-7347def5bac4" />
 </p>
 
 <p align="center">
@@ -50,7 +50,7 @@ Upon launch of the application the following window will appear (Fig. 2)
 All required login information (with the exception of the password) can be found with the launch of your MySQL Workbench, see figure 3 and figure 4 for more details on where to find the information.
 
 <p align="center">
-  <img width="813" height="496" alt="image" src="https://github.com/user-attachments/assets/c49a7fa0-c8bc-4203-b2fb-ccabc614ca98" />
+  <img width="813" height="496" alt="image" src="https://github.com/user-attachments/assets/58e96fce-dd32-4dfa-a3bd-4a102f0daca1" />
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ All required login information (with the exception of the password) can be found
 </p>
 
 <p align="center">
-  <img width="847" height="519" alt="image" src="https://github.com/user-attachments/assets/858d6623-0ccb-444f-8cfc-c5b3a04440f5" />
+  <img width="847" height="519" alt="image" src="https://github.com/user-attachments/assets/a1299263-cfaf-4103-8162-9f063a256766" />
 </p>
 
 <p align="center">
@@ -70,7 +70,7 @@ The MySQL password for the server is specified upon MySQL installation and is no
 If connection is unsuccessful, the following error message appears (Fig. 5): 
 
 <p align="center">
-  <img width="464" height="267" alt="image" src="https://github.com/user-attachments/assets/1584da8b-a4eb-4163-b152-a0ae167e8aff" />
+  <img width="464" height="267" alt="image" src="https://github.com/user-attachments/assets/82b39b52-c34f-49f6-a5cf-2429c8905d06" />
 </p>
 
 <p align="center">
@@ -89,7 +89,7 @@ ___
 Upon successful login, the following home screen is displayed (Fig. 6):
 
 <p align="center">
-  <img width="975" height="569" alt="image" src="https://github.com/user-attachments/assets/ee2883e0-2988-4a42-be0f-53b236781389" />
+  <img width="975" height="569" alt="image" src="https://github.com/user-attachments/assets/c165928e-0672-47a1-bf93-d93d80de9273" />
 </p>
 
 <p align="center">
@@ -102,7 +102,7 @@ For this section of the tutorial, we will be making an entry into the Item table
 The Item selection displays the following screen (Fig. 7): 
 
 <p align="center">
-  <img width="975" height="570" alt="image" src="https://github.com/user-attachments/assets/c8e90799-4f2a-4e93-bada-aeb45b860ea4" />
+  <img width="975" height="570" alt="image" src="https://github.com/user-attachments/assets/f83ce805-e1e2-4eca-8096-634da2d83eef" />
 </p>
 
 <p align="center">
@@ -117,7 +117,7 @@ In order to submit an entry, certain conditions must be met. These conditions mi
 For empty or invalid inputs, the following window will appear (Fig. 8):
 
 <p align="center">
-  <img width="520" height="267" alt="image" src="https://github.com/user-attachments/assets/1ea8fa9f-573c-42bd-a053-ec3a12c3968d" />
+  <img width="520" height="267" alt="image" src="https://github.com/user-attachments/assets/2e98d863-fd6b-498f-a7f9-d8f02d267dd0" />
 </p>
 
 <p align="center">
@@ -130,7 +130,7 @@ Please refer to the MarketDB ERD for specific types related to entity attributes
 Another condition that must be met is unique primary keys. If a user tries to enter an Item I.D. (for this example int the item table) that is already in use, the following error message will appear (Fig. 9): 
 
 <p align="center">
-  <img width="347" height="246" alt="image" src="https://github.com/user-attachments/assets/6ee2b0b1-6c52-4c27-a1d3-2161109ca46a" />
+  <img width="347" height="246" alt="image" src="https://github.com/user-attachments/assets/33b90c33-a06f-4c97-97d1-5e98f263e69c" />
 </p>
 
 <p align="center">
@@ -142,7 +142,7 @@ The primary key is always shown as the first column in the table located on the 
 The last condition that must be met are foreign key constraints. If a user tries to enter an Aisle No or Section I.D. (for this example in the item table) that does not exist, the following error messages will appear (Fig 10., Fig 11.): 
 
 <p align="center">
-  <img width="357" height="245" alt="image" src="https://github.com/user-attachments/assets/1f272353-f9e5-4d49-984d-06c953fc893c" />
+  <img width="357" height="245" alt="image" src="https://github.com/user-attachments/assets/ed1946e2-cafb-47c4-8960-d40ad8e18506" />
 </p>
 
 <p align="center">
@@ -150,7 +150,7 @@ The last condition that must be met are foreign key constraints. If a user tries
 </p>
 
 <p align="center">
-  <img width="337" height="245" alt="image" src="https://github.com/user-attachments/assets/e81991ba-f30b-4db9-811b-6287e4b84ba7" />
+  <img width="337" height="245" alt="image" src="https://github.com/user-attachments/assets/bff76a7f-242c-4066-80e7-fb2e4aa81ac1" />
 </p>
 
 <p align="center">
@@ -168,7 +168,7 @@ ___
 Deleting an entry is very easy in MarketDB. In order to delete an entry, the user must select an entry from the table shown in the window like so (Fig. 12): 
 
 <p align="center">
-  <img width="975" height="568" alt="image" src="https://github.com/user-attachments/assets/cfea8751-1af0-412d-89c5-bc34542bfd0c" />
+  <img width="975" height="568" alt="image" src="https://github.com/user-attachments/assets/6a93af21-c3a3-44fd-b05d-e9513d9a1f25" />
 </p>
 
 <p align="center">
@@ -186,7 +186,7 @@ Once an entry is selected, the user must left click the Modify button located at
 Once the modify button is clicked, all of the entry's attributes will be put into the input text boxes on the left side of the screen like so (Fig. 13): 
 
 <p align="center">
-  <img width="975" height="568" alt="image" src="https://github.com/user-attachments/assets/08d52efd-357e-48fc-88a8-b44343a364f6" />
+  <img width="975" height="568" alt="image" src="https://github.com/user-attachments/assets/060f0e49-0b59-40cd-aee6-2170e8143b7c" />
 </p>
 
 <p align="center">
@@ -203,7 +203,7 @@ ___
 Located at the top right of the MarketDB window is a magnifying glass. Upon left-clicking, a window will be displayed on the right side of the screen, prompting the user to select a condition to search by (Fig. 14).
 
 <p align="center">
-  <img width="975" height="571" alt="image" src="https://github.com/user-attachments/assets/65d4b0cf-691a-4b19-9f54-0ab0ae137631" />
+  <img width="975" height="571" alt="image" src="https://github.com/user-attachments/assets/d03b97bb-277d-49a1-a78a-4b91f0e20c07" />
 </p>
 
 <p align="center">
@@ -213,7 +213,7 @@ Located at the top right of the MarketDB window is a magnifying glass. Upon left
 Once a user makes a selection from the screen, an input is needed in box directly below it. If the input is empty or the input does not exist with the selection made, the following error messages will display (Fig. 15, Fig 16.):
 
 <p align="center">
-  <img width="336" height="244" alt="image" src="https://github.com/user-attachments/assets/a480c4fd-75c8-4989-9433-6180852c7038" />
+  <img width="336" height="244" alt="image" src="https://github.com/user-attachments/assets/13dc2b98-8f5d-4c93-b88e-466c81bad874" />
 </p>
 
 <p align="center">
@@ -221,7 +221,7 @@ Once a user makes a selection from the screen, an input is needed in box directl
 </p>
 
 <p align="center">
-  <img width="271" height="241" alt="image" src="https://github.com/user-attachments/assets/32712012-d401-417c-93e2-ef1df8e55999" />
+  <img width="271" height="241" alt="image" src="https://github.com/user-attachments/assets/8dffa679-cc02-4055-8014-508298ce2c94" />
 </p>
 
 <p align="center">
@@ -231,7 +231,7 @@ Once a user makes a selection from the screen, an input is needed in box directl
 Assuming that all conditions have been met and the ‘Go’ button has been clicked, a successful search query will result in a display of all tables that have a relation with the selection and the input. For this example we will show a successful search with an Item I.D. (Fig 17.): 
 
 <p align="center">
-  <img width="975" height="574" alt="image" src="https://github.com/user-attachments/assets/64c72f7d-b220-44dc-9299-9e5c83d8ed08" />
+  <img width="975" height="574" alt="image" src="https://github.com/user-attachments/assets/0c1e3b24-e259-480a-a8e3-c3aa2c67e881" />
 </p>
 
 <p align="center">
@@ -303,4 +303,4 @@ ___
 
 ### Entity Relationship Diagram
 
-<img width="1280" height="1280" alt="MarketDB ERD Diagram" src="https://github.com/user-attachments/assets/b1a06197-f6ce-4a2f-a660-ada275ed276b" />
+<img width="1280" height="1280" alt="MarketDB ERD Diagram" src="https://github.com/user-attachments/assets/ba77507a-fc73-4748-9846-43f7c3321676" />
